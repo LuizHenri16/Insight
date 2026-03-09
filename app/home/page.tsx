@@ -17,10 +17,15 @@ async function UserDetails() {
 
 export default function ProtectedPage() {
 
-
   return (
-    <Suspense fallback={<div>Carregando...</div>}>
-      <InsightTable />
-    </Suspense>
+    <div>
+      <Suspense fallback={<div>Carregando...</div>}>
+        <p className="px-3 py-1 text-[#1B2F53]">Cadastros</p>
+        <InsightTable />
+        <div>
+
+        </div>
+      </Suspense>
+    </div>
   );
 }

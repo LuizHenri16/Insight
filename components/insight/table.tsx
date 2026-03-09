@@ -21,10 +21,8 @@ export const InsightTable = async () => {
     )
   `) as { data: Empresa[] | null };
 
-    console.log(empresas)
-
     return (
-        <div className="overflow-x-auto px-4 py-2 border border-gray-200 rounded-2xl shadow-md">
+        <div className="overflow-x-auto px-4 py-2 border border-gray-200 rounded-2xl shadow-md bg-white">
             <table className="min-w-full divide-y divide-gray-200">
                 <thead className="[&_th]:px-6 [&_th]:py-3 [&_th]:text-center [&_th]:text-xs [&_th]:font-medium [&_th]:text-gray-500 [&_th]:uppercase [&_th]:tracking-wider">
                     <tr>
