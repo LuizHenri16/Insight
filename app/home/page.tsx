@@ -15,13 +15,17 @@ async function UserDetails() {
   return JSON.stringify(data.claims, null, 2);
 }
 
-export default function ProtectedPage() {
+interface PageProps {
+  searchParams: Promise<{ page?: string }>;
+}
+
+export default function ProtectedPage({ searchParams }: PageProps) {
 
   return (
     <div>
       <Suspense fallback={<div>Carregando...</div>}>
-        <p className="px-3 py-1 text-[#1B2F53]">Cadastros</p>
-        <InsightTable />
+        <p className="px-3 py-2 text-2xl font-semibold text-[#1B2F53]">Cadastros</p>
+        <InsightTable searchParams={searchParams} />
         <div>
 
         </div>
