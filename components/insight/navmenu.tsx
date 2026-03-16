@@ -15,7 +15,7 @@ export const NavMenu = () => {
         <div className="bg-white border-1 border-gray-300 rounded-xl p-2 ">
             <button onClick={handleModalAddOpen}><img src="/assets/icons/add.svg" alt="" />Adicionar</button>
             {isModalAddOpen && (
-                <BaseModal isOpen={isModalAddOpen} onClose={handleModalAddOpen} title="Cadastrar Relacionamento">
+                <BaseModal isOpen={isModalAddOpen} onClose={handleModalAddOpen} title="Cadastro">
                     <CreateForm />
                 </BaseModal>
             )}
