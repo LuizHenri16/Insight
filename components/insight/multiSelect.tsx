@@ -7,15 +7,13 @@ interface OptionProps {
 
 interface MultiSelectDropdownProps {
     options: OptionProps[];
-    label: string;
 }
 
-const MultiSelectDropdown = ({ options, label }: MultiSelectDropdownProps) => {
+const MultiSelectDropdown = ({ options }: MultiSelectDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedItems, setSelectedItems] = useState<OptionProps[]>([]);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    // Fecha o dropdown se clicar fora dele (Outside Click)
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -37,10 +35,7 @@ const MultiSelectDropdown = ({ options, label }: MultiSelectDropdownProps) => {
 
     return (
         <div ref={dropdownRef} className="w-[300px] relative">
-            <label>{label}</label>
-
-            {/* O "Campo" do Select */}
-            <div className='flex justify-between items-center cursor-pointer p-2 border-2 border-gray-500 rounded-lg'
+            <div className='flex justify-between items-center cursor-pointer px-3 py-2.5 border border-[#1B2F53] rounded-xl'
                 onClick={() => setIsOpen(!isOpen)}
             >
                 {selectedItems.length > 0
@@ -49,32 +44,14 @@ const MultiSelectDropdown = ({ options, label }: MultiSelectDropdownProps) => {
                 <span>{isOpen ? '▲' : '▼'}</span>
             </div>
 
-            {/* O Popup (Dropdown Menu) */}
             {isOpen && (
-                <div style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: 0,
-                    right: 0,
-                    backgroundColor: '#fff',
-                    border: '1px solid #ccc',
-                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                    zIndex: 10,
-                    maxHeight: '200px',
-                    overflowY: 'auto',
-                    borderRadius: '4px',
-                    marginTop: '5px'
-                }}>
+                <div
+                    className='absolute top-full left-0 right-0 bg-white border-1 border-gray-500 shadow-lg z-10 max-h-50 overflow-y-auto rounded-lg mt-1'>
                     {options.map((option) => (
                         <div
+                            className={`p-3 cursor-pointer border-b transition-colors hover:bg-blue-50 border-b-gray-200 ${selectedItems.some(s => s.id === option.id) ? 'bg-blue-200' : ''}`}
                             key={option.id}
                             onClick={() => toggleOption(option)}
-                            style={{
-                                padding: '10px',
-                                cursor: 'pointer',
-                                backgroundColor: selectedItems.some(s => s.id === option.id) ? '#e6f7ff' : 'transparent',
-                                borderBottom: '1px solid #eee'
-                            }}
                         >
                             <input
                                 type="checkbox"
