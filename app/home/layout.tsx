@@ -1,9 +1,10 @@
-import { DeployButton } from "@/components/deploy-button";
+
 import { EnvVarWarning } from "@/components/env-var-warning";
 import { AuthButton } from "@/components/auth-button";
 import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";
+import { NavMenu } from "@/components/insight/navmenu";
 
 export default function ProtectedLayout({
   children,
@@ -20,6 +21,7 @@ export default function ProtectedLayout({
                 <img src="/assets/icons/INSIGHT.svg" alt="Insight" />
               </Link>
             </div>
+            <NavMenu />
             {!hasEnvVars ? (
               <EnvVarWarning />
             ) : (
