@@ -5,9 +5,9 @@ import { LogoutButton } from "./logout-button";
 
 export async function AuthButton() {
   const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
+  const { data } = await supabase.auth.getUser();
 
-  const user = data?.claims;
+  const user = data?.user;
   // Exibir somente primeira parte do email
   const emailShort = user?.email?.split("@")[0];
 

@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { Empresa } from "@/utils/types/Empresa";
+import { EmpresaTable } from "@/utils/types/Empresa";
 import Link from "next/link";
 
 interface Props {
@@ -35,7 +35,7 @@ export const InsightTable = async ({ searchParams }: Props) => {
             )
         `, { count: 'exact' })
         .range(from, to)
-        .order('id_empresa', { ascending: true }) as { data: Empresa[] | null, count: number | null, error: any };
+        .order('id_empresa', { ascending: true }) as { data: EmpresaTable[] | null, count: number | null, error: any };
 
     const totalCount = count || 0;
     const totalPages = Math.ceil(totalCount / itemsPerPage);

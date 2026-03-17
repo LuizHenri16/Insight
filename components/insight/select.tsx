@@ -1,3 +1,4 @@
+import { TriangleDownIcon } from '@radix-ui/react-icons';
 import React, { useState, useRef, useEffect } from 'react';
 
 interface OptionProps {
@@ -41,8 +42,8 @@ const Select = ({ options, onSelect }: SingleSelectDropdownProps) => {
                 <span className={selectedItem ? 'text-black' : 'text-gray-400'}>
                     {selectedItem ? selectedItem.nomeDoItem : "Selecione..."}
                 </span>
-                <span className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
-                    ▼
+                <span className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                    <TriangleDownIcon width={20} height={20} />
                 </span>
             </div>
 

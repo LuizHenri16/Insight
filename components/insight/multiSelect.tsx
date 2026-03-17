@@ -1,3 +1,4 @@
+import { TriangleDownIcon, TriangleUpIcon } from '@radix-ui/react-icons';
 import React, { useState, useRef, useEffect } from 'react';
 
 interface OptionProps {
@@ -7,9 +8,10 @@ interface OptionProps {
 
 interface MultiSelectDropdownProps {
     options: OptionProps[];
+    onChange?: (selectedItems: OptionProps[]) => void;
 }
 
-const MultiSelectDropdown = ({ options }: MultiSelectDropdownProps) => {
+const MultiSelectDropdown = ({ options, onChange }: MultiSelectDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedItems, setSelectedItems] = useState<OptionProps[]>([]);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -26,11 +28,14 @@ const MultiSelectDropdown = ({ options }: MultiSelectDropdownProps) => {
 
     const toggleOption = (item: OptionProps) => {
         const isSelected = selectedItems.some((s) => s.id === item.id);
+        let newSelectedItems;
         if (isSelected) {
-            setSelectedItems(selectedItems.filter((s) => s.id !== item.id));
+            newSelectedItems = selectedItems.filter((s) => s.id !== item.id);
         } else {
-            setSelectedItems([...selectedItems, item]);
+            newSelectedItems = [...selectedItems, item];
         }
+        setSelectedItems(newSelectedItems);
+        if (onChange) onChange(newSelectedItems);
     };
 
     return (
@@ -41,12 +46,14 @@ const MultiSelectDropdown = ({ options }: MultiSelectDropdownProps) => {
                 {selectedItems.length > 0
                     ? `${selectedItems.length} selecionado(s)`
                     : "Selecione..."}
-                <span>{isOpen ? '▲' : '▼'}</span>
+                <span className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                    <TriangleDownIcon width={20} height={20} />
+                </span>
             </div>
 
             {isOpen && (
                 <div
-                    className='absolute top-full left-0 right-0 bg-white border-1 border-gray-500 shadow-lg z-10 max-h-50 overflow-y-auto rounded-lg mt-1'>
+                    className='absolute top-full left-0 right-0 bg-white border border-gray-200 shadow-lg z-10 max-h-[12rem] overflow-y-auto rounded-lg mt-1'>
                     {options.map((option) => (
                         <div
                             className={`p-3 cursor-pointer border-b transition-colors hover:bg-blue-50 border-b-gray-200 ${selectedItems.some(s => s.id === option.id) ? 'bg-blue-200' : ''}`}
@@ -57,7 +64,7 @@ const MultiSelectDropdown = ({ options }: MultiSelectDropdownProps) => {
                                 type="checkbox"
                                 readOnly
                                 checked={selectedItems.some(s => s.id === option.id)}
-                                style={{ marginRight: '8px' }}
+                                className='mr-2'
                             />
                             {option.nomeDoItem}
                         </div>
