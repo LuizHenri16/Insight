@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Sora } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
@@ -9,12 +9,21 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Insight",
+  description: "Gestão de Relacionamento",
+  icons: {
+    icon: "/assets/icons/INSIGHT.svg",
+  },
 };
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
+  display: "swap",
+  subsets: ["latin"],
+});
+
+const sora = Sora({
+  variable: "--font-sora",
   display: "swap",
   subsets: ["latin"],
 });
@@ -25,8 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
+    <html lang="pt-br" suppressHydrationWarning>
+      <body className={`${sora.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
