@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { InsightTable } from "@/components/insight/table";
 import { Suspense } from "react";
+import { EmpresaTable } from "@/utils/types/Empresa";
 
 async function UserDetails() {
   const supabase = await createClient();
@@ -20,15 +21,11 @@ interface PageProps {
 }
 
 export default function ProtectedPage({ searchParams }: PageProps) {
-
   return (
     <div>
       <Suspense fallback={<div>Carregando...</div>}>
         <p className="px-3 py-2 text-2xl font-semibold text-[#1B2F53]">Cadastros</p>
         <InsightTable searchParams={searchParams} />
-        <div>
-
-        </div>
       </Suspense>
     </div>
   );

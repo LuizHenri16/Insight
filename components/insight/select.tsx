@@ -9,12 +9,23 @@ interface OptionProps {
 interface SingleSelectDropdownProps {
     options: OptionProps[];
     onSelect?: (option: OptionProps) => void;
+    value?: string;
+    disabled?: boolean;
 }
 
-const Select = ({ options, onSelect }: SingleSelectDropdownProps) => {
+const Select = ({ options, onSelect, value, disabled }: SingleSelectDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<OptionProps | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (value) {
+            const defaultOption = options.find(o => o.id === value);
+            if (defaultOption) {
+                setSelectedItem(defaultOption);
+            }
+        }
+    }, [value, options]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {

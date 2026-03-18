@@ -9,12 +9,20 @@ interface OptionProps {
 interface MultiSelectDropdownProps {
     options: OptionProps[];
     onChange?: (selectedItems: OptionProps[]) => void;
+    value?: OptionProps[];
+    disabled?: boolean;
 }
 
-const MultiSelectDropdown = ({ options, onChange }: MultiSelectDropdownProps) => {
+const MultiSelectDropdown = ({ options, onChange, value, disabled }: MultiSelectDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedItems, setSelectedItems] = useState<OptionProps[]>([]);
+    const [selectedItems, setSelectedItems] = useState<OptionProps[]>(value || []);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    
+    useEffect(() => {
+        if (value) {
+            setSelectedItems(value);
+        }
+    }, [value]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
