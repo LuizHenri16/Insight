@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { EmpresaTable } from "@/utils/types/Empresa";
 import Link from "next/link";
+import { EyeOpenIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
+import { ActionButton } from "./actionButton";
 
 interface Props {
     searchParams: Promise<{ page?: string }>;
@@ -44,7 +46,7 @@ export const InsightTable = async ({ searchParams }: Props) => {
 
     return (
         <div className="overflow-x-auto px-4 py-2 border border-gray-200 rounded-2xl shadow-md bg-white text-gray-800">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="w-full divide-y divide-gray-200">
                 <thead className="[&_th]:px-6 [&_th]:py-3 [&_th]:text-center [&_th]:text-xs [&_th]:font-medium [&_th]:text-gray-500 [&_th]:uppercase [&_th]:tracking-wider">
                     <tr>
                         <th>ID</th>
@@ -80,8 +82,10 @@ export const InsightTable = async ({ searchParams }: Props) => {
                                         {empresa.crot === 'SIM' ? 'Sim' : 'Não'}
                                     </span>
                                 </td>
-                                <td>
-                                    {/* Espaço para o botão de editar / visualizar / deletar */}
+                                <td className="flex gap-1">
+                                    <ActionButton type="view" />
+                                    <ActionButton type="edit" />
+                                    <ActionButton type="delete" />
                                 </td>
                             </tr>
                         ))
