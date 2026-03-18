@@ -143,8 +143,7 @@ export const CreateForm = () => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-2">
-                        <Button variant="outline" type="button" className="w-full">Cancelar</Button>
+                    <div className="flex items-end mt-1">
                         <Button type="button" onClick={handleSubmit} disabled={loading} className="w-full">
                             {loading ? "Salvando..." : "Cadastrar"}
                         </Button>
