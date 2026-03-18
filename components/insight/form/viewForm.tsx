@@ -124,12 +124,8 @@ export const ViewForm = ({ id }: { id: number | string }) => {
                     <div>
                         <label htmlFor="">Cheque especial</label>
                         <div className="flex flex-col md:flex-row gap-2">
-                            <Select options={[{ id: "1", nomeDoItem: "SIM" }, { id: "2", nomeDoItem: "NAO" }]} value={dadosEmpresa?.crot?.toString() || ""} />
+                            <Select options={[{ id: "1", nomeDoItem: "SIM" }, { id: "2", nomeDoItem: "NAO" }]} value={dadosEmpresa?.crot === "SIM" ? "1" : (dadosEmpresa?.crot === "NAO" ? "2" : dadosEmpresa?.crot)} />
                         </div>
-                    </div>
-
-                    <div className="flex flex-col md:flex-row gap-2">
-                        <Button variant="outline" type="button" className="w-full">Fechar</Button>
                     </div>
                 </div>
             </form >
