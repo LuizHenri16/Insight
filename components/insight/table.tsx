@@ -10,6 +10,8 @@ interface Props {
 }
 
 export const InsightTable = async ({ searchParams }: Props) => {
+
+
     // 1. Configuração da Paginação
     const params = await searchParams;
     const currentPage = Number(params.page) || 1;
@@ -20,6 +22,7 @@ export const InsightTable = async ({ searchParams }: Props) => {
     const to = from + itemsPerPage - 1;
 
     const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
     // 2. Busca de dados com 'count' exato para saber o total de páginas
     const { data: empresas, count, error } = await supabase
@@ -37,6 +40,8 @@ export const InsightTable = async ({ searchParams }: Props) => {
                 cpfcnpj_socio
             )
         `, { count: 'exact' })
+        .is("deletado_em", null)
+        .eq("uuid_usuario", user?.id)
         .range(from, to)
         .order('id_empresa', { ascending: true }) as { data: EmpresaTable[] | null, count: number | null, error: any };
 
