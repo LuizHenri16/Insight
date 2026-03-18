@@ -24,6 +24,7 @@ export interface EmpresaTable {
 }
 
 export interface EmpresaForm {
+    id_empresa?: number;
     nome_empresa: string;
     cnpj_empresa: string;
     conta: string;
@@ -31,6 +32,7 @@ export interface EmpresaForm {
     email: string;
     crot: string;
     Socio: {
+        id_socio?: number;
         nome_socio: string;
         cpfcnpj_socio: string;
     }[];
