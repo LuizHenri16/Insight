@@ -31,7 +31,7 @@ export default function ProtectedLayout({
             )}
           </div>
         </nav>
-        <div className="flex justify-center items-center p-10">
+        <div className="px-10 md:px-16 lg:px-24 py-4">
           {children}
         </div>
       </div>

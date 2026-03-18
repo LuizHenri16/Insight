@@ -26,9 +26,6 @@ export default function ProtectedPage({ searchParams }: PageProps) {
       <Suspense fallback={<div>Carregando...</div>}>
         <p className="px-3 py-2 text-2xl font-semibold text-[#1B2F53]">Cadastros</p>
         <InsightTable searchParams={searchParams} />
-        <div>
-
-        </div>
       </Suspense>
     </div>
   );
