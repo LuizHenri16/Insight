@@ -1,3 +1,5 @@
+"use client"
+
 import { Cross2Icon } from '@radix-ui/react-icons'
 
 export const BaseModal = ({ children, isOpen, onClose, title }: { children: React.ReactNode, isOpen: boolean, onClose: () => void, title: string }) => {

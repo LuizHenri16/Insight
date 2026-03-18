@@ -1,21 +1,37 @@
+'use client';
+
+import { useState } from "react";
 import { EyeOpenIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import { TrashIcon } from "lucide-react";
+import { BaseModal } from "./modal";
+import { ViewForm } from "./form/viewForm";
 
-interface ActionButtonProps {
-    type: 'view' | 'edit' | 'delete';
-    onClick?: () => void;
-}
+export const ActionButton = ({ type, idEmpresa }: { type: 'view' | 'edit' | 'delete', idEmpresa: string | number }) => {
+    const [modalOpen, setModalOpen] = useState(false);
 
-const icons = {
-    view: <EyeOpenIcon className="w-4 h-4" color="#6b7280" />,
-    edit: <Pencil2Icon className="w-4 h-4" color="#6b7280" />,
-    delete: <TrashIcon className="w-4 h-4" color="#6b7280" />
-}
+    const toggleModal = () => setModalOpen(!modalOpen);
 
-export const ActionButton = ({ type, onClick }: ActionButtonProps) => {
+    const icons = {
+        view: <EyeOpenIcon className="w-4 h-4" />,
+        edit: <Pencil2Icon className="w-4 h-4" />,
+        delete: <TrashIcon className="w-4 h-4" />
+    };
+
     return (
-        <button className="p-1 rounded-lg text-white text-xs font-bold hover:bg-gray-200 transition-colors" onClick={onClick}>
-            {icons[type]}
-        </button>
+        <>
+            <button
+                type="button"
+                onClick={toggleModal}
+                className="p-1 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+                {icons[type]}
+            </button>
+
+            {modalOpen && type === 'view' && (
+                <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Visualizar">
+                    <ViewForm id={idEmpresa} />
+                </BaseModal>
+            )}
+        </>
     );
-}
+};

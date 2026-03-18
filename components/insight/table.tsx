@@ -1,7 +1,8 @@
+
 import { createClient } from "@/lib/supabase/server";
 import { EmpresaTable } from "@/utils/types/Empresa";
 import Link from "next/link";
-import { EyeOpenIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
+import dynamic from "next/dynamic";
 import { ActionButton } from "./actionButton";
 
 interface Props {
@@ -82,10 +83,10 @@ export const InsightTable = async ({ searchParams }: Props) => {
                                         {empresa.crot === 'SIM' ? 'Sim' : 'Não'}
                                     </span>
                                 </td>
-                                <td className="flex gap-1">
-                                    <ActionButton type="view" />
-                                    <ActionButton type="edit" />
-                                    <ActionButton type="delete" />
+                                <td className="flex gap-1 justify-center items-center">
+                                    <ActionButton type="view" idEmpresa={empresa.id_empresa} />
+                                    <ActionButton type="edit" idEmpresa={empresa.id_empresa} />
+                                    <ActionButton type="delete" idEmpresa={empresa.id_empresa} />
                                 </td>
                             </tr>
                         ))

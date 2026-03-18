@@ -4,12 +4,23 @@ export interface EmpresaTable {
     nome_empresa: string;
     cnpj_empresa: string;
     email: string;
+    telefone: string;
     crot: string;
     Socio: {
         id_socio: number;
         nome_socio: string;
         cpfcnpj_socio: string;
-    }[];
+    }[],
+    Investimentos: {
+        id_investimento: number;
+        investimento: string;
+    }[],
+    ProdutosServicos: {
+        id_produtos_servicos: number;
+        produto_servico: string;
+    }[],
+    id_rating_credito: number;
+
 }
 
 export interface EmpresaForm {
