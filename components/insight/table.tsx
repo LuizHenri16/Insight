@@ -12,7 +12,6 @@ interface Props {
 
 export const InsightTable = async ({ searchParams }: Props) => {
 
-
     // 1. Configuração da Paginação
     const params = await searchParams;
     const currentPage = Number(params.page) || 1;
