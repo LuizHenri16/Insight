@@ -8,13 +8,12 @@ interface MenuDropdownProps {
     children?: ReactNode;
 }
 
-export const MenuDropdown = ({ title = "Opções", children }: MenuDropdownProps) => {
+export const MenuDropdown = ({ title = "Menu", children }: MenuDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
-    // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -34,8 +33,9 @@ export const MenuDropdown = ({ title = "Opções", children }: MenuDropdownProps
     return (
         <div className="relative inline-block text-left" ref={dropdownRef}>
             <button onClick={toggleDropdown}
-                className="text-sm flex flex-row justify-center items-center gap-1 hover:bg-gray-100 hover:border-1 hover:border-gray-300 cursor-pointer px-2 py-1 rounded-xl transition-colors">
+                className="text-sm flex flex-row bg-[#1B2F53] gap-2 text-white justify-center items-center hover:border-1 cursor-pointer px-4 py-2 rounded-xl transition-colors">
                 {title}
+                <div className="border-l border-gray-300 h-4"></div>
                 <ChevronDownIcon width={14} height={14} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 

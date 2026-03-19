@@ -79,7 +79,7 @@ export const InsightTable = async ({ searchParams }: Props) => {
                                 <td className="font-mono text-xs">{empresa.id_empresa}</td>
                                 <td>{empresa.cnpj_empresa}</td>
                                 <td>{empresa.conta}</td>
-                                <td className="font-semibold text-blue-600 text-left">{empresa.nome_empresa}</td>
+                                <td className="font-normal text-blue-950">{empresa.nome_empresa}</td>
                                 <td>{empresa.Socio?.[0]?.nome_socio || "-"}</td>
                                 <td>{empresa.Socio?.[1]?.nome_socio || "-"}</td>
                                 <td className="lowercase">{empresa.email}</td>

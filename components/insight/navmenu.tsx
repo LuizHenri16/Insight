@@ -18,7 +18,7 @@ export const NavMenu = () => {
         <div className="bg-white border-1 border-gray-300 rounded-xl p-2 ">
             <MenuDropdown>
                 <div className="w-full flex flex-col text-left justify-center gap-1">
-                    <h3 className="ml-1 text-sm font-normal text-gray-400">Configurações</h3>
+                    <p className="ml-1 text-sm font-normal text-gray-400">Configurações</p>
                     <NavButton text="Acessos" onClick={handleModalAddOpen}>
                         <GearIcon width={18} height={18} />
                     </NavButton>
