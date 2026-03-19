@@ -20,6 +20,8 @@ export const ViewForm = ({ id }: { id: number | string }) => {
     const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
     const [produtosServicos, setProdutosServicos] = useState<ProdutoServico[]>([]);
 
+    const [fetching, setFetching] = useState(true);
+
     useEffect(() => {
         getRatingCredito().then((data) => setRatingCredito(data));
         getInvestimento().then((data) => setInvestimentos(data));
@@ -29,6 +31,7 @@ export const ViewForm = ({ id }: { id: number | string }) => {
     const [dadosEmpresa, setEmpresa] = useState<EmpresaTable | null>(null);
 
     const getEmpresa = async () => {
+        setFetching(true);
         const empresa = await select(id);
 
         const empresaFormatada: EmpresaTable = {
@@ -46,11 +49,16 @@ export const ViewForm = ({ id }: { id: number | string }) => {
         };
 
         setEmpresa(empresaFormatada);
+        setFetching(false);
     }
 
     useEffect(() => {
         getEmpresa();
     }, [id]);
+
+    if (fetching) {
+        return <div className="p-4">Carregando dados...</div>;
+    }
 
     return (
         <div>
