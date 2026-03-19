@@ -17,7 +17,7 @@ const MultiSelectDropdown = ({ options, onChange, value, disabled }: MultiSelect
     const [isOpen, setIsOpen] = useState(false);
     const [selectedItems, setSelectedItems] = useState<OptionProps[]>(value || []);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    
+
     useEffect(() => {
         if (value) {
             setSelectedItems(value);
@@ -47,7 +47,7 @@ const MultiSelectDropdown = ({ options, onChange, value, disabled }: MultiSelect
     };
 
     return (
-        <div ref={dropdownRef} className="w-[300px] relative">
+        <div ref={dropdownRef} className="w-full relative">
             <div className='flex justify-between items-center cursor-pointer px-3 py-2.5 border border-[#1B2F53] rounded-xl'
                 onClick={() => setIsOpen(!isOpen)}
             >
