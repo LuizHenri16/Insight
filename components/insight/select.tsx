@@ -44,7 +44,7 @@ const Select = ({ options, onSelect, value, disabled }: SingleSelectDropdownProp
     };
 
     return (
-        <div ref={dropdownRef} className="w-[300px] relative font-sans">
+        <div ref={dropdownRef} className="w-full relative font-sans">
             <div
                 className={`flex justify-between items-center cursor-pointer px-3 py-2.5 border rounded-xl transition-all
                     ${isOpen ? 'border-blue-500 shadow-sm' : 'border-[#1B2F53]'}`}
