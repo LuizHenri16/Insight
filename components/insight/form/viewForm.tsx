@@ -20,6 +20,8 @@ export const ViewForm = ({ id }: { id: number | string }) => {
     const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
     const [produtosServicos, setProdutosServicos] = useState<ProdutoServico[]>([]);
 
+    const [fetching, setFetching] = useState(true);
+
     useEffect(() => {
         getRatingCredito().then((data) => setRatingCredito(data));
         getInvestimento().then((data) => setInvestimentos(data));
@@ -29,6 +31,7 @@ export const ViewForm = ({ id }: { id: number | string }) => {
     const [dadosEmpresa, setEmpresa] = useState<EmpresaTable | null>(null);
 
     const getEmpresa = async () => {
+        setFetching(true);
         const empresa = await select(id);
 
         const empresaFormatada: EmpresaTable = {
@@ -46,11 +49,16 @@ export const ViewForm = ({ id }: { id: number | string }) => {
         };
 
         setEmpresa(empresaFormatada);
+        setFetching(false);
     }
 
     useEffect(() => {
         getEmpresa();
     }, [id]);
+
+    if (fetching) {
+        return <div className="p-4">Carregando dados...</div>;
+    }
 
     return (
         <div>
@@ -124,12 +132,8 @@ export const ViewForm = ({ id }: { id: number | string }) => {
                     <div>
                         <label htmlFor="">Cheque especial</label>
                         <div className="flex flex-col md:flex-row gap-2">
-                            <Select options={[{ id: "1", nomeDoItem: "SIM" }, { id: "2", nomeDoItem: "NAO" }]} value={dadosEmpresa?.crot?.toString() || ""} />
+                            <Select options={[{ id: "1", nomeDoItem: "SIM" }, { id: "2", nomeDoItem: "NAO" }]} value={dadosEmpresa?.crot === "SIM" ? "1" : (dadosEmpresa?.crot === "NAO" ? "2" : dadosEmpresa?.crot)} />
                         </div>
-                    </div>
-
-                    <div className="flex flex-col md:flex-row gap-2">
-                        <Button variant="outline" type="button" className="w-full">Fechar</Button>
                     </div>
                 </div>
             </form >

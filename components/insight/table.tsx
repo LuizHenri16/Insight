@@ -4,12 +4,14 @@ import { EmpresaTable } from "@/utils/types/Empresa";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ActionButton } from "./actionButton";
+import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 
 interface Props {
     searchParams: Promise<{ page?: string }>;
 }
 
 export const InsightTable = async ({ searchParams }: Props) => {
+
     // 1. Configuração da Paginação
     const params = await searchParams;
     const currentPage = Number(params.page) || 1;
@@ -20,6 +22,7 @@ export const InsightTable = async ({ searchParams }: Props) => {
     const to = from + itemsPerPage - 1;
 
     const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
     // 2. Busca de dados com 'count' exato para saber o total de páginas
     const { data: empresas, count, error } = await supabase
@@ -37,6 +40,8 @@ export const InsightTable = async ({ searchParams }: Props) => {
                 cpfcnpj_socio
             )
         `, { count: 'exact' })
+        .is("deletado_em", null)
+        .eq("uuid_usuario", user?.id)
         .range(from, to)
         .order('id_empresa', { ascending: true }) as { data: EmpresaTable[] | null, count: number | null, error: any };
 
@@ -64,8 +69,8 @@ export const InsightTable = async ({ searchParams }: Props) => {
                 <tbody className="divide-y divide-gray-100">
                     {(!empresas || empresas.length === 0) ? (
                         <tr>
-                            <td colSpan={8} className="p-8 text-center text-gray-400 italic">
-                                Nenhuma empresa encontrada
+                            <td colSpan={8} className="p-8 text-center text-gray-500 italic">
+                                Nenhum cadastro encontrado
                             </td>
                         </tr>
                     ) : (
@@ -97,7 +102,7 @@ export const InsightTable = async ({ searchParams }: Props) => {
             <div className="mt-2 border-t border-gray-100"></div>
             <div className="flex flex-col sm:flex-row justify-between items-center p-4 gap-4">
                 <p className="text-sm text-gray-600">
-                    Mostrando <strong>{from + 1}</strong> a <strong>{Math.min(to + 1, totalCount)}</strong> de <strong>{totalCount}</strong> empresas
+                    Mostrando <strong>{from + 1}</strong> a <strong>{Math.min(to + 1, totalCount)}</strong> de <strong>{totalCount}</strong> cadastros
                 </p>
 
                 <div className="flex items-center gap-4">
@@ -106,21 +111,13 @@ export const InsightTable = async ({ searchParams }: Props) => {
                     </span>
                     <div className="flex gap-2 text-sm font-medium">
                         {/* Botão Anterior */}
-                        <Link
-                            href={hasPrevPage ? `?page=${currentPage - 1}` : "#"}
-                            className={`px-4 py-2 border border-gray-200 rounded-lg shadow-sm transition-all ${!hasPrevPage ? "opacity-30 cursor-not-allowed pointer-events-none" : "hover:bg-gray-50 active:scale-95"
-                                }`}
-                        >
-                            Anterior
+                        <Link href={hasPrevPage ? `?page=${currentPage - 1}` : "#"} className={`px-4 py-2 border border-gray-200 rounded-lg shadow-sm transition-all ${!hasPrevPage ? "opacity-30 cursor-not-allowed pointer-events-none" : "hover:bg-gray-50 active:scale-95"}`}>
+                            <ChevronLeftIcon />
                         </Link>
 
                         {/* Botão Próximo */}
-                        <Link
-                            href={hasNextPage ? `?page=${currentPage + 1}` : "#"}
-                            className={`px-4 py-2 border border-gray-200 rounded-lg shadow-sm transition-all ${!hasNextPage ? "opacity-30 cursor-not-allowed pointer-events-none" : "hover:bg-gray-50 active:scale-95"
-                                }`}
-                        >
-                            Próximo
+                        <Link href={hasNextPage ? `?page=${currentPage + 1}` : "#"} className={`px-4 py-2 border border-gray-200 rounded-lg shadow-sm transition-all ${!hasNextPage ? "opacity-30 cursor-not-allowed pointer-events-none" : "hover:bg-gray-50 active:scale-95"}`}>
+                            <ChevronRightIcon />
                         </Link>
                     </div>
                 </div>

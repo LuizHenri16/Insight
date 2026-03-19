@@ -1,19 +1,24 @@
+"use client"
+
 import { Input } from "@/components/ui/input"
 import MultiSelect from "../multiSelect"
 import Select from "../select"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { EmpresaForm } from "@/utils/types/Empresa"
-import { save } from "@/lib/utils/create"
+import { update } from "@/lib/utils/update"
+import { select } from "@/lib/utils/select"
 import { getRatingCredito } from "@/lib/utils/ratingcredito"
 import { RatingCredito } from "@/utils/types/ratingcredito"
 import { Investimento } from "@/utils/types/investimento"
 import { ProdutoServico } from "@/utils/types/produtoservico"
 import { getProdutoServico } from "@/lib/utils/produtoservico"
 import { getInvestimento } from "@/lib/utils/investimento"
+import { useRouter } from "next/navigation"
 
-export const CreateForm = () => {
+export const EditForm = ({ id }: { id: number | string }) => {
 
+    const router = useRouter();
     const [ratingCredito, setRatingCredito] = useState<RatingCredito[]>([]);
     const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
     const [produtosServicos, setProdutosServicos] = useState<ProdutoServico[]>([]);
@@ -41,6 +46,55 @@ export const CreateForm = () => {
     });
 
     const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(true);
+
+    const getEmpresa = async () => {
+        try {
+            setFetching(true);
+            const empresa = await select(id);
+
+            const sociosMapeados = (empresa.EmpresaSocio || [])
+                .map((es: any) => es.Socio)
+                .slice(0, 2);
+
+            while (sociosMapeados.length < 2) {
+                sociosMapeados.push({ nome_socio: "", cpfcnpj_socio: "" });
+            }
+
+            const empresaFormatada: EmpresaForm = {
+                id_empresa: empresa.id_empresa,
+                nome_empresa: empresa.nome_empresa || "",
+                cnpj_empresa: empresa.cnpj_empresa || "",
+                conta: empresa.conta || "",
+                telefone: empresa.telefone || "",
+                email: empresa.email || "",
+                crot: empresa.crot || "",
+                Socio: sociosMapeados,
+                Investimentos: (empresa.EmpresaInvestimento || []).map((ei: any) => ({
+                    id_investimento: ei.Investimento.id_investimento,
+                    nome_investimento: ei.Investimento.investimento
+                })),
+                ProdutosServicos: (empresa.ProdutosServicosEmpresa || []).map((pse: any) => ({
+                    id_produto_servico: pse.ProdutosServicos.id_produtos_servicos,
+                    nome_produto_servico: pse.ProdutosServicos.produto_servico
+                })),
+                RatingCredito: empresa.id_rating_credito?.toString() || ""
+            };
+
+            setFormData(empresaFormatada);
+        } catch (error) {
+            console.error("Erro ao buscar dados da empresa:", error);
+            alert("Erro ao carregar dados para edição.");
+        } finally {
+            setFetching(false);
+        }
+    }
+
+    useEffect(() => {
+        if (id) {
+            getEmpresa();
+        }
+    }, [id]);
 
     const updateSocio = (index: number, field: 'nome_socio' | 'cpfcnpj_socio', value: string) => {
         const newSocios = [...formData.Socio];
@@ -54,10 +108,14 @@ export const CreateForm = () => {
             alert("Preencha os campos obrigatórios: Nome, CNPJ e Conta.");
             return;
         }
+
+        const empresaIdNumber = typeof id === 'string' ? parseInt(id) : id;
+
         setLoading(true);
         try {
-            if (await save(formData)) {
-                alert("Empresa cadastrada com sucesso!");
+            if (await update(empresaIdNumber, formData)) {
+                alert("Empresa atualizada com sucesso!");
+                router.refresh();
             }
         } catch (error: any) {
             console.error(error);
@@ -65,6 +123,10 @@ export const CreateForm = () => {
         } finally {
             setLoading(false);
         }
+    }
+
+    if (fetching) {
+        return <div className="p-4">Carregando dados...</div>;
     }
 
     return (
@@ -123,29 +185,45 @@ export const CreateForm = () => {
                 <div className="flex flex-col gap-4">
                     <div className="">
                         <label htmlFor="">Investimentos</label>
-                        <MultiSelect options={investimentos.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))} onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), nome_investimento: i.nomeDoItem })) })} />
+                        <MultiSelect
+                            options={investimentos.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))}
+                            value={formData.Investimentos.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.nome_investimento }))}
+                            onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), nome_investimento: i.nomeDoItem })) })}
+                        />
                     </div>
 
                     <div>
                         <label htmlFor="">Produtos/Serviços</label>
-                        <MultiSelect options={produtosServicos.map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))} onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), nome_produto_servico: i.nomeDoItem })) })} />
+                        <MultiSelect
+                            options={produtosServicos.map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))}
+                            value={formData.ProdutosServicos.map(p => ({ id: p.id_produto_servico.toString(), nomeDoItem: p.nome_produto_servico }))}
+                            onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), nome_produto_servico: i.nomeDoItem })) })}
+                        />
                     </div>
 
                     <div>
                         <label htmlFor="">Rating de Crédito</label>
-                        <Select options={ratingCredito.map(r => ({ id: r.id_rating_credito.toString(), nomeDoItem: r.rating_credito }))} onSelect={(item) => setFormData({ ...formData, RatingCredito: item.id })} />
+                        <Select
+                            options={ratingCredito.map(r => ({ id: r.id_rating_credito.toString(), nomeDoItem: r.rating_credito }))}
+                            value={formData.RatingCredito}
+                            onSelect={(item) => setFormData({ ...formData, RatingCredito: item.id })}
+                        />
                     </div>
 
                     <div>
                         <label htmlFor="">Cheque especial</label>
                         <div className="flex flex-col md:flex-row gap-2">
-                            <Select options={[{ id: "1", nomeDoItem: "SIM" }, { id: "2", nomeDoItem: "NAO" }]} onSelect={(item) => { setFormData({ ...formData, crot: item.nomeDoItem }) }} />
+                            <Select
+                                options={[{ id: "1", nomeDoItem: "SIM" }, { id: "2", nomeDoItem: "NAO" }]}
+                                value={formData.crot === "SIM" ? "1" : (formData.crot === "NAO" ? "2" : formData.crot)}
+                                onSelect={(item) => { setFormData({ ...formData, crot: item.nomeDoItem }) }}
+                            />
                         </div>
                     </div>
 
                     <div className="flex items-end mt-1">
                         <Button type="button" onClick={handleSubmit} disabled={loading} className="w-full">
-                            {loading ? "Salvando..." : "Cadastrar"}
+                            {loading ? "Salvando..." : "Salvar Edição"}
                         </Button>
                     </div>
                 </div>

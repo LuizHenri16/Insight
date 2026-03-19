@@ -5,6 +5,7 @@ import { EyeOpenIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import { TrashIcon } from "lucide-react";
 import { BaseModal } from "./modal";
 import { ViewForm } from "./form/viewForm";
+import { EditForm } from "./form/editForm";
 
 export const ActionButton = ({ type, idEmpresa }: { type: 'view' | 'edit' | 'delete', idEmpresa: string | number }) => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -30,6 +31,12 @@ export const ActionButton = ({ type, idEmpresa }: { type: 'view' | 'edit' | 'del
             {modalOpen && type === 'view' && (
                 <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Visualizar">
                     <ViewForm id={idEmpresa} />
+                </BaseModal>
+            )}
+
+            {modalOpen && type === 'edit' && (
+                <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Editar">
+                    <EditForm id={idEmpresa} />
                 </BaseModal>
             )}
         </>
