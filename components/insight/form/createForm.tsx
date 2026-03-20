@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input"
+import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
 import MultiSelect from "../multiSelect"
 import Select from "../select"
 import { Button } from "@/components/ui/button"
@@ -51,17 +52,17 @@ export const CreateForm = () => {
 
     async function handleSubmit() {
         if (!formData.nome_empresa || !formData.cnpj_empresa || !formData.conta) {
-            alert("Preencha os campos obrigatórios: Nome, CNPJ e Conta.");
+            windowDispatchFeedback("warning", "Preencha os campos obrigatórios: Nome, CNPJ e Conta.");
             return;
         }
         setLoading(true);
         try {
             if (await save(formData)) {
-                alert("Empresa cadastrada com sucesso!");
+                windowDispatchFeedback("success", "Empresa cadastrada com sucesso!");
             }
         } catch (error: any) {
             console.error(error);
-            alert(error.message || "Erro ao salvar os dados.");
+            windowDispatchFeedback("error", error.message || "Erro ao salvar os dados.");
         } finally {
             setLoading(false);
         }

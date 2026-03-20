@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Sora } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { FeedbackModal } from "@/components/insight/feedbackModal";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -43,6 +44,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <FeedbackModal />
         </ThemeProvider>
       </body>
     </html>

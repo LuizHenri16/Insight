@@ -6,8 +6,9 @@ import { TrashIcon } from "lucide-react";
 import { BaseModal } from "./modal";
 import { ViewForm } from "./form/viewForm";
 import { EditForm } from "./form/editForm";
+import { DeleteConfirmForm } from "./form/confirmForm";
 
-export const ActionButton = ({ type, idEmpresa }: { type: 'view' | 'edit' | 'delete', idEmpresa: string | number }) => {
+export const ActionButton = ({ type, idEmpresa }: { type: 'view' | 'edit' | 'delete', idEmpresa: number }) => {
     const [modalOpen, setModalOpen] = useState(false);
 
     const toggleModal = () => setModalOpen(!modalOpen);
@@ -27,6 +28,12 @@ export const ActionButton = ({ type, idEmpresa }: { type: 'view' | 'edit' | 'del
             >
                 {icons[type]}
             </button>
+
+            {modalOpen && type === 'delete' && (
+                <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Excluir">
+                    <DeleteConfirmForm idEmpresa={idEmpresa} />
+                </BaseModal>
+            )}
 
             {modalOpen && type === 'view' && (
                 <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Visualizar">
