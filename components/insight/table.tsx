@@ -63,7 +63,7 @@ export const InsightTable = async ({ searchParams }: Props) => {
                         <th>Sócio 2</th>
                         <th>Email</th>
                         <th>CROT</th>
-                        <th>s</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -110,12 +110,9 @@ export const InsightTable = async ({ searchParams }: Props) => {
                         Página {currentPage} de {totalPages}
                     </span>
                     <div className="flex gap-2 text-sm font-medium">
-                        {/* Botão Anterior */}
                         <Link href={hasPrevPage ? `?page=${currentPage - 1}` : "#"} className={`px-4 py-2 border border-gray-200 rounded-lg shadow-sm transition-all ${!hasPrevPage ? "opacity-30 cursor-not-allowed pointer-events-none" : "hover:bg-gray-50 active:scale-95"}`}>
                             <ChevronLeftIcon />
                         </Link>
-
-                        {/* Botão Próximo */}
                         <Link href={hasNextPage ? `?page=${currentPage + 1}` : "#"} className={`px-4 py-2 border border-gray-200 rounded-lg shadow-sm transition-all ${!hasNextPage ? "opacity-30 cursor-not-allowed pointer-events-none" : "hover:bg-gray-50 active:scale-95"}`}>
                             <ChevronRightIcon />
                         </Link>

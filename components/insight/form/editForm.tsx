@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input"
 import MultiSelect from "../multiSelect"
 import Select from "../select"
+import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { EmpresaForm } from "@/utils/types/Empresa"
@@ -84,7 +85,7 @@ export const EditForm = ({ id }: { id: number | string }) => {
             setFormData(empresaFormatada);
         } catch (error) {
             console.error("Erro ao buscar dados da empresa:", error);
-            alert("Erro ao carregar dados para edição.");
+            windowDispatchFeedback("error", "Erro ao carregar dados para edição.");
         } finally {
             setFetching(false);
         }
@@ -105,7 +106,7 @@ export const EditForm = ({ id }: { id: number | string }) => {
 
     async function handleSubmit() {
         if (!formData.nome_empresa || !formData.cnpj_empresa || !formData.conta) {
-            alert("Preencha os campos obrigatórios: Nome, CNPJ e Conta.");
+            windowDispatchFeedback("warning", "Preencha os campos obrigatórios: Nome, CNPJ e Conta.");
             return;
         }
 
@@ -114,12 +115,12 @@ export const EditForm = ({ id }: { id: number | string }) => {
         setLoading(true);
         try {
             if (await update(empresaIdNumber, formData)) {
-                alert("Empresa atualizada com sucesso!");
+                windowDispatchFeedback("success", "Empresa atualizada com sucesso!");
                 router.refresh();
             }
         } catch (error: any) {
             console.error(error);
-            alert(error.message || "Erro ao salvar os dados.");
+            windowDispatchFeedback("error", error.message || "Erro ao salvar os dados.");
         } finally {
             setLoading(false);
         }

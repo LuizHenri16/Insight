@@ -16,7 +16,7 @@ export const NavMenu = () => {
 
     return (
         <div className="bg-white border-1 border-gray-300 rounded-xl p-2 ">
-            <MenuDropdown>
+            <MenuDropdown title="Menu">
                 <div className="w-full flex flex-col text-left justify-center gap-1">
                     <p className="ml-1 text-sm font-normal text-gray-400">Configurações</p>
                     <NavButton text="Acessos" onClick={handleModalAddOpen}>
