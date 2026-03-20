@@ -30,8 +30,6 @@ export const FeedbackModal = () => {
             const customEvent = e as CustomEvent<FeedbackEvent>;
             setFeedback(customEvent.detail);
             setIsOpen(true);
-
-            // Auto-close success or warning after 4 seconds
             if (customEvent.detail.type === "success" || customEvent.detail.type === "warning") {
                 const timer = setTimeout(() => {
                     setIsOpen(false);
@@ -79,19 +77,19 @@ export const FeedbackModal = () => {
     };
 
     return (
-        <div 
+        <div
             className={`fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
         >
-            <div 
-                className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`} 
-                onClick={() => setIsOpen(false)} 
+            <div
+                className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}
+                onClick={() => setIsOpen(false)}
             />
-            
-            <div 
+
+            <div
                 className={`relative bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col transform transition-all duration-300
                 ${isOpen ? "scale-100 translate-y-0" : "scale-95 translate-y-4"} border border-gray-100 dark:border-zinc-800`}
             >
-                <button 
+                <button
                     onClick={() => setIsOpen(false)}
                     className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 >
@@ -102,7 +100,7 @@ export const FeedbackModal = () => {
                     <div className="bg-gray-50 dark:bg-zinc-800/50 p-4 rounded-full">
                         {getIcon(currentFeedback.type)}
                     </div>
-                    
+
                     <div className="space-y-2">
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                             {getTitle(currentFeedback.type)}
@@ -112,9 +110,9 @@ export const FeedbackModal = () => {
                         </p>
                     </div>
 
-                    <Button 
-                        onClick={() => setIsOpen(false)} 
-                        className="w-full mt-4" 
+                    <Button
+                        onClick={() => setIsOpen(false)}
+                        className="w-full mt-4"
                         variant={currentFeedback.type === "error" ? "destructive" : "default"}
                     >
                         {currentFeedback.type === "error" ? "Tentar novamente" : "Continuar"}

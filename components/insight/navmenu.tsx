@@ -19,13 +19,13 @@ export const NavMenu = () => {
             <MenuDropdown title="Menu">
                 <div className="w-full flex flex-col text-left justify-center gap-1">
                     <p className="ml-1 text-sm font-normal text-gray-400">Configurações</p>
-                    <NavButton text="Acessos" onClick={handleModalAddOpen}>
+                    <NavButton text="Gerenciar acessos" onClick={handleModalAddOpen}>
                         <GearIcon width={18} height={18} />
                     </NavButton>
                 </div>
                 <div className="w-full mt-1 flex flex-col text-left justify-center gap-1 border-t border-gray-300">
                     <h3 className="ml-1 text-sm font-normal text-gray-400">Ações</h3>
-                    <NavButton text="Adicionar" onClick={handleModalAddOpen}>
+                    <NavButton text="Novo cadastro" onClick={handleModalAddOpen}>
                         <PlusIcon width={18} height={18} />
                     </NavButton>
                 </div>
