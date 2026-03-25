@@ -40,7 +40,7 @@ export const MenuDropdown = ({ title = "Menu", children }: MenuDropdownProps) =>
             </button>
 
             {isOpen && (
-                <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-50 p-1 py-3 flex flex-col gap-1">
+                <div className="absolute left-0 mt-2 min-w-60 bg-white border border-gray-200 rounded-xl shadow-lg z-50 p-1 py-3 flex flex-col gap-1">
                     {children}
                 </div>
             )}
