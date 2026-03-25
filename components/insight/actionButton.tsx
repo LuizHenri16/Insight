@@ -4,9 +4,9 @@ import { useState } from "react";
 import { EyeOpenIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import { TrashIcon } from "lucide-react";
 import { BaseModal } from "./modal";
-import { ViewForm } from "./form/viewForm";
-import { EditForm } from "./form/editForm";
-import { DeleteConfirmForm } from "./form/confirmForm";
+import { ViewForm } from "./modalContent/viewForm";
+import { EditForm } from "./modalContent/editForm";
+import { DeleteConfirmForm } from "./modalContent/confirmForm";
 
 export const ActionButton = ({ type, idEmpresa }: { type: 'view' | 'edit' | 'delete', idEmpresa: number }) => {
     const [modalOpen, setModalOpen] = useState(false);
