@@ -12,7 +12,7 @@ cache:
 install_dependencies:
   stage: install
   script:
-    -npm install
+    - npm install
   only: 
     - develop
     - main
