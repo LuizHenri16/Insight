@@ -2,12 +2,12 @@ image: node:22-alpine
 
 stages:
   - install
-  - build
   - deploy
 
 cache:
   paths:
     - node_modules/
+    - .vercel/
 
 install_dependencies:
   stage: install
@@ -16,25 +16,19 @@ install_dependencies:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH == "develop"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   
 deploy_vercel:
   stage: deploy
   image: node:22-alpine
   script:
     - npm install --global vercel
-    - vercel link --yes --project $VERCEL_PROJECT_NAME --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
     - |
       if [ "$CI_COMMIT_BRANCH" == "main" ]; then
-        echo "Deploying to PRODUCTION..."
-        vercel pull --yes --environment=production --token=$VERCEL_TOKEN
-        vercel build --prod --token=$VERCEL_TOKEN
-        vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+        echo "🚀 Produção Direta"
+        vercel deploy --prod --yes --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
       else
-        echo "Deploying to PREVIEW..."
-        vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
-        vercel build --token=$VERCEL_TOKEN
-        vercel deploy --prebuilt --token=$VERCEL_TOKEN
+        echo "🛠️ Preview Direta"
+        vercel deploy --yes --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
       fi
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
