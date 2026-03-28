@@ -21,8 +21,7 @@ install_dependencies:
 build_project:
   stage: build
   script:
-    - echo "Testando URL ${NEXT_PUBLIC_SUPABASE_URL}"
-    - echo "Testando Chave ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}"
+    - export | grep NEXT_PUBLIC
     - npm run build
   variables: 
     NEXT_PUBLIC_SUPABASE_URL: $NEXT_PUBLIC_SUPABASE_URL
