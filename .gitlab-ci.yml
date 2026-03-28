@@ -13,10 +13,10 @@ install_dependencies:
   stage: install
   script:
     - npm install
-  only: 
-    - develop
-    - main
-    - merge_requests
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 build_project:
   stage: build
@@ -31,21 +31,18 @@ build_project:
 deploy_vercel:
   stage: deploy
   image: node:22-alpine
-  only: 
-    - develop
-    - main
   script:
     - npm install --global vercel
     - vercel link --yes --project $VERCEL_PROJECT_NAME --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
     - |
       if [ "$CI_COMMIT_BRANCH" == "main" ]; then
+        echo "Deploying to PRODUCTION..."
         vercel pull --yes --environment=production --token=$VERCEL_TOKEN
         vercel build --prod --token=$VERCEL_TOKEN
         vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
       else
+        echo "Deploying to PREVIEW..."
         vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
-      
-      
         vercel build --token=$VERCEL_TOKEN
         vercel deploy --prebuilt --token=$VERCEL_TOKEN
       fi
