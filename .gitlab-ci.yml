@@ -27,3 +27,18 @@ build_project:
     - develop
     - main
     - merge_requests
+  
+deploy_vercel:
+  stage: deploy
+  image: node:22-alpine
+  only: 
+    - develop
+    - main
+  script:
+    - npm install --global vercel
+    - vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+    - vercel build --prod --token=$VERCEL_TOKEN
+    - vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+  variables:
+    VERCEL_ORG_ID: $VERCEL_ORG_ID
+    VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
