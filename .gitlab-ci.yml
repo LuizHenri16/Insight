@@ -23,10 +23,10 @@ build_project:
   script:
     - export | grep NEXT_PUBLIC
     - npm run build
-  only: 
-    - develop
-    - main
-    - merge_requests
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   
 deploy_vercel:
   stage: deploy
