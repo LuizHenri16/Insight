@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { EmpresaTable } from "@/utils/types/Empresa";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -62,4 +63,37 @@ export async function POST(request: NextRequest) {
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
+}
+
+// 1. Função "Pura" de busca (Pode ser exportada para usar no Componente)
+export async function getEmpresas(from: number, to: number) {
+    const supabase = await createClient();
+    const { data: userData } = await supabase.auth.getUser();
+
+    if (!userData?.user) return { data: null, count: 0, error: "Unauthorized" };
+
+    const { data, count, error } = await supabase
+        .from('Empresa')
+        .select(`
+                id_empresa, conta, nome_empresa, cnpj_empresa, email, crot,
+                Socio (id_socio, nome_socio, cpfcnpj_socio)
+            `, { count: 'exact' })
+        .is("deletado_em", null)
+        .eq("uuid_usuario", userData.user.id)
+        .range(from, to)
+        .order('id_empresa', { ascending: true });
+
+    return { data, count, error };
+}
+
+// 2. A Rota de API (Para chamadas externas ou do Client side)
+export async function GET(request: NextRequest) {
+    const { searchParams } = new URL(request.url);
+    const from = Number(searchParams.get('from')) || 0;
+    const to = Number(searchParams.get('to')) || 9;
+
+    const { data, count, error } = await getEmpresas(from, to);
+
+    if (error) return NextResponse.json({ error }, { status: 500 });
+    return NextResponse.json({ empresas: data, count });
 }

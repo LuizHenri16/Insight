@@ -1,0 +1,31 @@
+image: node:22-alpine
+
+stages:
+  - install
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: install
+  script:
+    -npm install
+  only: 
+    - develop
+    - main
+    - merge_requests
+
+build_project:
+  stage: build
+  script:
+    - npm run build
+  variables: 
+    NEXT_PUBLIC_SUPABASE_URL: $NEXT_PUBLIC_SUPABASE_URL
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: $NEXT_PUBLIC_SUPABASE_ANON_KEY
+  only: 
+    - develop
+    - main
+    - merge_requests
