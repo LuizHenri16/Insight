@@ -36,9 +36,6 @@ deploy_vercel:
     - main
   script:
     - npm install --global vercel
-    - vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+    - vercel pull --yes --environment=production --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
     - vercel build --prod --token=$VERCEL_TOKEN
     - vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
-  variables:
-    VERCEL_ORG_ID: $VERCEL_ORG_ID
-    VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
