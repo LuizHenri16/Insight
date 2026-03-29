@@ -18,9 +18,10 @@ export const NavMenu = () => {
     const [isModalAcessosOpen, setIsModalAcessosOpen] = useState(false);
 
     const [role, setRole] = useState("");
-    const supabase = createClient();
 
     useEffect(() => {
+        const supabase = createClient();
+
         async function getUserRole() {
             const { data: { user } } = await supabase.auth.getUser();
 
