@@ -24,11 +24,11 @@ deploy_vercel:
     - npm install --global vercel
     - |
       if [ "$CI_COMMIT_BRANCH" == "main" ]; then
-        echo "🚀 Produção Direta"
-        vercel deploy --prod --yes --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
+        echo "🚀 Produção oficial: Insight"
+        vercel deploy --prod --yes --token=$VERCEL_TOKEN
       else
-        echo "🛠️ Preview Direta"
-        vercel deploy --yes --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
+        echo "🛠️ Preview de teste: Insight"
+        vercel deploy --yes --token=$VERCEL_TOKEN
       fi
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
