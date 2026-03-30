@@ -22,7 +22,6 @@ export const ProductsModal = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* Placeholder */}
                         <tr className="border-b dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                             <td className="py-3 px-4 text-slate-600 dark:text-slate-300">1</td>
                             <td className="py-3 px-4 text-slate-600 dark:text-slate-300">Produto Exemplo</td>
