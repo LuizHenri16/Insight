@@ -5,7 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ActionButton } from "./actionButton";
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
-import { GET, getEmpresas } from "@/api/empresa/routes";
+import { getEmpresas } from "@/api/empresa/routes";
 
 interface Props {
     searchParams: Promise<{ page?: string }>;
