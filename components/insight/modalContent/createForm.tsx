@@ -71,7 +71,7 @@ export const CreateForm = () => {
     }
 
     return (
-        <div className="w-full max-w-5xl mx-auto p-2 sm:p-6">
+        <div className="w-full max-w-5xl max-h-[32rem] overflow-y-auto mx-auto p-2 sm:p-6">
             <form className="flex flex-col gap-10">
                 <section className="space-y-6">
                     <div className="border-b pb-3">
