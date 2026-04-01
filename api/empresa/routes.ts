@@ -13,7 +13,7 @@ export async function POST(data: EmpresaForm) {
     try {
         // 1. Inserir Empresa
         const { data: empresa, error: empresaError } = await supabase
-            .from('empresa')
+            .from('Empresa')
             .insert({
                 nome_empresa: data.nome_empresa,
                 cnpj_empresa: data.cnpj_empresa,
@@ -32,17 +32,30 @@ export async function POST(data: EmpresaForm) {
 
         // 2. Inserir Sócios
         if (data.Socio?.length > 0) {
-            const sociosFiltrados = data.Socio.filter((s: any) => s.nome_socio.trim() !== "");
+            const sociosParaInserir = data.Socio
+                .filter((s: any) => s.nome_socio.trim() !== "")
+                .map((s: any) => ({
+                    nome_socio: s.nome_socio,
+                    cpfcnpj_socio: s.cpfcnpj_socio
+                }));
 
-            for (const socio of sociosFiltrados) {
-                const { data: sData, error: sErr } = await supabase
+            if (sociosParaInserir.length > 0) {
+                const { data: sDatas, error: sErr } = await supabase
                     .from('Socio')
-                    .insert({ nome_socio: socio.nome_socio, cpfcnpj_socio: socio.cpfcnpj_socio })
-                    .select().single();
+                    .insert(sociosParaInserir)
+                    .select('id_socio');
 
                 if (sErr) throw sErr;
 
-                await supabase.from('EmpresaSocio').insert({ id_empresa, id_socio: sData.id_socio });
+                const vinculoSocios = sDatas.map(s => ({
+                    id_empresa,
+                    id_socio: s.id_socio
+                }));
+
+                const { error: relErr } = await supabase
+                    .from('EmpresaSocio')
+                    .insert(vinculoSocios);
+                if (relErr) throw relErr;
             }
         }
 
@@ -61,18 +74,21 @@ export async function POST(data: EmpresaForm) {
             if (invErr) throw invErr;
         }
 
-        // 4. Vincular Produtos/Serviços
         if (data.ProdutosServicos?.length > 0) {
-            const prodData = data.ProdutosServicos.map((prod: any) => ({
-                id_empresa: id_empresa,
-                id_produtos_servicos: prod.id_produtos_servicos
-            }));
+            const validProds = data.ProdutosServicos
+                .filter((p: any) => p.id_produtos_servicos)
+                .map((prod: any) => ({
+                    id_empresa: id_empresa,
+                    id_produtos_servicos: prod.id_produtos_servicos
+                }));
 
-            const { error: prodErr } = await supabase
-                .from('ProdutosServicosEmpresa')
-                .insert(prodData);
+            if (validProds.length > 0) {
+                const { error: prodErr } = await supabase
+                    .from('ProdutosServicosEmpresa')
+                    .insert(validProds);
 
-            if (prodErr) throw prodErr;
+                if (prodErr) throw new Error("Erro nos Produtos: " + prodErr.message);
+            }
         }
 
         return { success: true, id_empresa };

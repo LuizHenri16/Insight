@@ -19,12 +19,15 @@ export const InsightTable = () => {
 
     const itemsPerPage = 10;
 
+    // O useMemo serve para memorizar o range e evitar que ele seja recriado a cada renderização
     const range = useMemo(() => {
         const from = (currentPage - 1) * itemsPerPage;
         const to = from + itemsPerPage - 1;
         return { from, to };
     }, [currentPage]);
 
+    // O useCallback serve para memorizar a função fetchData e evitar que ela seja recriada a cada renderização
+    // Isso é importante para que o useEffect não seja chamado a cada renderização, evitando bugs
     const fetchData = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -43,6 +46,8 @@ export const InsightTable = () => {
         }
     }, [range, activeFilter]);
 
+
+    // Dispara a busca quando muda de página ou o filtro é inserido
     useEffect(() => {
         fetchData();
     }, [fetchData]);
