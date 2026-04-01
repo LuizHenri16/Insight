@@ -1,9 +1,38 @@
 import { Button } from "@/components/ui/button";
 import { Edit, Trash, Plus } from "lucide-react";
+import { ActionButton } from "../actionButton";
+import { useEffect, useMemo, useState } from "react";
+import { ProdutoServico } from "@/utils/types/produtoservico";
+import { getProdutoServico } from "@/api/produtoservico/routes";
 
 export const ProductsModal = () => {
+
+    const [produtos, setProdutos] = useState<ProdutoServico[]>([]);
+
+    const rows = useMemo(() => {
+        return produtos.map((produto) => (
+            <tr key={produto.id_produtos_servicos} className="border-b dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{produto.id_produtos_servicos}</td>
+                <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{produto.produto_servico}</td>
+                <td className="py-3 px-4 flex justify-end gap-2">
+                    <ActionButton type="edit" idEmpresa={produto.id_produtos_servicos} />
+                    <ActionButton type="delete" idEmpresa={produto.id_produtos_servicos} />
+                </td>
+            </tr>
+        ));
+    }, [produtos]);
+
+    useEffect(() => {
+        const fetchProdutos = async () => {
+            const response = await getProdutoServico();
+            setProdutos(response);
+        }
+        fetchProdutos();
+    }, []);
+
+
     return (
-        <div className="w-full flex flex-col gap-4">
+        <div className="w-full max-h-[24rem] overflow-y-auto flex flex-col gap-4">
             <div className="w-full flex justify-between items-center">
                 <h1 className="text-xl font-bold dark:text-white">Produtos</h1>
                 <Button className="w-40" variant="default">
@@ -22,19 +51,7 @@ export const ProductsModal = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* Placeholder */}
-                        <tr className="border-b dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                            <td className="py-3 px-4 text-slate-600 dark:text-slate-300">1</td>
-                            <td className="py-3 px-4 text-slate-600 dark:text-slate-300">Produto Exemplo</td>
-                            <td className="py-3 px-4 flex justify-end gap-2">
-                                <button className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md transition-colors" title="Editar">
-                                    <Edit size={18} />
-                                </button>
-                                <button className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-slate-800 rounded-md transition-colors" title="Excluir">
-                                    <Trash size={18} />
-                                </button>
-                            </td>
-                        </tr>
+                        {rows}
                     </tbody>
                 </table>
             </div>

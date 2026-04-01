@@ -1,103 +1,164 @@
+"use client"
 
-import { createClient } from "@/lib/supabase/server";
-import { EmpresaTable } from "@/utils/types/Empresa";
-import Link from "next/link";
-import dynamic from "next/dynamic";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { ActionButton } from "./actionButton";
-import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
-import { GET, getEmpresas } from "@/api/empresa/routes";
+import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { getEmpresas } from "@/api/empresa/routes";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
-interface Props {
-    searchParams: Promise<{ page?: string }>;
-}
+export const InsightTable = () => {
+    const [data, setData] = useState<any[]>([]);
+    const [totalCount, setTotalCount] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
 
-export const InsightTable = async ({ searchParams }: Props) => {
+    const [filterField, setFilterField] = useState("nome_empresa");
+    const [filterValue, setFilterValue] = useState("");
+    const [activeFilter, setActiveFilter] = useState({ field: "", value: "" });
 
-    // 1. Configuração da Paginação
-    const params = await searchParams;
-    const currentPage = Number(params.page) || 1;
     const itemsPerPage = 10;
 
-    // Cálculo do intervalo para o Supabase (.range)
-    const from = (currentPage - 1) * itemsPerPage;
-    const to = from + itemsPerPage - 1;
+    // O useMemo serve para memorizar o range e evitar que ele seja recriado a cada renderização
+    const range = useMemo(() => {
+        const from = (currentPage - 1) * itemsPerPage;
+        const to = from + itemsPerPage - 1;
+        return { from, to };
+    }, [currentPage]);
 
-    // Buscar dados
-    const response = await getEmpresas(from, to);
+    // O useCallback serve para memorizar a função fetchData e evitar que ela seja recriada a cada renderização
+    // Isso é importante para que o useEffect não seja chamado a cada renderização, evitando bugs
+    const fetchData = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const response = await getEmpresas(
+                range.from,
+                range.to,
+                activeFilter.field,
+                activeFilter.value
+            );
+            setData(response.data || []);
+            setTotalCount(response.count || 0);
+        } catch (error) {
+            console.error("Erro ao buscar dados:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [range, activeFilter]);
 
-    const { data, count, error } = response;
 
-    const totalCount = count || 0;
+    // Dispara a busca quando muda de página ou o filtro é inserido
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        setCurrentPage(1);
+        setActiveFilter({ field: filterField, value: filterValue });
+    };
+
     const totalPages = Math.ceil(totalCount / itemsPerPage);
-    const hasNextPage = currentPage < totalPages;
-    const hasPrevPage = currentPage > 1;
 
     return (
-        <div className="overflow-x-auto px-4 py-2 border border-gray-200 rounded-2xl shadow-md bg-white text-gray-800">
-            <table className="w-full divide-y divide-gray-200">
-                <thead className="[&_th]:px-6 [&_th]:py-3 [&_th]:text-center [&_th]:text-xs [&_th]:font-medium [&_th]:text-gray-500 [&_th]:uppercase [&_th]:tracking-wider">
-                    <tr>
-                        <th>ID</th>
-                        <th>CNPJ</th>
-                        <th>Conta</th>
-                        <th>Empresa</th>
-                        <th>Sócio 1</th>
-                        <th>Sócio 2</th>
-                        <th>Email</th>
-                        <th>CROT</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                    {(!data || data.length === 0) ? (
+        <div className="flex flex-col gap-4 overflow-x-auto px-4 py-3 border border-gray-200 rounded-2xl shadow-md bg-white text-gray-800">
+            <form onSubmit={handleSearch} className="flex flex-wrap items-center gap-3 p-2 bg-gray-100 rounded-xl border border-gray-100">
+                <select
+                    value={filterField}
+                    onChange={(e) => setFilterField(e.target.value)}
+                    className="w-32 p-2 bg-white border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                >
+                    <option value="nome_empresa">Empresa</option>
+                    <option value="cnpj_empresa">CNPJ</option>
+                    <option value="email">Email</option>
+                    <option value="conta">Conta</option>
+                </select>
+
+                <Input
+                    type="text"
+                    placeholder="Filtro da busca..."
+                    value={filterValue}
+                    onChange={(e) => setFilterValue(e.target.value)}
+                    className="flex-1 min-w-[200px] p-2 bg-white border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <Button variant={"default"}>
+                    <MagnifyingGlassIcon /> Pesquisar
+                </Button>
+            </form>
+            <div className={isLoading ? "opacity-50 pointer-events-none transition-opacity" : "transition-opacity"}>
+                <table className="w-full divide-y divide-gray-200">
+                    <thead className="[&_th]:px-6 [&_th]:py-3 [&_th]:text-center [&_th]:text-xs [&_th]:font-medium [&_th]:text-gray-500 [&_th]:uppercase [&_th]:tracking-wider">
                         <tr>
-                            <td colSpan={8} className="p-8 text-center text-gray-500 italic">
-                                Nenhum cadastro encontrado
-                            </td>
+                            <th>ID</th>
+                            <th>CNPJ</th>
+                            <th>Conta</th>
+                            <th>Empresa</th>
+                            <th>Sócio 1</th>
+                            <th>Sócio 2</th>
+                            <th>Email</th>
+                            <th>CROT</th>
+                            <th></th>
                         </tr>
-                    ) : (
-                        data.map((data) => (
-                            <tr className="[&_td]:p-3 [&_td]:whitespace-nowrap text-center hover:bg-gray-50 transition-colors" key={data.id_empresa}>
-                                <td className="font-mono text-xs">{data.id_empresa}</td>
-                                <td>{data.cnpj_empresa}</td>
-                                <td>{data.conta}</td>
-                                <td className="font-normal text-blue-950">{data.nome_empresa}</td>
-                                <td>{data.Socio?.[0]?.nome_socio || "-"}</td>
-                                <td>{data.Socio?.[1]?.nome_socio || "-"}</td>
-                                <td className="lowercase">{data.email}</td>
-                                <td>
-                                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${data.crot === 'SIM' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                        {data.crot === 'SIM' ? 'Sim' : 'Não'}
-                                    </span>
-                                </td>
-                                <td className="flex gap-1 justify-center items-center">
-                                    <ActionButton type="view" idEmpresa={data.id_empresa} />
-                                    <ActionButton type="edit" idEmpresa={data.id_empresa} />
-                                    <ActionButton type="delete" idEmpresa={data.id_empresa} />
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {data.length === 0 && !isLoading ? (
+                            <tr>
+                                <td colSpan={9} className="p-8 text-center text-gray-500 italic">
+                                    Nenhum cadastro encontrado
                                 </td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                        ) : (
+                            data.map((item) => (
+                                <tr className="[&_td]:p-3 [&_td]:whitespace-nowrap text-center hover:bg-gray-50 transition-colors" key={item.id_empresa}>
+                                    <td className="font-mono text-xs">{item.id_empresa}</td>
+                                    <td>{item.cnpj_empresa}</td>
+                                    <td>{item.conta}</td>
+                                    <td className="font-normal text-blue-950">{item.nome_empresa}</td>
+                                    <td>{item.Socio?.[0]?.nome_socio || "-"}</td>
+                                    <td>{item.Socio?.[1]?.nome_socio || "-"}</td>
+                                    <td className="lowercase">{item.email}</td>
+                                    <td>
+                                        <span className={`px-2 py-1 rounded-full text-xs font-bold ${item.crot === 'SIM' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                            {item.crot === 'SIM' ? 'Sim' : 'Não'}
+                                        </span>
+                                    </td>
+                                    <td className="flex gap-1 justify-center items-center">
+                                        <ActionButton type="view" idEmpresa={item.id_empresa} />
+                                        <ActionButton type="edit" idEmpresa={item.id_empresa} />
+                                        <ActionButton type="delete" idEmpresa={item.id_empresa} />
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
 
             <div className="mt-2 border-t border-gray-100"></div>
             <div className="flex flex-col sm:flex-row justify-between items-center p-4 gap-4">
                 <p className="text-sm text-gray-600">
-                    Mostrando <strong>{from + 1}</strong> a <strong>{Math.min(to + 1, totalCount)}</strong> de <strong>{totalCount}</strong> cadastros
+                    Mostrando <strong>{range.from + 1}</strong> a <strong>{Math.min(range.to + 1, totalCount)}</strong> de <strong>{totalCount}</strong> cadastros
                 </p>
 
                 <div className="flex items-center gap-4">
                     <span className="text-sm text-gray-500">
-                        Página {currentPage} de {totalPages}
+                        Página {currentPage} de {totalPages || 1}
                     </span>
                     <div className="flex gap-2 text-sm font-medium">
-                        <Link href={hasPrevPage ? `?page=${currentPage - 1}` : "#"} className={`px-4 py-2 border border-gray-200 rounded-lg shadow-sm transition-all ${!hasPrevPage ? "opacity-30 cursor-not-allowed pointer-events-none" : "hover:bg-gray-50 active:scale-95"}`}>
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1 || isLoading}
+                            className="px-4 py-2 border border-gray-200 rounded-lg shadow-sm disabled:opacity-30 hover:bg-gray-50 active:scale-95 transition-all"
+                        >
                             <ChevronLeftIcon />
-                        </Link>
-                        <Link href={hasNextPage ? `?page=${currentPage + 1}` : "#"} className={`px-4 py-2 border border-gray-200 rounded-lg shadow-sm transition-all ${!hasNextPage ? "opacity-30 cursor-not-allowed pointer-events-none" : "hover:bg-gray-50 active:scale-95"}`}>
+                        </button>
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage >= totalPages || isLoading}
+                            className="px-4 py-2 border border-gray-200 rounded-lg shadow-sm disabled:opacity-30 hover:bg-gray-50 active:scale-95 transition-all"
+                        >
                             <ChevronRightIcon />
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>

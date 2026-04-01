@@ -7,15 +7,17 @@ import { NavButton } from "./navbutton";
 import { MenuDropdown } from "./menudropdown";
 import { GearIcon, PlusIcon } from "@radix-ui/react-icons";
 import { ProductsModal } from "./modalContent/productsModal";
-import { RatingCreditoModal } from "./modalContent/rtModal";
+import { RatingCreditoModal } from "./modalContent/ratingCreditoModal";
 import { AccessModal } from "./modalContent/accessModal";
 import { createClient } from "@/lib/supabase/client";
+import { InvestimentosModal } from "./modalContent/investimentos.Modal";
 
 export const NavMenu = () => {
     const [isModalAddOpen, setIsModalAddOpen] = useState(false);
     const [isModalProdutosOpen, setIsModalProdutosOpen] = useState(false);
     const [isModalRatingCreditoOpen, setIsModalRatingCreditoOpen] = useState(false);
     const [isModalAcessosOpen, setIsModalAcessosOpen] = useState(false);
+    const [isModalInvestimentosOpen, setIsModalInvestimentosOpen] = useState(false);
 
     const [role, setRole] = useState("");
 
@@ -55,6 +57,10 @@ export const NavMenu = () => {
         setIsModalAcessosOpen(!isModalAcessosOpen);
     }
 
+    const handleModalInvestimentosOpen = () => {
+        setIsModalInvestimentosOpen(!isModalInvestimentosOpen);
+    }
+
     return (
         <div className="w-ful bg-white border-1 border-gray-300 rounded-xl p-2 ">
             <MenuDropdown title="Menu">
@@ -67,6 +73,10 @@ export const NavMenu = () => {
                         </NavButton>
 
                         <NavButton text="Gerenciar rating crédito" onClick={handleModalRatingCreditoOpen}>
+                            <GearIcon width={18} height={18} />
+                        </NavButton>
+
+                        <NavButton text="Gerenciar Investimentos" onClick={handleModalInvestimentosOpen}>
                             <GearIcon width={18} height={18} />
                         </NavButton>
 
@@ -104,6 +114,12 @@ export const NavMenu = () => {
             {isModalAcessosOpen && (
                 <BaseModal isOpen={isModalAcessosOpen} onClose={handleModalAcessosOpen} title="Gerenciar acessos">
                     <AccessModal />
+                </BaseModal>
+            )}
+
+            {isModalInvestimentosOpen && (
+                <BaseModal isOpen={isModalInvestimentosOpen} onClose={handleModalInvestimentosOpen} title="Gerenciar Investimentos">
+                    <InvestimentosModal />
                 </BaseModal>
             )}
         </div>

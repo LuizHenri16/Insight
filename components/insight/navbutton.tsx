@@ -1,6 +1,4 @@
-
-import { PlusIcon, GearIcon } from "@radix-ui/react-icons"
-import { Children, ReactNode } from "react";
+import { ReactNode } from "react";
 
 interface NavBUttonProps {
     text: string;

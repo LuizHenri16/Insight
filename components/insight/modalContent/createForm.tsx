@@ -5,13 +5,13 @@ import Select from "../select"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { EmpresaForm } from "@/utils/types/Empresa"
-import { save } from "@/lib/utils/create"
-import { getRatingCredito } from "@/lib/utils/ratingcredito"
+import { ResponseCreateEmpresa, save } from "@/api/empresa/create"
 import { RatingCredito } from "@/utils/types/ratingcredito"
 import { Investimento } from "@/utils/types/investimento"
 import { ProdutoServico } from "@/utils/types/produtoservico"
-import { getProdutoServico } from "@/lib/utils/produtoservico"
-import { getInvestimento } from "@/lib/utils/investimento"
+import { getRatingCredito } from "@/api/ratingcredito/routes"
+import { getProdutoServico } from "@/api/produtoservico/routes"
+import { getInvestimento } from "@/api/investimento/routes"
 
 export const CreateForm = () => {
 
@@ -57,10 +57,13 @@ export const CreateForm = () => {
         }
         setLoading(true);
         try {
-            await save(formData);
+            const response: ResponseCreateEmpresa = await save(formData);
+            if (!response.success) {
+                windowDispatchFeedback("error", response.error || "Erro ao salvar os dados.");
+                return;
+            }
             windowDispatchFeedback("success", "Empresa cadastrada com sucesso!");
         } catch (error: any) {
-            console.error(error);
             windowDispatchFeedback("error", error.message || "Erro ao salvar os dados.");
         } finally {
             setLoading(false);
@@ -68,7 +71,7 @@ export const CreateForm = () => {
     }
 
     return (
-        <div className="w-full max-w-5xl mx-auto p-2 sm:p-6">
+        <div className="w-full max-w-5xl max-h-[32rem] overflow-y-auto mx-auto p-2 sm:p-6">
             <form className="flex flex-col gap-10">
                 <section className="space-y-6">
                     <div className="border-b pb-3">

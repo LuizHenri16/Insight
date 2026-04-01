@@ -1,8 +1,8 @@
-import { createClient } from "@/lib/supabase/server";
-import { EmpresaTable } from "@/utils/types/Empresa";
-import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/client";
+import { EmpresaForm } from "@/utils/types/Empresa";
+import { NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
+export async function POST(data: EmpresaForm) {
     const supabase = await createClient();
 
     const { data: userData, error: userError } = await supabase.auth.getUser();
@@ -10,21 +10,21 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 });
     }
 
-    const body = await request.json();
+
 
     try {
         // 1. Inserir Empresa
         const { data: empresa, error: empresaError } = await supabase
-            .from('empresa')
+            .from('Empresa')
             .insert({
-                nome_empresa: body.nome_empresa,
-                cnpj_empresa: body.cnpj_empresa,
-                conta: body.conta,
-                telefone: body.telefone,
-                email: body.email,
-                crot: body.crot,
+                nome_empresa: data.nome_empresa,
+                cnpj_empresa: data.cnpj_empresa,
+                conta: data.conta,
+                telefone: data.telefone,
+                email: data.email,
+                crot: data.crot,
                 uuid_usuario: userData.user.id,
-                id_rating_credito: body.RatingCredito ? parseInt(body.RatingCredito) : null
+                id_rating_credito: data.RatingCredito ? parseInt(data.RatingCredito) : null
             })
             .select()
             .single();
@@ -33,67 +33,97 @@ export async function POST(request: NextRequest) {
         const id_empresa = empresa.id_empresa;
 
         // 2. Inserir Sócios
-        if (body.Socio?.length > 0) {
-            const sociosFiltrados = body.Socio.filter((s: any) => s.nome_socio.trim() !== "");
+        if (data.Socio?.length > 0) {
+            const sociosParaInserir = data.Socio
+                .filter((s: any) => s.nome_socio.trim() !== "")
+                .map((s: any) => ({
+                    nome_socio: s.nome_socio,
+                    cpfcnpj_socio: s.cpfcnpj_socio.replace(".", "").replace(".", "").replace("/", "").replace("-", "")
+                }));
 
-            for (const socio of sociosFiltrados) {
-                const { data: sData, error: sErr } = await supabase
+            if (sociosParaInserir.length > 0) {
+                const { data: sDatas, error: sErr } = await supabase
                     .from('Socio')
-                    .insert({ nome_socio: socio.nome_socio, cpfcnpj_socio: socio.cpfcnpj_socio })
-                    .select().single();
+                    .insert(sociosParaInserir)
+                    .select('id_socio');
 
                 if (sErr) throw sErr;
 
-                await supabase.from('EmpresaSocio').insert({ id_empresa, id_socio: sData.id_socio });
+                const vinculoSocios = sDatas.map(s => ({
+                    id_empresa,
+                    id_socio: s.id_socio
+                }));
+
+                const { error: relErr } = await supabase
+                    .from('EmpresaSocio')
+                    .insert(vinculoSocios);
+                if (relErr) throw relErr;
             }
         }
 
         // 3. Vincular Investimentos
-        if (body.Investimentos?.length > 0) {
-            const invData = body.Investimentos.map((inv: any) => ({
+        if (data.Investimentos?.length > 0) {
+
+            const invData = data.Investimentos.map((inv: any) => ({
                 id_empresa: id_empresa,
                 id_investimento: inv.id_investimento
             }));
-            const { error: invErr } = await supabase.from('EmpresaInvestimento').insert(invData);
+
+            const { error: invErr } = await supabase
+                .from('EmpresaInvestimento')
+                .insert(invData);
+
             if (invErr) throw invErr;
         }
 
-        return NextResponse.json({ success: true, id_empresa });
+        if (data.ProdutosServicos?.length > 0) {
+            const validProds = data.ProdutosServicos
+                .filter((p: any) => p.id_produtos_servicos)
+                .map((prod: any) => ({
+                    id_empresa: id_empresa,
+                    id_produtos_servicos: prod.id_produtos_servicos
+                }));
+
+            if (validProds.length > 0) {
+                const { error: prodErr } = await supabase
+                    .from('ProdutosServicosEmpresa')
+                    .insert(validProds);
+
+                if (prodErr) throw new Error("Erro nos Produtos: " + prodErr.message);
+            }
+        }
+
+        return { success: true, id_empresa };
 
     } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return { success: false, error: error.message, id_empresa: null };
     }
 }
 
-// 1. Função "Pura" de busca (Pode ser exportada para usar no Componente)
-export async function getEmpresas(from: number, to: number) {
+export async function getEmpresas(from: number, to: number, filterField?: string, filterValue?: string) {
     const supabase = await createClient();
     const { data: userData } = await supabase.auth.getUser();
 
-    if (!userData?.user) return { data: null, count: 0, error: "Unauthorized" };
+    if (!userData?.user) return { data: null, count: 0, error: "Não autorizado" };
 
-    const { data, count, error } = await supabase
+    // Query para a busca
+    let query = supabase
         .from('Empresa')
         .select(`
-                id_empresa, conta, nome_empresa, cnpj_empresa, email, crot,
-                Socio (id_socio, nome_socio, cpfcnpj_socio)
-            `, { count: 'exact' })
+            id_empresa, conta, nome_empresa, cnpj_empresa, email, crot,
+            Socio (id_socio, nome_socio, cpfcnpj_socio)
+        `, { count: 'exact' })
         .is("deletado_em", null)
-        .eq("uuid_usuario", userData.user.id)
+        .eq("uuid_usuario", userData.user.id);
+
+    // Aplicar filtro caso necessário
+    if (filterField && filterValue) {
+        query = query.ilike(filterField, `%${filterValue}%`);
+    }
+
+    const { data, count, error } = await query
         .range(from, to)
         .order('id_empresa', { ascending: true });
 
     return { data, count, error };
-}
-
-// 2. A Rota de API (Para chamadas externas ou do Client side)
-export async function GET(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
-    const from = Number(searchParams.get('from')) || 0;
-    const to = Number(searchParams.get('to')) || 9;
-
-    const { data, count, error } = await getEmpresas(from, to);
-
-    if (error) return NextResponse.json({ error }, { status: 500 });
-    return NextResponse.json({ empresas: data, count });
 }
