@@ -82,20 +82,28 @@ export async function POST(data: EmpresaForm) {
     }
 }
 
-export async function getEmpresas(from: number, to: number) {
+export async function getEmpresas(from: number, to: number, filterField?: string, filterValue?: string) {
     const supabase = await createClient();
     const { data: userData } = await supabase.auth.getUser();
 
     if (!userData?.user) return { data: null, count: 0, error: "Não autorizado" };
 
-    const { data, count, error } = await supabase
+    // Query para a busca
+    let query = supabase
         .from('Empresa')
         .select(`
-                id_empresa, conta, nome_empresa, cnpj_empresa, email, crot,
-                Socio (id_socio, nome_socio, cpfcnpj_socio)
-            `, { count: 'exact' })
+            id_empresa, conta, nome_empresa, cnpj_empresa, email, crot,
+            Socio (id_socio, nome_socio, cpfcnpj_socio)
+        `, { count: 'exact' })
         .is("deletado_em", null)
-        .eq("uuid_usuario", userData.user.id)
+        .eq("uuid_usuario", userData.user.id);
+
+    // Aplicar filtro caso necessário
+    if (filterField && filterValue) {
+        query = query.ilike(filterField, `%${filterValue}%`);
+    }
+
+    const { data, count, error } = await query
         .range(from, to)
         .order('id_empresa', { ascending: true });
 

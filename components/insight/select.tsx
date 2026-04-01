@@ -11,9 +11,10 @@ interface SingleSelectDropdownProps {
     onSelect?: (option: OptionProps) => void;
     value?: string;
     disabled?: boolean;
+    className?: string;
 }
 
-const Select = ({ options, onSelect, value, disabled }: SingleSelectDropdownProps) => {
+const Select = ({ options, onSelect, value, disabled, className }: SingleSelectDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<OptionProps | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -44,7 +45,7 @@ const Select = ({ options, onSelect, value, disabled }: SingleSelectDropdownProp
     };
 
     return (
-        <div ref={dropdownRef} className="w-full relative font-sans">
+        <div ref={dropdownRef} className={`w-full relative font-sans ${className}`}>
             <div
                 className={`flex justify-between items-center cursor-pointer px-3 py-2.5 border rounded-xl transition-all
                     ${isOpen ? 'border-blue-500 shadow-sm' : 'border-[#1B2F53]'}`}
