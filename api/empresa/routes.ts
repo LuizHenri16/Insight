@@ -10,6 +10,8 @@ export async function POST(data: EmpresaForm) {
         return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 });
     }
 
+
+
     try {
         // 1. Inserir Empresa
         const { data: empresa, error: empresaError } = await supabase
@@ -36,7 +38,7 @@ export async function POST(data: EmpresaForm) {
                 .filter((s: any) => s.nome_socio.trim() !== "")
                 .map((s: any) => ({
                     nome_socio: s.nome_socio,
-                    cpfcnpj_socio: s.cpfcnpj_socio
+                    cpfcnpj_socio: s.cpfcnpj_socio.replace(".", "").replace(".", "").replace("/", "").replace("-", "")
                 }));
 
             if (sociosParaInserir.length > 0) {
