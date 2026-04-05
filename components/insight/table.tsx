@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { ActionButton } from "./actionButton";
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { FileSearch } from "lucide-react";
 import { getEmpresas } from "@/api/empresa/routes";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -61,7 +62,7 @@ export const InsightTable = () => {
     const totalPages = Math.ceil(totalCount / itemsPerPage);
 
     return (
-        <div className="flex flex-col gap-4 overflow-x-auto px-4 py-3 border border-gray-200 rounded-2xl shadow-md bg-white text-gray-800">
+        <div className="border border-gray-200 rounded-2xl shadow-lg bg-white p-4">
             <form onSubmit={handleSearch} className="flex flex-wrap items-center gap-3 p-2 bg-gray-100 rounded-xl border border-gray-100">
                 <select
                     value={filterField}
@@ -85,56 +86,57 @@ export const InsightTable = () => {
                     <MagnifyingGlassIcon /> Pesquisar
                 </Button>
             </form>
-            <div className={isLoading ? "opacity-50 pointer-events-none transition-opacity" : "transition-opacity"}>
-                <table className="w-full divide-y divide-gray-200">
-                    <thead className="[&_th]:px-6 [&_th]:py-3 [&_th]:text-center [&_th]:text-xs [&_th]:font-medium [&_th]:text-gray-500 [&_th]:uppercase [&_th]:tracking-wider">
-                        <tr>
-                            <th>ID</th>
-                            <th>CNPJ</th>
-                            <th>Conta</th>
-                            <th>Empresa</th>
-                            <th>Sócio 1</th>
-                            <th>Sócio 2</th>
-                            <th>Email</th>
-                            <th>CROT</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                        {data.length === 0 && !isLoading ? (
+            <div className="flex flex-col gap-4 overflow-x-auto px-4 py-3 text-gray-800">
+                <div className={isLoading ? "opacity-50 pointer-events-none transition-opacity" : "transition-opacity"}>
+                    <table className="w-full divide-y divide-gray-200">
+                        <thead className="[&_th]:px-6 [&_th]:py-3 [&_th]:text-center [&_th]:text-xs [&_th]:font-medium [&_th]:text-gray-500 [&_th]:uppercase [&_th]:tracking-wider">
                             <tr>
-                                <td colSpan={9} className="p-8 text-center text-gray-500 italic">
-                                    Nenhum cadastro encontrado
-                                </td>
+                                <th>Empresa</th>
+                                <th>CNPJ</th>
+                                <th>Conta</th>
+                                <th>Sócio 1</th>
+                                <th>Sócio 2</th>
+                                <th>Email</th>
+                                <th>CROT</th>
+                                <th></th>
                             </tr>
-                        ) : (
-                            data.map((item) => (
-                                <tr className="[&_td]:p-3 [&_td]:whitespace-nowrap text-center hover:bg-gray-50 transition-colors" key={item.id_empresa}>
-                                    <td className="font-mono text-xs">{item.id_empresa}</td>
-                                    <td>{item.cnpj_empresa}</td>
-                                    <td>{item.conta}</td>
-                                    <td className="font-normal text-blue-950">{item.nome_empresa}</td>
-                                    <td>{item.Socio?.[0]?.nome_socio || "-"}</td>
-                                    <td>{item.Socio?.[1]?.nome_socio || "-"}</td>
-                                    <td className="lowercase">{item.email}</td>
-                                    <td>
-                                        <span className={`px-2 py-1 rounded-full text-xs font-bold ${item.crot === 'SIM' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                            {item.crot === 'SIM' ? 'Sim' : 'Não'}
-                                        </span>
-                                    </td>
-                                    <td className="flex gap-1 justify-center items-center">
-                                        <ActionButton type="view" idEmpresa={item.id_empresa} />
-                                        <ActionButton type="edit" idEmpresa={item.id_empresa} />
-                                        <ActionButton type="delete" idEmpresa={item.id_empresa} />
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                            {data.length === 0 && !isLoading ? (
+                                <tr>
+                                    <td colSpan={9} className="p-8 text-center">
+                                        <FileSearch size={48} className="w-14 h-14 mx-auto mt-6" />
+                                        <p className="mt-2 text-gray-500">Nenhum cadastro encontrado</p>
                                     </td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                            ) : (
+                                data.map((item) => (
+                                    <tr className="[&_td]:p-3 [&_td]:whitespace-nowrap text-center hover:bg-gray-50 transition-colors" key={item.id_empresa}>
+                                        <td className="font-normal text-blue-950">{item.nome_empresa}</td>
+                                        <td>{item.cnpj_empresa}</td>
+                                        <td>{item.conta}</td>
+                                        <td>{item.Socio?.[0]?.nome_socio || "-"}</td>
+                                        <td>{item.Socio?.[1]?.nome_socio || "-"}</td>
+                                        <td className="lowercase">{item.email}</td>
+                                        <td>
+                                            <span className={`px-2 py-1 rounded-full text-xs font-bold ${item.crot === 'SIM' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                                {item.crot === 'SIM' ? 'Sim' : 'Não'}
+                                            </span>
+                                        </td>
+                                        <td className="flex gap-1 justify-center items-center">
+                                            <ActionButton type="view" idEmpresa={item.id_empresa} />
+                                            <ActionButton type="edit" idEmpresa={item.id_empresa} />
+                                            <ActionButton type="delete" idEmpresa={item.id_empresa} />
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
 
-            <div className="mt-2 border-t border-gray-100"></div>
+                <div className="mt-2 border-t border-gray-100"></div>
+            </div>
             <div className="flex flex-col sm:flex-row justify-between items-center p-4 gap-4">
                 <p className="text-sm text-gray-600">
                     Mostrando <strong>{range.from + 1}</strong> a <strong>{Math.min(range.to + 1, totalCount)}</strong> de <strong>{totalCount}</strong> cadastros

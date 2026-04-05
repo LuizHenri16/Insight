@@ -10,8 +10,6 @@ export async function POST(data: EmpresaForm) {
         return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 });
     }
 
-
-
     try {
         // 1. Inserir Empresa
         const { data: empresa, error: empresaError } = await supabase
@@ -78,10 +76,10 @@ export async function POST(data: EmpresaForm) {
 
         if (data.ProdutosServicos?.length > 0) {
             const validProds = data.ProdutosServicos
-                .filter((p: any) => p.id_produtos_servicos)
+                .filter((p: any) => p.id_produto_servico)
                 .map((prod: any) => ({
-                    id_empresa: id_empresa,
-                    id_produtos_servicos: prod.id_produtos_servicos
+                    id_empresa: Number(id_empresa),
+                    id_produtos_servicos: Number(prod.id_produto_servico)
                 }));
 
             if (validProds.length > 0) {
