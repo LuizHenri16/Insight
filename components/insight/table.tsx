@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { ActionButton } from "./actionButton";
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { FileSearch } from "lucide-react";
 import { getEmpresas } from "@/api/empresa/routes";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -103,8 +104,9 @@ export const InsightTable = () => {
                         <tbody className="divide-y divide-gray-100">
                             {data.length === 0 && !isLoading ? (
                                 <tr>
-                                    <td colSpan={9} className="p-8 text-center text-gray-500 italic">
-                                        Nenhum cadastro encontrado
+                                    <td colSpan={9} className="p-8 text-center">
+                                        <FileSearch size={48} className="w-14 h-14 mx-auto mt-6" />
+                                        <p className="mt-2 text-gray-500">Nenhum cadastro encontrado</p>
                                     </td>
                                 </tr>
                             ) : (
