@@ -94,15 +94,6 @@ export function LoginForm({
                 {isLoading ? "Entrando..." : "Entrar"}
               </Button>
             </div>
-            <div className="mt-4 text-center text-sm">
-              Não tem uma conta?{" "}
-              <Link
-                href="/auth/sign-up"
-                className="underline underline-offset-4"
-              >
-                Cadastre-se
-              </Link>
-            </div>
           </form>
         </CardContent>
       </Card>
