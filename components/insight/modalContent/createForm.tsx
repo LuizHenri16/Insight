@@ -5,7 +5,7 @@ import Select from "../select"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { EmpresaForm } from "@/utils/types/Empresa"
-import { ResponseCreateEmpresa, save } from "@/api/empresa/create"
+import { save } from "@/api/empresa/create"
 import { RatingCredito } from "@/utils/types/ratingcredito"
 import { Investimento } from "@/utils/types/investimento"
 import { ProdutoServico } from "@/utils/types/produtoservico"
@@ -56,12 +56,9 @@ export const CreateForm = () => {
             return;
         }
         setLoading(true);
+
         try {
-            const response: ResponseCreateEmpresa = await save(formData);
-            if (!response.success) {
-                windowDispatchFeedback("error", response.error || "Erro ao salvar os dados.");
-                return;
-            }
+            await save(formData);
             windowDispatchFeedback("success", "Empresa cadastrada com sucesso!");
         } catch (error: any) {
             windowDispatchFeedback("error", error.message || "Erro ao salvar os dados.");
