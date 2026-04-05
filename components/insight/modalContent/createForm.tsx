@@ -55,6 +55,7 @@ export const CreateForm = () => {
             windowDispatchFeedback("warning", "Preencha os campos obrigatórios: Nome, CNPJ e Conta.");
             return;
         }
+
         setLoading(true);
 
         try {
