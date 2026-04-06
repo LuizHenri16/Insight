@@ -12,8 +12,8 @@ export async function AuthButton() {
   const emailShort = user?.email?.split("@")[0];
 
   return user ? (
-    <div className="flex items-center gap-4">
-      Olá, {emailShort}!
+    <div className="flex items-center gap-2">
+      <p className="text-[.8rem] font-semibold text-gray-800">Olá, {emailShort}!</p>
       <LogoutButton />
     </div>
   ) : (

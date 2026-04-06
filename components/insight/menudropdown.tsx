@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, ReactNode } from "react";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { Button } from "../ui/button";
 
 interface MenuDropdownProps {
     title?: string;
@@ -28,16 +29,16 @@ export const MenuDropdown = ({ title = "Menu", children }: MenuDropdownProps) =>
         }
 
         return () => document.removeEventListener("mousedown", handleClickOutside);
+
     }, [isOpen]);
 
     return (
         <div className="relative inline-block text-left" ref={dropdownRef}>
-            <button onClick={toggleDropdown}
-                className="text-sm flex flex-row bg-[#1B2F53] gap-2 text-white justify-center items-center hover:border-1 cursor-pointer px-4 py-2 rounded-xl transition-colors">
+            <Button className="rounded-xl" size="sm" variant="default" onClick={toggleDropdown}>
                 {title}
-                <div className="border-l border-gray-300 h-4"></div>
+                <div className="border-l border-[1px] border-white h-3"></div>
                 <ChevronDownIcon width={14} height={14} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-            </button>
+            </Button>
 
             {isOpen && (
                 <div className="absolute left-0 mt-2 min-w-60 bg-white border border-gray-200 rounded-xl shadow-lg z-50 p-1 py-3 flex flex-col gap-1">
