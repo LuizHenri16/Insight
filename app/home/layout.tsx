@@ -14,15 +14,12 @@ export default function ProtectedLayout({
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-[#FAFCFF]">
       <div className="flex-1 w-full flex flex-col">
-        <nav className="w-full flex justify-center items-center border-b border-b-foreground/10 h-16">
-          <div className="w-full flex justify-around items-center text-sm">
-
-            <Link className="w-[6rem]" href={"/home"}>
-              <img src="/assets/icons/INSIGHT.svg" alt="Insight" />
-            </Link>
-
+        <nav className="w-full flex justify-between px-4 md:px-10 lg:px-20 items-center border-b border-b-foreground/10 h-14">
+          <Link className="w-[6rem]" href={"/home"}>
+            <img src="/assets/icons/INSIGHT.svg" alt="Insight" />
+          </Link>
+          <div className="flex gap-6">
             <NavMenu />
-
             {!hasEnvVars ? (
               <EnvVarWarning />
             ) : (
@@ -32,7 +29,7 @@ export default function ProtectedLayout({
             )}
           </div>
         </nav>
-        <div className="px-10 md:px-16 lg:px-24 py-4">
+        <div className="px-4 md:px-10 lg:px-20 py-4">
           {children}
         </div>
       </div>
