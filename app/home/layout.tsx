@@ -12,7 +12,7 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-[#FAFCFF]">
+    <main className="min-h-screen flex flex-col items-center justify-center background-dashboard-gradient">
       <div className="flex-1 w-full flex flex-col">
         <nav className="w-full flex justify-between px-4 md:px-10 lg:px-20 items-center border-b border-b-foreground/10 h-14">
           <Link className="w-[6rem]" href={"/home"}>
