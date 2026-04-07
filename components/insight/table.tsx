@@ -3,10 +3,11 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { ActionButton } from "./actionButton";
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { FileSearch } from "lucide-react";
+import { FileSearch, Loader, Loader2 } from "lucide-react";
 import { getEmpresas } from "@/api/empresa/routes";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import Image from "next/image";
 
 export const InsightTable = () => {
     const [data, setData] = useState<any[]>([]);
@@ -62,7 +63,7 @@ export const InsightTable = () => {
     const totalPages = Math.ceil(totalCount / itemsPerPage);
 
     return (
-        <div className="border border-gray-200 rounded-2xl shadow-lg bg-white p-4">
+        <div className="border border-gray-200 rounded-2xl shadow-xl bg-white p-4">
             <form onSubmit={handleSearch} className="flex flex-wrap items-center gap-3 p-2 bg-gray-100 rounded-xl border border-gray-100">
                 <select
                     value={filterField}
@@ -102,11 +103,20 @@ export const InsightTable = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
+                            {isLoading && (
+                                <tr>
+                                    <td colSpan={9} className="p-8 text-center">
+                                        <Loader className="w-14 h-14 mx-auto mt-6" />
+                                        <h3 className="mt-2 font-semibold text-gray-800">Carregando dados...</h3>
+                                    </td>
+                                </tr>
+                            )}
                             {data.length === 0 && !isLoading ? (
                                 <tr>
                                     <td colSpan={9} className="p-8 text-center">
-                                        <FileSearch size={48} className="w-14 h-14 mx-auto mt-6" />
-                                        <p className="mt-2 text-gray-500">Nenhum cadastro encontrado</p>
+                                        <Image src="/assets/images/no-data-image.svg" alt="Vazio" width={138} height={138} className="mx-auto" />
+                                        <h3 className="mt-2 font-semibold text-gray-800">Nenhum cadastro encontrado</h3>
+                                        <p className="text-gray-500">Use a barra de pesquisa ou ajuste os filtros</p>
                                     </td>
                                 </tr>
                             ) : (

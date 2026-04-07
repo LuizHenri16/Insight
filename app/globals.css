@@ -73,3 +73,7 @@
 .background-login-gradient {
   background: var(--background-login-gradient);
 }
+
+.background-dashboard-gradient {
+  background: linear-gradient(140deg, #ffffff 48%, #8f9bb8 100%);
+}
