@@ -57,7 +57,13 @@ export const CreateForm = () => {
         setFormData({ ...formData, Socio: newSocios });
     };
 
-    async function handleSubmit() {
+    // Envia o formulário para a API
+    // Em caso de sucesso mostra um feedback e limpa o formulário
+    // Em caso de erro mostra um feedback
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+
+
         if (!formData.nome_empresa || !formData.cnpj_empresa || !formData.conta) {
             windowDispatchFeedback("warning", "Preencha os campos obrigatórios: Nome, CNPJ e Conta.");
             return;
@@ -77,7 +83,7 @@ export const CreateForm = () => {
 
     return (
         <div className="w-full max-w-5xl max-h-[32rem] overflow-y-auto mx-auto p-2 sm:p-6">
-            <form className="flex flex-col gap-10">
+            <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
                 <section className="space-y-6">
                     <div className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados da Empresa</h2>
@@ -187,7 +193,7 @@ export const CreateForm = () => {
                 </section>
 
                 <div className="pt-6 mt-4 border-t flex justify-end">
-                    <Button type="button" onClick={handleSubmit} disabled={loading} className="w-full md:w-auto md:min-w-[200px]" size="lg">
+                    <Button type="submit" disabled={loading} className="w-full md:w-auto md:min-w-[200px]" size="lg">
                         {loading ? "Salvando..." : "Cadastrar Empresa"}
                     </Button>
                 </div>
