@@ -19,10 +19,17 @@ export const CreateForm = () => {
     const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
     const [produtosServicos, setProdutosServicos] = useState<ProdutoServico[]>([]);
 
+    // Carrega os dados necessários para preencher os selects do formulário
+    // Em caso de erro mostra um feedback
     useEffect(() => {
-        getRatingCredito().then((data) => setRatingCredito(data));
-        getInvestimento().then((data) => setInvestimentos(data));
-        getProdutoServico().then((data) => setProdutosServicos(data));
+        Promise.all(([getRatingCredito(), getInvestimento(), getProdutoServico()]))
+            .then(([ratingCredito, investimentos, produtosServicos]) => {
+                setRatingCredito(ratingCredito);
+                setInvestimentos(investimentos);
+                setProdutosServicos(produtosServicos);
+            }).catch((error) => {
+                windowDispatchFeedback("error", error.message || "Erro ao carregar os dados.");
+            });
     }, []);
 
     const [formData, setFormData] = useState<EmpresaForm>({
