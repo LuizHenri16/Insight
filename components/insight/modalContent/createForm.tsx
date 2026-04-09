@@ -13,6 +13,24 @@ import { getRatingCredito } from "@/api/ratingcredito/routes"
 import { getProdutoServico } from "@/api/produtoservico/routes"
 import { getInvestimento } from "@/api/investimento/routes"
 
+
+// Dados iniciais do formulário
+const initialFormData: EmpresaForm = {
+    nome_empresa: "",
+    cnpj_empresa: "",
+    conta: "",
+    telefone: "",
+    email: "",
+    crot: "",
+    Socio: [
+        { nome_socio: "", cpfcnpj_socio: "" },
+        { nome_socio: "", cpfcnpj_socio: "" }
+    ],
+    Investimentos: [],
+    ProdutosServicos: [],
+    RatingCredito: "",
+};
+
 export const CreateForm = () => {
 
     const [ratingCredito, setRatingCredito] = useState<RatingCredito[]>([]);
@@ -22,7 +40,7 @@ export const CreateForm = () => {
     // Carrega os dados necessários para preencher os selects do formulário
     // Em caso de erro mostra um feedback
     useEffect(() => {
-        Promise.all(([getRatingCredito(), getInvestimento(), getProdutoServico()]))
+        Promise.all([getRatingCredito(), getInvestimento(), getProdutoServico()])
             .then(([ratingCredito, investimentos, produtosServicos]) => {
                 setRatingCredito(ratingCredito);
                 setInvestimentos(investimentos);
@@ -32,21 +50,7 @@ export const CreateForm = () => {
             });
     }, []);
 
-    const [formData, setFormData] = useState<EmpresaForm>({
-        nome_empresa: "",
-        cnpj_empresa: "",
-        conta: "",
-        telefone: "",
-        email: "",
-        crot: "",
-        Socio: [
-            { nome_socio: "", cpfcnpj_socio: "" },
-            { nome_socio: "", cpfcnpj_socio: "" }
-        ],
-        Investimentos: [],
-        ProdutosServicos: [],
-        RatingCredito: "",
-    });
+    const [formData, setFormData] = useState<EmpresaForm>(initialFormData);
 
     const [loading, setLoading] = useState(false);
 
@@ -74,8 +78,10 @@ export const CreateForm = () => {
         try {
             await save(formData);
             windowDispatchFeedback("success", "Empresa cadastrada com sucesso!");
-        } catch (error: any) {
-            windowDispatchFeedback("error", error.message || "Erro ao salvar os dados.");
+            setFormData(initialFormData);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Erro ao salvar os dados.";
+            windowDispatchFeedback("error", message);
         } finally {
             setLoading(false);
         }
