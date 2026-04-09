@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import { windowDispatchFeedback } from "./insight/feedbackModal";
 
 export function LoginForm({
   className,
@@ -42,7 +43,7 @@ export function LoginForm({
       // Update this route to redirect to an authenticated route. The user already has an active session.
       router.push("/home");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      windowDispatchFeedback("error", error instanceof Error ? "Email ou senha incorretos." : "Ocorre um erro ao tentar fazer login.");
     } finally {
       setIsLoading(false);
     }
