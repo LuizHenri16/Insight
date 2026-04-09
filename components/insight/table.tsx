@@ -68,7 +68,7 @@ export const InsightTable = () => {
                 <select
                     value={filterField}
                     onChange={(e) => setFilterField(e.target.value)}
-                    className="w-32 p-2 bg-white border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                    className="w-32 p-2 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                 >
                     <option value="nome_empresa">Empresa</option>
                     <option value="cnpj_empresa">CNPJ</option>
@@ -81,7 +81,7 @@ export const InsightTable = () => {
                     placeholder="Filtro da busca..."
                     value={filterValue}
                     onChange={(e) => setFilterValue(e.target.value)}
-                    className="flex-1 min-w-[200px] p-2 bg-white border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 min-w-[200px] p-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <Button variant={"default"}>
                     <MagnifyingGlassIcon /> Pesquisar
