@@ -13,21 +13,20 @@ import { getRatingCredito } from "@/api/ratingcredito/routes"
 import { RatingCredito } from "@/utils/types/ratingcredito"
 import { Investimento } from "@/utils/types/investimento"
 import { ProdutoServico } from "@/utils/types/produtoservico"
-import { getProdutoServico } from "@/api/produtoservico/routes"
 import { getInvestimento } from "@/api/investimento/routes"
 import { useRouter } from "next/navigation"
+import { useProdutos } from "@/hooks/queries/useProdutos"
 
 export const EditForm = ({ id }: { id: number | string }) => {
 
     const router = useRouter();
     const [ratingCredito, setRatingCredito] = useState<RatingCredito[]>([]);
     const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
-    const [produtosServicos, setProdutosServicos] = useState<ProdutoServico[]>([]);
+    const { data: produtosServicos, isLoading: isLoadingProdutosServicos } = useProdutos();
 
     useEffect(() => {
         getRatingCredito().then((data) => setRatingCredito(data));
         getInvestimento().then((data) => setInvestimentos(data));
-        getProdutoServico().then((data) => setProdutosServicos(data));
     }, []);
 
     const [formData, setFormData] = useState<EmpresaForm>({
@@ -235,7 +234,7 @@ export const EditForm = ({ id }: { id: number | string }) => {
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Produtos/Serviços</label>
                             <MultiSelect
-                                options={produtosServicos.map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))}
+                                options={(produtosServicos || []).map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))}
                                 value={formData.ProdutosServicos.map(p => ({ id: p.id_produto_servico.toString(), nomeDoItem: p.nome_produto_servico }))}
                                 onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), nome_produto_servico: i.nomeDoItem })) })}
                             />

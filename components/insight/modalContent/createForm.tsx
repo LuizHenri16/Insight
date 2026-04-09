@@ -8,10 +8,11 @@ import { EmpresaForm } from "@/utils/types/Empresa"
 import { save } from "@/api/empresa/create"
 import { RatingCredito } from "@/utils/types/ratingcredito"
 import { Investimento } from "@/utils/types/investimento"
-import { ProdutoServico } from "@/utils/types/produtoservico"
 import { getRatingCredito } from "@/api/ratingcredito/routes"
-import { getProdutoServico } from "@/api/produtoservico/routes"
 import { getInvestimento } from "@/api/investimento/routes"
+import { useProdutos } from "@/hooks/queries/useProdutos"
+import { useInvestimentos } from "@/hooks/queries/useInvestimentos"
+import { useRatingCredito } from "@/hooks/queries/useRatingCredito"
 
 
 // Dados iniciais do formulário
@@ -32,23 +33,9 @@ const initialFormData: EmpresaForm = {
 };
 
 export const CreateForm = () => {
-
-    const [ratingCredito, setRatingCredito] = useState<RatingCredito[]>([]);
-    const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
-    const [produtosServicos, setProdutosServicos] = useState<ProdutoServico[]>([]);
-
-    // Carrega os dados necessários para preencher os selects do formulário
-    // Em caso de erro mostra um feedback
-    useEffect(() => {
-        Promise.all([getRatingCredito(), getInvestimento(), getProdutoServico()])
-            .then(([ratingCredito, investimentos, produtosServicos]) => {
-                setRatingCredito(ratingCredito);
-                setInvestimentos(investimentos);
-                setProdutosServicos(produtosServicos);
-            }).catch((error) => {
-                windowDispatchFeedback("error", error.message || "Erro ao carregar os dados.");
-            });
-    }, []);
+    const { data: produtosServicos, isLoading: isLoadingProdutosServicos } = useProdutos();
+    const { data: investimentos, isLoading: isLoadingInvestimentos } = useInvestimentos();
+    const { data: ratingCredito, isLoading: isLoadingRatingCredito } = useRatingCredito();
 
     const [formData, setFormData] = useState<EmpresaForm>(initialFormData);
 
@@ -66,8 +53,6 @@ export const CreateForm = () => {
     // Em caso de erro mostra um feedback
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
-
         if (!formData.nome_empresa || !formData.cnpj_empresa || !formData.conta) {
             windowDispatchFeedback("warning", "Preencha os campos obrigatórios: Nome, CNPJ e Conta.");
             return;
@@ -178,17 +163,17 @@ export const CreateForm = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Investimentos</label>
-                            <MultiSelect options={investimentos.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))} onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), nome_investimento: i.nomeDoItem })) })} />
+                            <MultiSelect options={(investimentos || []).map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))} onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), nome_investimento: i.nomeDoItem })) })} />
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Produtos/Serviços</label>
-                            <MultiSelect options={produtosServicos.map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))} onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), nome_produto_servico: i.nomeDoItem })) })} />
+                            <MultiSelect options={(produtosServicos || []).map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))} onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), nome_produto_servico: i.nomeDoItem })) })} />
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Rating de Crédito</label>
-                            <Select options={ratingCredito.map(r => ({ id: r.id_rating_credito.toString(), nomeDoItem: r.rating_credito }))} onSelect={(item) => setFormData({ ...formData, RatingCredito: item.id })} />
+                            <Select options={(ratingCredito || []).map(r => ({ id: r.id_rating_credito.toString(), nomeDoItem: r.rating_credito }))} onSelect={(item) => setFormData({ ...formData, RatingCredito: item.id })} />
                         </div>
 
                         <div className="flex flex-col gap-2">

@@ -5,14 +5,14 @@ import { useEffect, useMemo, useState } from "react";
 import { Investimento } from "@/utils/types/investimento";
 import { getInvestimento } from "@/api/investimento/routes";
 import Image from "next/image";
+import { useInvestimentos } from "@/hooks/queries/useInvestimentos";
 
 export const InvestimentosModal = () => {
 
-    const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const { data: investimentos, isLoading } = useInvestimentos();
 
     const rows = useMemo(() => {
-        return investimentos.map((investimento) => (
+        return (investimentos || []).map((investimento) => (
             <tr key={investimento.id_investimento} className="border-b dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                 <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{investimento.id_investimento}</td>
                 <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{investimento.investimento}</td>
@@ -23,17 +23,6 @@ export const InvestimentosModal = () => {
             </tr>
         ));
     }, [investimentos]);
-
-    useEffect(() => {
-        const fetchInvestimentos = async () => {
-            setIsLoading(true);
-            const response = await getInvestimento();
-            setInvestimentos(response);
-            setIsLoading(false);
-        }
-        fetchInvestimentos();
-    }, []);
-
 
     return (
         <div className="w-full flex flex-col gap-4">
@@ -65,7 +54,7 @@ export const InvestimentosModal = () => {
                                 </td>
                             </tr>
                         ) : (
-                            investimentos.length === 0 ? (
+                            investimentos?.length === 0 ? (
                                 <tr>
                                     <td colSpan={3} className="py-3 px-4 text-center text-slate-600 dark:text-slate-300">
                                         <Image src="/assets/images/no-data-image.svg" alt="Vazio" width={138} height={138} className="mx-auto" />

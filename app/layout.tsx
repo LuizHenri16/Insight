@@ -3,6 +3,7 @@ import { Geist, Sora } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { FeedbackModal } from "@/components/insight/feedbackModal";
 import "./globals.css";
+import Providers from "@/components/providers";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -43,8 +44,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <FeedbackModal />
+          <Providers>
+            {children}
+            <FeedbackModal />
+          </Providers>
         </ThemeProvider>
       </body>
     </html>

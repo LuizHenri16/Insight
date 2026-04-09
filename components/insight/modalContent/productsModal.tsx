@@ -1,18 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Loader, Plus } from "lucide-react";
 import { ActionButton } from "../actionButton";
-import { useEffect, useMemo, useState } from "react";
-import { ProdutoServico } from "@/utils/types/produtoservico";
-import { getProdutoServico } from "@/api/produtoservico/routes";
+import { useMemo, useState } from "react";
 import Image from "next/image";
+import { ModalCreateProduct } from "./createProduct";
+import { BaseModal } from "../modal";
+import { useProdutos } from "@/hooks/queries/useProdutos";
 
 export const ProductsModal = () => {
 
-    const [produtos, setProdutos] = useState<ProdutoServico[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const { data: produtos, isLoading } = useProdutos();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleModalOpen = () => {
+        setIsModalOpen(!isModalOpen);
+    }
 
     const rows = useMemo(() => {
-        return produtos.map((produto) => (
+        return produtos?.map((produto) => (
             <tr key={produto.id_produtos_servicos} className="border-b dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                 <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{produto.id_produtos_servicos}</td>
                 <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{produto.produto_servico}</td>
@@ -24,22 +29,12 @@ export const ProductsModal = () => {
         ));
     }, [produtos]);
 
-    useEffect(() => {
-        const fetchProdutos = async () => {
-            setIsLoading(true);
-            const response = await getProdutoServico();
-            setProdutos(response);
-            setIsLoading(false);
-        }
-        fetchProdutos();
-    }, []);
-
 
     return (
         <div className="w-full max-h-[24rem] overflow-y-auto flex flex-col gap-4">
             <div className="w-full flex justify-between items-center">
                 <h1 className="text-xl font-bold dark:text-white">Produtos</h1>
-                <Button className="w-40" variant="default">
+                <Button onClick={() => setIsModalOpen(true)} className="w-40" variant="default">
                     <Plus size={18} />
                     Cadastrar novo
                 </Button>
@@ -65,7 +60,7 @@ export const ProductsModal = () => {
                                 </td>
                             </tr>
                         ) : (
-                            produtos.length === 0 ? (
+                            produtos?.length === 0 ? (
                                 <tr>
                                     <td colSpan={3} className="py-3 px-4 text-center text-slate-600 dark:text-slate-300">
                                         <Image src="/assets/images/no-data-image.svg" alt="Vazio " width={138} height={138} className="mx-auto" />
@@ -79,6 +74,11 @@ export const ProductsModal = () => {
                     </tbody>
                 </table>
             </div>
+            {isModalOpen && (
+                <BaseModal isOpen={isModalOpen} onClose={handleModalOpen} title="Cadastrar novo produto">
+                    <ModalCreateProduct />
+                </BaseModal>
+            )}
         </div>
     )
 }
