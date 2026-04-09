@@ -1,13 +1,15 @@
 import { getRatingCredito } from "@/api/ratingcredito/routes";
 import { Button } from "@/components/ui/button";
 import { RatingCredito } from "@/utils/types/ratingcredito";
-import { Edit, Trash, Plus } from "lucide-react";
+import { Edit, Trash, Plus, Loader } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ActionButton } from "../actionButton";
+import Image from "next/image";
 
 export const RatingCreditoModal = () => {
 
     const [ratingCredito, setRatingCredito] = useState<RatingCredito[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const rows = useMemo(() => {
         return ratingCredito.map((item) => (
@@ -24,8 +26,10 @@ export const RatingCreditoModal = () => {
 
     useEffect(() => {
         const fetchRatingCredito = async () => {
+            setIsLoading(true);
             const response = await getRatingCredito();
             setRatingCredito(response);
+            setIsLoading(false);
         }
         fetchRatingCredito();
     }, []);
@@ -51,7 +55,27 @@ export const RatingCreditoModal = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {rows}
+                        {isLoading ? (
+                            <tr>
+                                <td colSpan={3} className="py-10">
+                                    <div className="flex flex-col items-center justify-center animate-pulse gap-2 text-slate-600 dark:text-slate-300">
+                                        <Loader className="animate-spin" />
+                                        <p>Carregando rating de crédito...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : (
+                            ratingCredito.length === 0 ? (
+                                <tr>
+                                    <td colSpan={3} className="py-3 px-4 text-center text-slate-600 dark:text-slate-300">
+                                        <Image src="/assets/images/no-data-image.svg" alt="Vazio" width={138} height={138} className="mx-auto" />
+                                        <h3 className="mt-2 font-semibold text-slate-600 dark:text-slate-300">Nenhum rating de crédito encontrado</h3>
+                                    </td>
+                                </tr>
+                            ) : (
+                                rows
+                            )
+                        )}
                     </tbody>
                 </table>
             </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { ActionButton } from "./actionButton";
 import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { FileSearch, Loader, Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { getEmpresas } from "@/api/empresa/routes";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -19,12 +19,12 @@ export const InsightTable = () => {
     const [filterValue, setFilterValue] = useState("");
     const [activeFilter, setActiveFilter] = useState({ field: "", value: "" });
 
-    const itemsPerPage = 10;
+    const ITEMS_PER_PAGE = 10;
 
     // O useMemo serve para memorizar o range e evitar que ele seja recriado a cada renderização
     const range = useMemo(() => {
-        const from = (currentPage - 1) * itemsPerPage;
-        const to = from + itemsPerPage - 1;
+        const from = (currentPage - 1) * ITEMS_PER_PAGE;
+        const to = from + ITEMS_PER_PAGE - 1;
         return { from, to };
     }, [currentPage]);
 
@@ -60,7 +60,7 @@ export const InsightTable = () => {
         setActiveFilter({ field: filterField, value: filterValue });
     };
 
-    const totalPages = Math.ceil(totalCount / itemsPerPage);
+    const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
     return (
         <div className="border border-gray-200 rounded-2xl shadow-xl bg-white p-4">
@@ -99,21 +99,21 @@ export const InsightTable = () => {
                                 <th>Sócio 2</th>
                                 <th>Email</th>
                                 <th>CROT</th>
-                                <th></th>
+                                <th aria-label="Ações"></th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {isLoading && (
                                 <tr>
-                                    <td colSpan={9} className="p-8 text-center">
-                                        <Loader className="w-14 h-14 mx-auto mt-6" />
+                                    <td colSpan={9} className="p-8 text-center animate-pulse">
+                                        <Loader className="w-14 h-14 mx-auto mt-6 animate-spin" />
                                         <h3 className="mt-2 font-semibold text-gray-800">Carregando dados...</h3>
                                     </td>
                                 </tr>
                             )}
                             {data.length === 0 && !isLoading ? (
                                 <tr>
-                                    <td colSpan={9} className="p-8 text-center">
+                                    <td colSpan={8} className="p-8 text-center">
                                         <Image src="/assets/images/no-data-image.svg" alt="Vazio" width={138} height={138} className="mx-auto" />
                                         <h3 className="mt-2 font-semibold text-gray-800">Nenhum cadastro encontrado</h3>
                                         <p className="text-gray-500">Use a barra de pesquisa ou ajuste os filtros</p>

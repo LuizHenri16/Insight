@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { Edit, Trash, Plus } from "lucide-react";
+import { Loader, Plus } from "lucide-react";
 import { ActionButton } from "../actionButton";
 import { useEffect, useMemo, useState } from "react";
 import { ProdutoServico } from "@/utils/types/produtoservico";
 import { getProdutoServico } from "@/api/produtoservico/routes";
+import Image from "next/image";
 
 export const ProductsModal = () => {
 
     const [produtos, setProdutos] = useState<ProdutoServico[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const rows = useMemo(() => {
         return produtos.map((produto) => (
@@ -24,8 +26,10 @@ export const ProductsModal = () => {
 
     useEffect(() => {
         const fetchProdutos = async () => {
+            setIsLoading(true);
             const response = await getProdutoServico();
             setProdutos(response);
+            setIsLoading(false);
         }
         fetchProdutos();
     }, []);
@@ -51,7 +55,27 @@ export const ProductsModal = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {rows}
+                        {isLoading ? (
+                            <tr>
+                                <td colSpan={3} className="py-10">
+                                    <div className="flex flex-col items-center justify-center animate-pulse gap-2 text-slate-600 dark:text-slate-300">
+                                        <Loader className="animate-spin" />
+                                        <p>Carregando produtos...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : (
+                            produtos.length === 0 ? (
+                                <tr>
+                                    <td colSpan={3} className="py-3 px-4 text-center text-slate-600 dark:text-slate-300">
+                                        <Image src="/assets/images/no-data-image.svg" alt="Vazio " width={138} height={138} className="mx-auto" />
+                                        <h3 className="mt-2 font-semibold text-slate-600 dark:text-slate-300">Nenhum produto encontrado</h3>
+                                    </td>
+                                </tr>
+                            ) : (
+                                rows
+                            )
+                        )}
                     </tbody>
                 </table>
             </div>
