@@ -7,7 +7,7 @@ export const BaseModal = ({ children, isOpen, onClose, title }: { children: Reac
 
     return (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center overflow-y-auto p-4 sm:p-6 lg:p-8 animate-in fade-in duration-200">
-            <div className="relative bg-white dark:bg-zinc-950 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-5xl my-auto animate-in zoom-in-95 duration-200 border border-gray-100 dark:border-zinc-800">
+            <div className="relative bg-white dark:bg-zinc-950 p-6 sm:p-8 rounded-2xl shadow-xl w-full min-w-sm max-w-5xl my-auto animate-in zoom-in-95 duration-200 border border-gray-100 dark:border-zinc-800">
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-zinc-800">
                     <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-100">{title}</h2>
                     <button

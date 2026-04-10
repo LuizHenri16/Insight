@@ -65,7 +65,7 @@ export const NavMenu = () => {
         <div className="w-ful bg-white border-1 border-gray-300 rounded-xl p-2 ">
             <MenuDropdown title="Menu">
                 {role === "admin" && (
-                    <div className="w-full flex flex-col text-left justify-center gap-1 border-b border-gray-300">
+                    <div className="w-full flex flex-col text-left justify-center pb-2 gap-1 border-b border-gray-300">
                         <p className="ml-1 text-sm font-normal text-gray-400">Configurações</p>
 
                         <NavButton text="Gerenciar produtos" onClick={handleModalProdutosOpen}>
@@ -80,9 +80,9 @@ export const NavMenu = () => {
                             <GearIcon width={18} height={18} />
                         </NavButton>
 
-                        <NavButton text="Gerenciar acessos" onClick={handleModalAcessosOpen}>
+                        {/* <NavButton text="Gerenciar acessos" onClick={handleModalAcessosOpen}>
                             <GearIcon width={18} height={18} />
-                        </NavButton>
+                        </NavButton> */}
                     </div>
                 )}
                 <div className="w-full mt-1 flex flex-col text-left justify-center gap-1 ">

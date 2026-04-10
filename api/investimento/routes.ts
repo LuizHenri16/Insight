@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/client";
 import { Investimento } from "@/utils/types/investimento";
 
-export async function getInvestimento() {
+export const getInvestimento = async (): Promise<Investimento[]> => {
     const supabase = createClient();
 
     const { data, error } = await supabase
@@ -10,5 +10,5 @@ export async function getInvestimento() {
 
     if (error) throw new Error(error.message);
 
-    return data as Investimento[];
+    return data as Investimento[] || [];
 }

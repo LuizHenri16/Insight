@@ -9,26 +9,22 @@ import { EmpresaForm, EmpresaTable } from "@/utils/types/Empresa"
 import { getRatingCredito } from "@/api/ratingcredito/routes"
 import { RatingCredito } from "@/utils/types/ratingcredito"
 import { Investimento } from "@/utils/types/investimento"
-import { ProdutoServico } from "@/utils/types/produtoservico"
-import { getProdutoServico } from "@/api/produtoservico/routes"
 import { getInvestimento } from "@/api/investimento/routes"
 import { select } from "@/lib/utils/select"
+import { useProdutos } from "@/hooks/queries/useProdutos"
+import { useInvestimentos } from "@/hooks/queries/useInvestimentos"
+import { useRatingCredito } from "@/hooks/queries/useRatingCredito"
 
 export const ViewForm = ({ id }: { id: number | string }) => {
 
-    const [ratingCredito, setRatingCredito] = useState<RatingCredito[]>([]);
-    const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
-    const [produtosServicos, setProdutosServicos] = useState<ProdutoServico[]>([]);
+    const { data: produtosServicos, isLoading: isLoadingProdutosServicos } = useProdutos();
+    const { data: investimentos, isLoading: isLoadingInvestimentos } = useInvestimentos();
+    const { data: ratingCredito, isLoading: isLoadingRatingCredito } = useRatingCredito();
 
     const [fetching, setFetching] = useState(true);
 
-    useEffect(() => {
-        getRatingCredito().then((data) => setRatingCredito(data));
-        getInvestimento().then((data) => setInvestimentos(data));
-        getProdutoServico().then((data) => setProdutosServicos(data));
-    }, []);
-
     const [dadosEmpresa, setEmpresa] = useState<EmpresaTable | null>(null);
+
 
     const getEmpresa = async () => {
         setFetching(true);
@@ -151,18 +147,18 @@ export const ViewForm = ({ id }: { id: number | string }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="w-full flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Investimentos</label>
-                            <MultiSelect options={investimentos.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))} value={dadosEmpresa?.Investimentos?.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento })) || []} />
+                            <MultiSelect options={(investimentos || []).map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))} value={dadosEmpresa?.Investimentos?.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento })) || []} />
                         </div>
 
                         <div className="w-full flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Produtos/Serviços</label>
-                            <MultiSelect options={produtosServicos.map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))} value={dadosEmpresa?.ProdutosServicos?.map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico })) || []} />
+                            <MultiSelect options={(produtosServicos || []).map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))} value={dadosEmpresa?.ProdutosServicos?.map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico })) || []} />
                         </div>
 
 
                         <div className="w-full flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Rating de Crédito</label>
-                            <Select options={ratingCredito.map(r => ({ id: r.id_rating_credito.toString(), nomeDoItem: r.rating_credito }))} value={dadosEmpresa?.id_rating_credito?.toString()} />
+                            <Select options={(ratingCredito || []).map(r => ({ id: r.id_rating_credito.toString(), nomeDoItem: r.rating_credito }))} value={dadosEmpresa?.id_rating_credito?.toString()} />
                         </div>
 
                         <div className="w-full flex flex-col gap-2">

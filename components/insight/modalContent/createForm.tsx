@@ -8,38 +8,36 @@ import { EmpresaForm } from "@/utils/types/Empresa"
 import { save } from "@/api/empresa/create"
 import { RatingCredito } from "@/utils/types/ratingcredito"
 import { Investimento } from "@/utils/types/investimento"
-import { ProdutoServico } from "@/utils/types/produtoservico"
 import { getRatingCredito } from "@/api/ratingcredito/routes"
-import { getProdutoServico } from "@/api/produtoservico/routes"
 import { getInvestimento } from "@/api/investimento/routes"
+import { useProdutos } from "@/hooks/queries/useProdutos"
+import { useInvestimentos } from "@/hooks/queries/useInvestimentos"
+import { useRatingCredito } from "@/hooks/queries/useRatingCredito"
+
+
+// Dados iniciais do formulário
+const initialFormData: EmpresaForm = {
+    nome_empresa: "",
+    cnpj_empresa: "",
+    conta: "",
+    telefone: "",
+    email: "",
+    crot: "",
+    Socio: [
+        { nome_socio: "", cpfcnpj_socio: "" },
+        { nome_socio: "", cpfcnpj_socio: "" }
+    ],
+    Investimentos: [],
+    ProdutosServicos: [],
+    RatingCredito: "",
+};
 
 export const CreateForm = () => {
+    const { data: produtosServicos, isLoading: isLoadingProdutosServicos } = useProdutos();
+    const { data: investimentos, isLoading: isLoadingInvestimentos } = useInvestimentos();
+    const { data: ratingCredito, isLoading: isLoadingRatingCredito } = useRatingCredito();
 
-    const [ratingCredito, setRatingCredito] = useState<RatingCredito[]>([]);
-    const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
-    const [produtosServicos, setProdutosServicos] = useState<ProdutoServico[]>([]);
-
-    useEffect(() => {
-        getRatingCredito().then((data) => setRatingCredito(data));
-        getInvestimento().then((data) => setInvestimentos(data));
-        getProdutoServico().then((data) => setProdutosServicos(data));
-    }, []);
-
-    const [formData, setFormData] = useState<EmpresaForm>({
-        nome_empresa: "",
-        cnpj_empresa: "",
-        conta: "",
-        telefone: "",
-        email: "",
-        crot: "",
-        Socio: [
-            { nome_socio: "", cpfcnpj_socio: "" },
-            { nome_socio: "", cpfcnpj_socio: "" }
-        ],
-        Investimentos: [],
-        ProdutosServicos: [],
-        RatingCredito: "",
-    });
+    const [formData, setFormData] = useState<EmpresaForm>(initialFormData);
 
     const [loading, setLoading] = useState(false);
 
@@ -50,7 +48,11 @@ export const CreateForm = () => {
         setFormData({ ...formData, Socio: newSocios });
     };
 
-    async function handleSubmit() {
+    // Envia o formulário para a API
+    // Em caso de sucesso mostra um feedback e limpa o formulário
+    // Em caso de erro mostra um feedback
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
         if (!formData.nome_empresa || !formData.cnpj_empresa || !formData.conta) {
             windowDispatchFeedback("warning", "Preencha os campos obrigatórios: Nome, CNPJ e Conta.");
             return;
@@ -61,8 +63,10 @@ export const CreateForm = () => {
         try {
             await save(formData);
             windowDispatchFeedback("success", "Empresa cadastrada com sucesso!");
-        } catch (error: any) {
-            windowDispatchFeedback("error", error.message || "Erro ao salvar os dados.");
+            setFormData(initialFormData);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Erro ao salvar os dados.";
+            windowDispatchFeedback("error", message);
         } finally {
             setLoading(false);
         }
@@ -70,7 +74,7 @@ export const CreateForm = () => {
 
     return (
         <div className="w-full max-w-5xl max-h-[32rem] overflow-y-auto mx-auto p-2 sm:p-6">
-            <form className="flex flex-col gap-10">
+            <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
                 <section className="space-y-6">
                     <div className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados da Empresa</h2>
@@ -159,17 +163,17 @@ export const CreateForm = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Investimentos</label>
-                            <MultiSelect options={investimentos.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))} onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), nome_investimento: i.nomeDoItem })) })} />
+                            <MultiSelect options={(investimentos || []).map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))} onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), nome_investimento: i.nomeDoItem })) })} />
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Produtos/Serviços</label>
-                            <MultiSelect options={produtosServicos.map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))} onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), nome_produto_servico: i.nomeDoItem })) })} />
+                            <MultiSelect options={(produtosServicos || []).map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))} onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), nome_produto_servico: i.nomeDoItem })) })} />
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Rating de Crédito</label>
-                            <Select options={ratingCredito.map(r => ({ id: r.id_rating_credito.toString(), nomeDoItem: r.rating_credito }))} onSelect={(item) => setFormData({ ...formData, RatingCredito: item.id })} />
+                            <Select options={(ratingCredito || []).map(r => ({ id: r.id_rating_credito.toString(), nomeDoItem: r.rating_credito }))} onSelect={(item) => setFormData({ ...formData, RatingCredito: item.id })} />
                         </div>
 
                         <div className="flex flex-col gap-2">
@@ -180,7 +184,7 @@ export const CreateForm = () => {
                 </section>
 
                 <div className="pt-6 mt-4 border-t flex justify-end">
-                    <Button type="button" onClick={handleSubmit} disabled={loading} className="w-full md:w-auto md:min-w-[200px]" size="lg">
+                    <Button type="submit" disabled={loading} className="w-full md:w-auto md:min-w-[200px]" size="lg">
                         {loading ? "Salvando..." : "Cadastrar Empresa"}
                     </Button>
                 </div>
