@@ -9,9 +9,11 @@ import { useProdutos } from "@/hooks/queries/useProdutos";
 
 export const ProductsModal = () => {
 
+    // Busca os produtos cadastrados
     const { data: produtos, isLoading } = useProdutos();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Função para fechar o modal
     const handleModalOpen = () => {
         setIsModalOpen(!isModalOpen);
     }
