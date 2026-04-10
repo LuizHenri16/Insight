@@ -18,9 +18,9 @@ export const RatingCreditoModal = () => {
 
     const rows = useMemo(() => {
         return ratingCredito?.map((item) => (
-            <tr key={item.id_rating_credito} className="border-b dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{item.id_rating_credito}</td>
-                <td className="py-3 px-4 text-slate-600 dark:text-slate-300">{item.rating_credito}</td>
+            <tr key={item.id_rating_credito} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                <td className="py-3 px-4 text-slate-600">{item.id_rating_credito}</td>
+                <td className="py-3 px-4 text-slate-600">{item.rating_credito}</td>
                 <td className="py-3 px-4 flex justify-end gap-2">
                     <ActionButton type="edit" idEmpresa={item.id_rating_credito} />
                     <ActionButton type="delete" idEmpresa={item.id_rating_credito} />
@@ -31,8 +31,8 @@ export const RatingCreditoModal = () => {
 
     return (
         <div className="w-full max-h-[24rem] overflow-y-auto flex flex-col gap-4">
-            <div className="flex justify-between items-center">
-                <h1 className="text-xl font-bold dark:text-white">Rating Crédito</h1>
+            <div className="flex gap-2 justify-between items-center">
+                <h1 className="text-lg font-bold">Rating Crédito</h1>
                 <Button variant={"default"} className="flex items-center gap-2" onClick={handleModalOpen}>
                     <Plus size={16} />
                     Cadastrar novo
@@ -42,10 +42,10 @@ export const RatingCreditoModal = () => {
             <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="border-b dark:border-slate-700">
-                            <th className="py-3 px-4 font-medium dark:text-slate-200">ID</th>
-                            <th className="py-3 px-4 font-medium dark:text-slate-200">Rating Crédito</th>
-                            <th className="py-3 px-4 font-medium dark:text-slate-200 text-right">Ações</th>
+                        <tr className="border-b border-slate-200">
+                            <th className="py-3 px-4 font-medium">ID</th>
+                            <th className="py-3 px-4 font-medium">Rating Crédito</th>
+                            <th className="py-3 px-4 font-medium text-right">Ações</th>
                         </tr>
                     </thead>
                     <tbody>

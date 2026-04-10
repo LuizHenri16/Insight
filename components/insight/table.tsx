@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import Image from "next/image";
 import { useEmpresa } from "@/hooks/queries/useEmpresa";
+import { table } from "console";
 
 export const InsightTable = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -68,10 +69,8 @@ export const InsightTable = () => {
             </form>
 
             <div className="flex flex-col gap-4 overflow-x-auto px-4 py-3 text-gray-800">
-                {/* Adicionamos uma opacidade se estiver carregando ou se os dados forem "antigos" (placeholder) */}
                 <div className={isLoading || isPlaceholderData ? "opacity-50 pointer-events-none transition-opacity" : "transition-opacity"}>
                     <table className="w-full divide-y divide-gray-200">
-                        {/* thead permanece igual... */}
                         <thead className="[&_th]:px-6 [&_th]:py-3 [&_th]:text-center [&_th]:text-xs [&_th]:font-medium [&_th]:text-gray-500 [&_th]:uppercase [&_th]:tracking-wider">
                             <tr>
                                 <th>Empresa</th>
@@ -94,7 +93,7 @@ export const InsightTable = () => {
                                 </tr>
                             ) : data.length === 0 ? (
                                 <tr>
-                                    <td colSpan={9} className="p-8 text-center">
+                                    <td colSpan={8} className="p-8 text-center">
                                         <Image src="/assets/images/no-data-image.svg" alt="Vazio" width={138} height={138} className="mx-auto" />
                                         <h3 className="mt-2 font-semibold text-gray-800">Nenhum cadastro encontrado</h3>
                                         <p className="text-gray-500">Use a barra de pesquisa ou ajuste os filtros</p>
