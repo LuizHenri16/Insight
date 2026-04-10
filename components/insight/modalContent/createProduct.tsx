@@ -18,9 +18,8 @@ export const ModalCreateProduct = () => {
             windowDispatchFeedback("error", "Preencha o campo produto com pelo menos 2 caracteres");
             return;
         }
-
-        // Cria o produto
         createProduct({ produto_servico: produto })
+        setProduto("")
     }
 
     return (

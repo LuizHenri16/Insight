@@ -6,10 +6,17 @@ import { Investimento } from "@/utils/types/investimento";
 import { getInvestimento } from "@/api/investimento/routes";
 import Image from "next/image";
 import { useInvestimentos } from "@/hooks/queries/useInvestimentos";
+import { BaseModal } from "../modal";
+import { ModalCreateInvestimento } from "./createInvestimento";
 
 export const InvestimentosModal = () => {
 
     const { data: investimentos, isLoading } = useInvestimentos();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleModalOpen = () => {
+        setIsModalOpen(!isModalOpen);
+    }
 
     const rows = useMemo(() => {
         return (investimentos || []).map((investimento) => (
@@ -28,7 +35,7 @@ export const InvestimentosModal = () => {
         <div className="w-full flex flex-col gap-4">
             <div className="w-full flex justify-between items-center">
                 <h1 className="text-xl font-bold dark:text-white">Investimentos</h1>
-                <Button className="w-40" variant="default">
+                <Button className="w-40" variant="default" onClick={handleModalOpen}>
                     <Plus size={18} />
                     Cadastrar novo
                 </Button>
@@ -68,6 +75,11 @@ export const InvestimentosModal = () => {
                     </tbody>
                 </table>
             </div>
+            {isModalOpen && (
+                <BaseModal isOpen={isModalOpen} onClose={handleModalOpen} title="Cadastrar novo investimento">
+                    <ModalCreateInvestimento />
+                </BaseModal>
+            )}
         </div>
     )
 }
