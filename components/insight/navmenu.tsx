@@ -80,9 +80,9 @@ export const NavMenu = () => {
                             <GearIcon width={18} height={18} />
                         </NavButton>
 
-                        <NavButton text="Gerenciar acessos" onClick={handleModalAcessosOpen}>
+                        {/* <NavButton text="Gerenciar acessos" onClick={handleModalAcessosOpen}>
                             <GearIcon width={18} height={18} />
-                        </NavButton>
+                        </NavButton> */}
                     </div>
                 )}
                 <div className="w-full mt-1 flex flex-col text-left justify-center gap-1 ">
