@@ -8,6 +8,9 @@ export const useProdutosMutation = () => {
     const supabase = createClient()
 
     return useMutation({
+
+        // Função que será chamada quando o mutation for executado
+        // Vai cadastrar um novo produto no banco de dados
         mutationFn: async (novoProduto: Partial<ProdutoServico>) => {
             const { data, error } = await supabase
                 .from('ProdutosServicos')
@@ -17,7 +20,7 @@ export const useProdutosMutation = () => {
             return data
         },
         onSuccess: () => {
-            // Invalida a query de produtos para atualizar a lista
+            // Invalida a query de 'produtos' para atualizar a lista com os novos dados
             queryClient.invalidateQueries({ queryKey: ['produtos'] })
             // Dispara sucesso em caso de criação do produto
             windowDispatchFeedback("success", "Produto cadastrado com sucesso!");

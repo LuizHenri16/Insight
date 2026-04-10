@@ -1,15 +1,20 @@
-import { getRatingCredito } from "@/api/ratingcredito/routes";
 import { Button } from "@/components/ui/button";
-import { RatingCredito } from "@/utils/types/ratingcredito";
-import { Edit, Trash, Plus, Loader } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { Plus, Loader } from "lucide-react";
+import { useMemo, useState } from "react";
 import { ActionButton } from "../actionButton";
 import Image from "next/image";
 import { useRatingCredito } from "@/hooks/queries/useRatingCredito";
+import { BaseModal } from "../modal";
+import { ModalCreateRatingCredito } from "./createRatingCredito";
 
 export const RatingCreditoModal = () => {
 
     const { data: ratingCredito, isLoading } = useRatingCredito();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleModalOpen = () => {
+        setIsModalOpen(!isModalOpen);
+    }
 
     const rows = useMemo(() => {
         return ratingCredito?.map((item) => (
@@ -28,7 +33,7 @@ export const RatingCreditoModal = () => {
         <div className="w-full max-h-[24rem] overflow-y-auto flex flex-col gap-4">
             <div className="flex justify-between items-center">
                 <h1 className="text-xl font-bold dark:text-white">Rating Crédito</h1>
-                <Button variant={"default"} className="flex items-center gap-2">
+                <Button variant={"default"} className="flex items-center gap-2" onClick={handleModalOpen}>
                     <Plus size={16} />
                     Cadastrar novo
                 </Button>
@@ -68,6 +73,11 @@ export const RatingCreditoModal = () => {
                     </tbody>
                 </table>
             </div>
+            {isModalOpen && (
+                <BaseModal isOpen={isModalOpen} onClose={handleModalOpen} title="Cadastrar Rating de crédito">
+                    <ModalCreateRatingCredito />
+                </BaseModal>
+            )}
         </div>
     )
 }
