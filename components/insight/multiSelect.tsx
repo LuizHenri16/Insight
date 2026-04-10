@@ -1,4 +1,5 @@
 import { TriangleDownIcon, TriangleUpIcon } from '@radix-ui/react-icons';
+import { ChevronDownIcon } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 
 interface OptionProps {
@@ -55,7 +56,7 @@ const MultiSelectDropdown = ({ options, onChange, value, disabled }: MultiSelect
                     ? `${selectedItems.length} selecionado(s)`
                     : "Selecione..."}
                 <span className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
-                    <TriangleDownIcon width={20} height={20} />
+                    <ChevronDownIcon size={18} />
                 </span>
             </div>
 

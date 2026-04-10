@@ -51,7 +51,7 @@ const Select = ({ options, onSelect, value, disabled, className }: SingleSelectD
                     ${isOpen ? 'border-blue-500 shadow-sm' : 'border-[#1B2F53]'}`}
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className={selectedItem ? 'text-black' : 'text-gray-400'}>
+                <span className={selectedItem ? 'text-black' : 'text-gray-500'}>
                     {selectedItem ? selectedItem.nomeDoItem : "Selecione..."}
                 </span>
                 <span className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
