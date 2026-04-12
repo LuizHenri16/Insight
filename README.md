@@ -1,109 +1,96 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# Insight - Sistema de Gestão Empresarial
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+O **Insight** é uma plataforma robusta de gestão voltada para o acompanhamento de empresas, sócios, investimentos e limites de crédito. Construído com tecnologias modernas como **Next.js 15**, **Supabase** e **TanStack Query**, o sistema oferece uma interface fluida, segura e eficiente para operações de CRUD e monitoramento de dados corporativos.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+## 🚀 Principais Funcionalidades
 
-## Features
+- **Gestão de Empresas (Cadastros):** Controle completo de informações cadastrais de empresas (CNPJ, Razão Social, Contato, etc.).
+- **Gestão de Sócios:** Vinculação e acompanhamento de sócios por empresa.
+- **Painel de Crédito:** Monitoramento de ratings de crédito e indicadores como "CROT".
+- **Módulo de Investimentos:** Gerenciamento de investimentos escolhidos pelo cliente.
+- **Tabela Dinâmica (InsightTable):** Componente avançado com:
+  - Pesquisa global e filtragem específica (CNPJ, Email, Conta, Empresa).
+  - Paginação eficiente integrada ao Supabase.
+  - CRUD completo via Modais (Visualizar, Editar, Excluir).
+- **Autenticação Segura:** Sistema de login e controle de acesso via Supabase Auth (SSR).
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Proxy
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+## 🛠️ Tech Stack
 
-## Demo
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router)
+- **Banco de Dados & Auth:** [Supabase](https://supabase.com/) (PostgreSQL + Auth + SSR)
+- **Estado & Data Fetching:** [TanStack Query v5](https://tanstack.com/query/latest)
+- **Estilização:** [Tailwind CSS](https://tailwindcss.com/)
+- **Componentes UI:** [Radix UI](https://www.radix-ui.com/) & [Lucide React](https://lucide.dev/)
+- **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+## 📂 Estrutura do Projeto
 
-## Deploy to Vercel
+```bash
+├── app/                  # Rotas e Páginas (Next.js App Router)
+│   ├── auth/            # Fluxo de autenticação (Login, Sign-up)
+│   └── home/            # Dashboard principal e listagem de empresas
+├── components/           # Componentes React reutilizáveis
+│   ├── insight/         # Componentes específicos do domínio Insight (Table, Modals)
+│   └── ui/              # Componentes base de interface
+├── hooks/               # Custom hooks (Queries e Mutations com TanStack Query)
+├── api/                 # API Routes (Next.js)
+├── lib/                 # Configurações de bibliotecas (Supabase Client/Server)
+├── utils/               # Funções utilitárias e definições de Tipos/Interfaces
+└── public/              # Ativos estáticos (Imagens, Logos)
+```
 
-Vercel deployment will guide you through creating a Supabase account and project.
+## ⚙️ Começando
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+### Pré-requisitos
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+- **Node.js** (v18+)
+- **NPM**, **YARN** ou **PNPM**
+- Conta no **Supabase**
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+### Instalação
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/seu-usuario/insight.git
+    cd insight
+    ```
 
-## Clone and run locally
+2.  **Instale as dependências:**
+    ```bash
+    npm install
+    # ou
+    yarn install
+    ```
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+3.  **Configure as variáveis de ambiente:**
+    Renomeie `.env.example` para `.env.local` e preencha com suas credenciais do Supabase:
+    ```env
+    NEXT_PUBLIC_SUPABASE_URL=seu_projeto_url
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sua_anon_key
+    ```
 
-2. Create a Next.js app using the Supabase Starter template npx command
+4.  **Inicie o servidor de desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+O sistema estará disponível em `http://localhost:3000`.
 
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
+## 📄 Documentação Técnica
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+### Integração com Supabase
+O projeto utiliza `@supabase/ssr` para gerenciar a autenticação em Client e Server Components, garantindo que a sessão do usuário seja persistente e segura.
 
-3. Use `cd` to change into the app's directory
+### Gerenciamento de Dados
+Utilizamos o **TanStack Query** para:
+- Cache inteligente de dados e revalidação automática após edições ou exclusões, reduzindo o número de requisições ao banco de dados.
+- Estados de loading e erro centralizados.
+- Paginação simplificada (através do hook `useEmpresa`).
 
-   ```bash
-   cd with-supabase-app
-   ```
+### Componentes de Destaque
+- **`InsightTable`**: Localizado em `components/insight/table.tsx`, é o coração do sistema, integrando busca parametrizada e controle de estado de paginação.
+- **`ModalContent/`**: Estrutura modular para formulários de criação (`createForm.tsx`) e edição (`editForm.tsx`), facilitando a manutenção de campos complexos.
 
-4. Rename `.env.example` to `.env.local` and update the following:
+## 📄 Licença
 
-  ```env
-  NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[INSERT SUPABASE PROJECT API PUBLISHABLE OR ANON KEY]
-  ```
-  > [!NOTE]
-  > This example uses `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, which refers to Supabase's new **publishable** key format.
-  > Both legacy **anon** keys and new **publishable** keys can be used with this variable name during the transition period. Supabase's dashboard may show `NEXT_PUBLIC_SUPABASE_ANON_KEY`; its value can be used in this example.
-  > See the [full announcement](https://github.com/orgs/supabase/discussions/29260) for more information.
-
-  Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
-
-5. You can now run the Next.js local development server:
-
-   ```bash
-   npm run dev
-   ```
-
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
-
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
-
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
-
-## Feedback and issues
-
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
-
-## More Supabase examples
-
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+Este projeto é de uso interno. Todos os direitos reservados.
