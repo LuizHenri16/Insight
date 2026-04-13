@@ -1,23 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createClient } from "@/lib/supabase/client"
 import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
-import { RatingCredito } from "@/utils/types/ratingcredito"
+import { postRatingCredito } from "@/api/ratingcredito/routes"
 
 export const useRatingCreditoMutation = () => {
     const queryClient = useQueryClient()
-    const supabase = createClient()
 
     return useMutation({
         // Função que será chamada quando o mutation for executado
         // Vai cadastrar um novo rating de crédito no banco de dados
-        mutationFn: async (novoRatingCredito: Partial<RatingCredito>) => {
-            const { data, error } = await supabase
-                .from('RatingCredito')
-                .insert([novoRatingCredito])
-
-            if (error) throw error
-            return data
-        },
+        mutationFn: postRatingCredito,
 
         // Em caso de sucesso vai ser exibido o feedback apontando sucesso
         onSuccess: () => {

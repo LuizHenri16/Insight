@@ -62,7 +62,7 @@ export const ViewForm = ({ id }: { id: number | string }) => {
                 <section className="space-y-6">
                     <div className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados da Empresa</h2>
-                        <p className="text-sm text-gray-500 mt-1">Informações principais para identificação.</p>
+                        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Informações principais para identificação.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div className="flex flex-col gap-2">
@@ -83,10 +83,10 @@ export const ViewForm = ({ id }: { id: number | string }) => {
                 <section className="space-y-6">
                     <div className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados dos Sócios</h2>
-                        <p className="text-sm text-gray-500 mt-1">Informações sobre os sócios da empresa.</p>
+                        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Informações sobre os sócios da empresa.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="p-5 rounded-xl bg-gray-50/50 dark:bg-zinc-900/50 border border-gray-100 dark:border-zinc-800 space-y-4">
+                        <div className="p-5 rounded-xl bg-gray-50/50 dark:bg-zinc-800/50 border border-gray-100 dark:border-zinc-700 space-y-4">
                             <h3 className="font-semibold text-sm text-gray-800 dark:text-gray-200 flex items-center gap-2">
                                 <span className="bg-primary/10 text-primary w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
                                 Sócio Primário
@@ -103,7 +103,7 @@ export const ViewForm = ({ id }: { id: number | string }) => {
                             </div>
                         </div>
 
-                        <div className="p-5 rounded-xl bg-gray-50/50 dark:bg-zinc-900/50 border border-gray-100 dark:border-zinc-800 space-y-4">
+                        <div className="p-5 rounded-xl bg-gray-50/50 dark:bg-zinc-800/50 border border-gray-100 dark:border-zinc-700 space-y-4">
                             <h3 className="font-semibold text-sm text-gray-800 dark:text-gray-200 flex items-center gap-2">
                                 <span className="bg-primary/10 text-primary w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
                                 Sócio Secundário
@@ -125,7 +125,7 @@ export const ViewForm = ({ id }: { id: number | string }) => {
                 <section className="space-y-6">
                     <div className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados de Contato</h2>
-                        <p className="text-sm text-gray-500 mt-1">Meios de comunicação com a empresa.</p>
+                        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Meios de comunicação com a empresa.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="flex flex-col gap-2">
@@ -142,7 +142,7 @@ export const ViewForm = ({ id }: { id: number | string }) => {
                 <section className="space-y-6">
                     <div className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Financeiro</h2>
-                        <p className="text-sm text-gray-500 mt-1">Informações financeiras, investimentos e crédito.</p>
+                        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Informações financeiras, investimentos e crédito.</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="w-full flex flex-col gap-2">

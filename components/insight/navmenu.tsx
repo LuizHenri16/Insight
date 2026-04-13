@@ -5,14 +5,16 @@ import { BaseModal } from "./modal";
 import { CreateForm } from "./modalContent/createForm";
 import { NavButton } from "./navbutton";
 import { MenuDropdown } from "./menudropdown";
-import { GearIcon, PlusIcon } from "@radix-ui/react-icons";
+import { GearIcon, PlusIcon, QuestionMarkIcon } from "@radix-ui/react-icons";
 import { ProductsModal } from "./modalContent/productsModal";
 import { RatingCreditoModal } from "./modalContent/ratingCreditoModal";
 import { AccessModal } from "./modalContent/accessModal";
 import { createClient } from "@/lib/supabase/client";
 import { InvestimentosModal } from "./modalContent/investimentos.Modal";
+import { useRouter } from "next/navigation";
 
 export const NavMenu = () => {
+    const router = useRouter();
     const [isModalAddOpen, setIsModalAddOpen] = useState(false);
     const [isModalProdutosOpen, setIsModalProdutosOpen] = useState(false);
     const [isModalRatingCreditoOpen, setIsModalRatingCreditoOpen] = useState(false);
@@ -62,31 +64,37 @@ export const NavMenu = () => {
     }
 
     return (
-        <div className="w-ful bg-white border-1 border-gray-300 rounded-xl p-2 ">
+        <div className="">
             <MenuDropdown title="Menu">
-                {role === "admin" && (
-                    <div className="w-full flex flex-col text-left justify-center pb-2 gap-1 border-b border-gray-300">
-                        <p className="ml-1 text-sm font-normal text-gray-400">Configurações</p>
 
-                        <NavButton text="Gerenciar produtos" onClick={handleModalProdutosOpen}>
-                            <GearIcon width={18} height={18} />
-                        </NavButton>
+                <div className="w-full flex flex-col text-left justify-center pb-2 gap-1 border-b border-gray-300 dark:border-zinc-700">
+                    <p className="ml-1 text-sm font-normal text-gray-400 dark:text-zinc-500">Configurações</p>
 
-                        <NavButton text="Gerenciar rating crédito" onClick={handleModalRatingCreditoOpen}>
-                            <GearIcon width={18} height={18} />
-                        </NavButton>
+                    {role === "admin" && (
+                        <div className="flex flex-col gap-1">
+                            <NavButton text="Gerenciar produtos" onClick={handleModalProdutosOpen}>
+                                <GearIcon width={18} height={18} />
+                            </NavButton>
 
-                        <NavButton text="Gerenciar Investimentos" onClick={handleModalInvestimentosOpen}>
-                            <GearIcon width={18} height={18} />
-                        </NavButton>
+                            <NavButton text="Gerenciar rating crédito" onClick={handleModalRatingCreditoOpen}>
+                                <GearIcon width={18} height={18} />
+                            </NavButton>
 
-                        {/* <NavButton text="Gerenciar acessos" onClick={handleModalAcessosOpen}>
+                            <NavButton text="Gerenciar Investimentos" onClick={handleModalInvestimentosOpen}>
+                                <GearIcon width={18} height={18} />
+                            </NavButton>
+
+                            {/* <NavButton text="Gerenciar acessos" onClick={handleModalAcessosOpen}>
                             <GearIcon width={18} height={18} />
                         </NavButton> */}
-                    </div>
-                )}
+                        </div>
+                    )}
+                    <NavButton text="Central de Ajuda" onClick={() => router.push("/help")}>
+                        <QuestionMarkIcon width={18} height={18} />
+                    </NavButton>
+                </div>
                 <div className="w-full mt-1 flex flex-col text-left justify-center gap-1 ">
-                    <h3 className="ml-1 text-sm font-normal text-gray-400">Ações</h3>
+                    <h3 className="ml-1 text-sm font-normal text-gray-400 dark:text-zinc-500">Ações</h3>
                     <NavButton text="Novo cadastro" onClick={handleModalAddOpen}>
                         <PlusIcon width={18} height={18} />
                     </NavButton>

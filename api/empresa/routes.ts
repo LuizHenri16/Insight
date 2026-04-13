@@ -13,7 +13,7 @@ export async function POST(data: EmpresaForm) {
     try {
         // 1. Inserir Empresa
         const { data: empresa, error: empresaError } = await supabase
-            .from('Empresa')
+            .from('empresa')
             .insert({
                 nome_empresa: data.nome_empresa,
                 cnpj_empresa: data.cnpj_empresa,
@@ -41,7 +41,7 @@ export async function POST(data: EmpresaForm) {
 
             if (sociosParaInserir.length > 0) {
                 const { data: sDatas, error: sErr } = await supabase
-                    .from('Socio')
+                    .from('socio')
                     .insert(sociosParaInserir)
                     .select('id_socio');
 
@@ -53,7 +53,7 @@ export async function POST(data: EmpresaForm) {
                 }));
 
                 const { error: relErr } = await supabase
-                    .from('EmpresaSocio')
+                    .from('empresasocio')
                     .insert(vinculoSocios);
                 if (relErr) throw relErr;
             }
@@ -68,7 +68,7 @@ export async function POST(data: EmpresaForm) {
             }));
 
             const { error: invErr } = await supabase
-                .from('EmpresaInvestimento')
+                .from('empresainvestimento')
                 .insert(invData);
 
             if (invErr) throw invErr;
@@ -84,7 +84,7 @@ export async function POST(data: EmpresaForm) {
 
             if (validProds.length > 0) {
                 const { error: prodErr } = await supabase
-                    .from('ProdutosServicosEmpresa')
+                    .from('produtosservicosempresa')
                     .insert(validProds);
 
                 if (prodErr) throw new Error("Erro nos Produtos: " + prodErr.message);
@@ -106,10 +106,10 @@ export async function getEmpresas(from: number, to: number, filterField?: string
 
     // Query para a busca
     let query = supabase
-        .from('Empresa')
+        .from('empresa')
         .select(`
             id_empresa, conta, nome_empresa, cnpj_empresa, email, crot,
-            Socio (id_socio, nome_socio, cpfcnpj_socio)
+            socio (id_socio, nome_socio, cpfcnpj_socio)
         `, { count: 'exact' })
         .is("deletado_em", null)
         .eq("uuid_usuario", userData.user.id);

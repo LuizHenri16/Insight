@@ -24,7 +24,7 @@ export const ModalCreateInvestimento = () => {
     return (
         <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2 p-2">
-                <label htmlFor="investimento">Investimento</label>
+                <label htmlFor="investimento" className="text-sm font-medium dark:text-zinc-300">Investimento</label>
                 <Input required name="investimento" id="investimento" value={investimento} onChange={(e) => setInvestimento(e.target.value)} placeholder="Digite o nome do investimento" />
             </div>
             <div className="flex justify-end">

@@ -43,12 +43,12 @@ export const InsightTable = () => {
     };
 
     return (
-        <div className="border border-gray-200 rounded-2xl shadow-xl bg-white p-4">
-            <form onSubmit={handleSearch} className="flex flex-wrap items-center gap-3 p-2 bg-gray-100 rounded-xl border border-gray-100">
+        <div className="border border-gray-200 dark:border-zinc-700 rounded-2xl shadow-xl bg-white dark:bg-zinc-900 p-4">
+            <form onSubmit={handleSearch} className="flex flex-wrap items-center gap-3 p-2 bg-gray-100 dark:bg-zinc-800 rounded-xl border border-gray-100 dark:border-zinc-700">
                 <select
                     value={filterField}
                     onChange={(e) => setFilterField(e.target.value)}
-                    className="w-32 p-2 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                    className="w-32 p-2 bg-white dark:bg-zinc-900 dark:text-zinc-200 border border-gray-200 dark:border-zinc-600 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                 >
                     <option value="nome_empresa">Empresa</option>
                     <option value="cnpj_empresa">CNPJ</option>
@@ -61,17 +61,17 @@ export const InsightTable = () => {
                     placeholder="Filtro da busca..."
                     value={filterValue}
                     onChange={(e) => setFilterValue(e.target.value)}
-                    className="flex-1 min-w-[200px] p-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 min-w-[200px] p-3 bg-white dark:bg-zinc-900 dark:text-zinc-200 border border-gray-200 dark:border-zinc-600 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <Button variant={"default"} type="submit">
                     <MagnifyingGlassIcon /> Pesquisar
                 </Button>
             </form>
 
-            <div className="flex flex-col gap-4 overflow-x-auto px-4 py-3 text-gray-800">
+            <div className="flex flex-col gap-4 overflow-x-auto px-4 py-3 text-gray-800 dark:text-zinc-200">
                 <div className={isLoading || isPlaceholderData ? "opacity-50 pointer-events-none transition-opacity" : "transition-opacity"}>
                     <table className="w-full divide-y divide-gray-200">
-                        <thead className="[&_th]:px-6 [&_th]:py-3 [&_th]:text-center [&_th]:text-xs [&_th]:font-medium [&_th]:text-gray-500 [&_th]:uppercase [&_th]:tracking-wider">
+                        <thead className="[&_th]:px-6 [&_th]:py-3 [&_th]:text-center [&_th]:text-xs [&_th]:font-medium [&_th]:text-gray-500 dark:[&_th]:text-zinc-400 [&_th]:uppercase [&_th]:tracking-wider">
                             <tr>
                                 <th>Empresa</th>
                                 <th>CNPJ</th>
@@ -83,25 +83,25 @@ export const InsightTable = () => {
                                 <th aria-label="Ações"></th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-gray-100 dark:divide-zinc-700">
                             {isLoading ? (
                                 <tr>
                                     <td colSpan={9} className="p-8 text-center animate-pulse">
                                         <Loader className="w-14 h-14 mx-auto mt-6 animate-spin" />
-                                        <h3 className="mt-2 font-semibold text-gray-800">Carregando dados...</h3>
+                                        <h3 className="mt-2 font-semibold text-gray-800 dark:text-zinc-200">Carregando dados...</h3>
                                     </td>
                                 </tr>
                             ) : data.length === 0 ? (
                                 <tr>
                                     <td colSpan={8} className="p-8 text-center">
                                         <Image src="/assets/images/no-data-image.svg" alt="Vazio" width={138} height={138} className="mx-auto" />
-                                        <h3 className="mt-2 font-semibold text-gray-800">Nenhum cadastro encontrado</h3>
-                                        <p className="text-gray-500">Use a barra de pesquisa ou ajuste os filtros</p>
+                                        <h3 className="mt-2 font-semibold text-gray-800 dark:text-zinc-200">Nenhum cadastro encontrado</h3>
+                                        <p className="text-gray-500 dark:text-zinc-400">Use a barra de pesquisa ou ajuste os filtros</p>
                                     </td>
                                 </tr>
                             ) : (
                                 data.map((item: any) => (
-                                    <tr className="[&_td]:p-3 [&_td]:whitespace-nowrap text-center hover:bg-gray-50 transition-colors" key={item.id_empresa}>
+                                    <tr className="[&_td]:p-3 [&_td]:whitespace-nowrap text-center hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors" key={item.id_empresa}>
                                         <td className="font-normal text-blue-950">{item.nome_empresa}</td>
                                         <td>{item.cnpj_empresa}</td>
                                         <td>{item.conta}</td>
@@ -127,26 +127,26 @@ export const InsightTable = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row justify-between items-center p-4 gap-4">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-zinc-400">
                     Mostrando <strong>{range.from + 1}</strong> a <strong>{Math.min(range.to + 1, totalCount)}</strong> de <strong>{totalCount}</strong> cadastros
                 </p>
 
                 <div className="flex items-center gap-4">
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-gray-500 dark:text-zinc-400">
                         Página {currentPage} de {totalPages || 1}
                     </span>
                     <div className="flex gap-2 text-sm font-medium">
                         <button
                             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                             disabled={currentPage === 1 || isLoading}
-                            className="px-4 py-2 border border-gray-200 rounded-lg shadow-sm disabled:opacity-30 hover:bg-gray-50 transition-all"
+                            className="px-4 py-2 border border-gray-200 dark:border-zinc-600 rounded-lg shadow-sm disabled:opacity-30 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
                         >
                             <ChevronLeftIcon />
                         </button>
                         <button
                             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                             disabled={currentPage >= totalPages || isLoading}
-                            className="px-4 py-2 border border-gray-200 rounded-lg shadow-sm disabled:opacity-30 hover:bg-gray-50 transition-all"
+                            className="px-4 py-2 border border-gray-200 dark:border-zinc-600 rounded-lg shadow-sm disabled:opacity-30 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
                         >
                             <ChevronRightIcon />
                         </button>

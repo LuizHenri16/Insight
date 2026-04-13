@@ -24,7 +24,7 @@ export const ActionButton = ({ type, idEmpresa }: { type: 'view' | 'edit' | 'del
             <button
                 type="button"
                 onClick={toggleModal}
-                className="p-1 rounded-lg hover:bg-gray-200 transition-colors"
+                className="p-1 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
             >
                 {icons[type]}
             </button>
