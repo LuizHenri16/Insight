@@ -86,6 +86,12 @@ export function LoginForm({
                 {isLoading ? "Entrando..." : "Entrar"}
               </Button>
             </div>
+            <div className="mt-6 text-center text-sm">
+              Não tem uma conta?{" "}
+              <Link href="/auth/sign-up" className="underline">
+                Registre-se
+              </Link>
+            </div>
           </form>
         </CardContent>
       </Card>
