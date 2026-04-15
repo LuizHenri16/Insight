@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
-import { postInvestimento } from "@/api/investimento/routes"
+import { postInvestimento, updateInvestimento } from "@/api/investimento/routes"
 
 export const useInvestimentosMutation = () => {
     const queryClient = useQueryClient()
@@ -23,3 +23,19 @@ export const useInvestimentosMutation = () => {
     })
 
 }
+
+export const useUpdateInvestimentoMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ id, investimento }: { id: number, investimento: string }) => updateInvestimento(id, { investimento }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['investimentos'] })
+            windowDispatchFeedback("success", "Investimento atualizado com sucesso!");
+        },
+        onError: (error) => {
+            windowDispatchFeedback("error", error.message);
+        }
+    })
+}
+

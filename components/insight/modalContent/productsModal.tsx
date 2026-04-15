@@ -24,13 +24,12 @@ export const ProductsModal = () => {
                 <td className="py-3 px-4 text-slate-600 dark:text-zinc-300">{produto.id_produtos_servicos}</td>
                 <td className="py-3 px-4 text-slate-600 dark:text-zinc-300">{produto.produto_servico}</td>
                 <td className="py-3 px-4 flex justify-end gap-2">
-                    <ActionButton type="edit" idEmpresa={produto.id_produtos_servicos} />
+                    <ActionButton type="edit" idEmpresa={produto.id_produtos_servicos} entity="produto" />
                     <ActionButton type="delete" idEmpresa={produto.id_produtos_servicos} />
                 </td>
             </tr>
         ));
     }, [produtos]);
-
 
     return (
         <div className="w-full max-h-[24rem] overflow-y-auto flex flex-col gap-4">

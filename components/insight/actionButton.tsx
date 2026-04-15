@@ -6,9 +6,12 @@ import { TrashIcon } from "lucide-react";
 import { BaseModal } from "./modal";
 import { ViewForm } from "./modalContent/viewForm";
 import { EditForm } from "./modalContent/editForm";
+import { ModalEditProduto } from "./modalContent/editProduto";
+import { ModalEditRatingCredito } from "./modalContent/editRatingCredito";
+import { ModalEditInvestimento } from "./modalContent/editInvestimento";
 import { DeleteConfirmForm } from "./modalContent/confirmForm";
 
-export const ActionButton = ({ type, idEmpresa }: { type: 'view' | 'edit' | 'delete', idEmpresa: number }) => {
+export const ActionButton = ({ type, idEmpresa, entity = 'empresa' }: { type: 'view' | 'edit' | 'delete', idEmpresa: number, entity?: 'empresa' | 'produto' | 'ratingCredito' | 'investimento' }) => {
     const [modalOpen, setModalOpen] = useState(false);
 
     const toggleModal = () => setModalOpen(!modalOpen);
@@ -43,7 +46,15 @@ export const ActionButton = ({ type, idEmpresa }: { type: 'view' | 'edit' | 'del
 
             {modalOpen && type === 'edit' && (
                 <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Editar">
-                    <EditForm id={idEmpresa} />
+                    {entity === 'produto' ? (
+                        <ModalEditProduto id={idEmpresa} />
+                    ) : entity === 'ratingCredito' ? (
+                        <ModalEditRatingCredito id={idEmpresa} />
+                    ) : entity === 'investimento' ? (
+                        <ModalEditInvestimento id={idEmpresa} />
+                    ) : (
+                        <EditForm id={idEmpresa} />
+                    )}
                 </BaseModal>
             )}
         </>

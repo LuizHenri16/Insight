@@ -22,7 +22,7 @@ export const RatingCreditoModal = () => {
                 <td className="py-3 px-4 text-slate-600 dark:text-zinc-300">{item.id_rating_credito}</td>
                 <td className="py-3 px-4 text-slate-600 dark:text-zinc-300">{item.rating_credito}</td>
                 <td className="py-3 px-4 flex justify-end gap-2">
-                    <ActionButton type="edit" idEmpresa={item.id_rating_credito} />
+                    <ActionButton type="edit" idEmpresa={item.id_rating_credito} entity="ratingCredito" />
                     <ActionButton type="delete" idEmpresa={item.id_rating_credito} />
                 </td>
             </tr>

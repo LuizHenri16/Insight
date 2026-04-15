@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
-import { postProduto } from "@/api/produtoservico/routes"
+import { postProduto, updateProduto } from "@/api/produtoservico/routes"
 
 export const useProdutosMutation = () => {
     const queryClient = useQueryClient()
@@ -23,3 +23,18 @@ export const useProdutosMutation = () => {
         }
     })
 }
+
+export const useUpdateProdutoMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ id, produto }: { id: number, produto: string }) => updateProduto(id, { produto_servico: produto }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['produtos'] })
+            windowDispatchFeedback("success", "Produto atualizado com sucesso!");
+        },
+        onError: (error) => {
+            windowDispatchFeedback("error", error.message);
+        }
+    })
+}
