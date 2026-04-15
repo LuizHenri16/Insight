@@ -34,9 +34,10 @@ export const ActionButton = ({ type, idEmpresa, entity = 'empresa' }: { type: 'v
 
             {modalOpen && type === 'delete' && (
                 <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Excluir">
-                    <DeleteConfirmForm idEmpresa={idEmpresa} />
+                    <DeleteConfirmForm idEmpresa={idEmpresa} entity={entity} />
                 </BaseModal>
             )}
+
 
             {modalOpen && type === 'view' && (
                 <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Visualizar">

@@ -17,7 +17,9 @@ export const getProdutos = async (): Promise<ProdutoServico[]> => {
 
     const { data, error } = await supabase
         .from('produtosservicos')
-        .select('id_produtos_servicos, produto_servico');
+        .select('id_produtos_servicos, produto_servico')
+        .is('deletado_em', null);
+
 
     if (error) throw new Error(error.message);
 
@@ -50,3 +52,16 @@ export const updateProduto = async (id: number, produto: Partial<ProdutoServico>
 
     return data;
 }
+
+export const deleteProduto = async (id: number) => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('produtosservicos')
+        .update({ deletado_em: new Date().toISOString() })
+        .eq('id_produtos_servicos', id);
+
+    if (error) throw error;
+
+    return data;
+}

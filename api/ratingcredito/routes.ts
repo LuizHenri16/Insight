@@ -17,7 +17,9 @@ export async function getRatingCredito() {
 
     const { data, error } = await supabase
         .from('ratingcredito')
-        .select('id_rating_credito, rating_credito');
+        .select('id_rating_credito, rating_credito')
+        .is('deletado_em', null);
+
 
     if (error) throw new Error(error.message);
 
@@ -50,3 +52,16 @@ export const updateRatingCredito = async (id: number, ratingCredito: Partial<Rat
 
     return data;
 }
+
+export const deleteRatingCredito = async (id: number) => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('ratingcredito')
+        .update({ deletado_em: new Date().toISOString() })
+        .eq('id_rating_credito', id);
+
+    if (error) throw error;
+
+    return data;
+}

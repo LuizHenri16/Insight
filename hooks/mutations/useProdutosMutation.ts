@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
-import { postProduto, updateProduto } from "@/api/produtoservico/routes"
+import { postProduto, updateProduto, deleteProduto } from "@/api/produtoservico/routes"
+
 
 export const useProdutosMutation = () => {
     const queryClient = useQueryClient()
@@ -37,4 +38,21 @@ export const useUpdateProdutoMutation = () => {
             windowDispatchFeedback("error", error.message);
         }
     })
-}
+}
+
+export const useDeleteProdutoMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteProduto(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['produtos'] })
+            windowDispatchFeedback("success", "Produto excluído com sucesso!");
+        },
+        onError: (error) => {
+            windowDispatchFeedback("error", error.message);
+        }
+    })
+}
+
+

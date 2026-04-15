@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
-import { postRatingCredito, updateRatingCredito } from "@/api/ratingcredito/routes"
+import { postRatingCredito, updateRatingCredito, deleteRatingCredito } from "@/api/ratingcredito/routes"
+
 
 export const useRatingCreditoMutation = () => {
     const queryClient = useQueryClient()
@@ -37,4 +38,20 @@ export const useUpdateRatingCreditoMutation = () => {
             windowDispatchFeedback("error", error.message);
         }
     })
-}
+}
+
+export const useDeleteRatingCreditoMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteRatingCredito(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['ratingCredito'] })
+            windowDispatchFeedback("success", "Rating de crédito excluído com sucesso!");
+        },
+        onError: (error) => {
+            windowDispatchFeedback("error", error.message);
+        }
+    })
+}
+

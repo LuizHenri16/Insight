@@ -18,7 +18,9 @@ export const getInvestimento = async (): Promise<Investimento[]> => {
 
     const { data, error } = await supabase
         .from('investimento')
-        .select('id_investimento, investimento');
+        .select('id_investimento, investimento')
+        .is('deletado_em', null);
+
 
     if (error) throw new Error(error.message);
 
@@ -51,3 +53,17 @@ export const updateInvestimento = async (id: number, investimento: Partial<Inves
 
     return data;
 }
+
+export const deleteInvestimento = async (id: number) => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from('investimento')
+        .update({ deletado_em: new Date().toISOString() })
+        .eq('id_investimento', id);
+
+    if (error) throw error;
+
+    return data;
+}
+
