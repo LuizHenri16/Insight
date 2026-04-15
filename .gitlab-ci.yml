@@ -2,12 +2,13 @@ image: node:22-alpine
 
 stages:
   - install
+  - validate
   - deploy
 
 cache:
   paths:
     - node_modules/
-    - .vercel/
+    - .next/cache/
 
 install_dependencies:
   stage: install
@@ -16,7 +17,16 @@ install_dependencies:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH == "develop"
-  
+
+validate:
+  stage: validate
+  script:
+    - npm run lint
+    - npx tsc --noEmit
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+
 deploy_vercel:
   stage: deploy
   image: node:22-alpine

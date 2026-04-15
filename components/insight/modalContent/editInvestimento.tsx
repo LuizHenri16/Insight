@@ -22,13 +22,11 @@ export const ModalEditInvestimento = ({ id }: { id: number | string }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-
         const valor = investimentoEdit.trim()
         if (valor.length < 2) {
             windowDispatchFeedback("warning", "Preencha o investimento com pelo menos 2 caracteres")
             return
         }
-
         mutate({ id: Number(id), investimento: valor })
     }
 
