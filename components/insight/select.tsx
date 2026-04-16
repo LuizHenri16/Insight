@@ -45,7 +45,7 @@ const Select = ({ options, onSelect, value, disabled, className }: SingleSelectD
     };
 
     return (
-        <div ref={dropdownRef} className={`w-full relative font-sans ${className}`}>
+        <div ref={dropdownRef} className={`${disabled ? 'opacity-50 cursor-not-allowed' : 'w-full'} relative font-sans ${className}`}>
             <div
                 className={`flex justify-between items-center cursor-pointer px-3 py-2.5 border rounded-xl transition-all
                     bg-white dark:bg-zinc-900 dark:text-zinc-200

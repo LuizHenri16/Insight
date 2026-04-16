@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import Image from "next/image";
 import { useEmpresa } from "@/hooks/queries/useEmpresa";
-import { table } from "console";
+import { EmpresaQueryResult } from "@/utils/types/Empresa";
 
 export const InsightTable = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -32,7 +32,7 @@ export const InsightTable = () => {
         activeFilter.value
     );
 
-    const data = response?.data || [];
+    const data: EmpresaQueryResult[] = response?.data || [];
     const totalCount = response?.count || 0;
     const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
@@ -100,13 +100,13 @@ export const InsightTable = () => {
                                     </td>
                                 </tr>
                             ) : (
-                                data.map((item: any) => (
+                                data.map((item: EmpresaQueryResult) => (
                                     <tr className="[&_td]:p-3 [&_td]:whitespace-nowrap text-center hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors" key={item.id_empresa}>
                                         <td className="font-normal text-blue-950">{item.nome_empresa}</td>
                                         <td>{item.cnpj_empresa}</td>
                                         <td>{item.conta}</td>
-                                        <td>{item.Socio?.[0]?.nome_socio || "-"}</td>
-                                        <td>{item.Socio?.[1]?.nome_socio || "-"}</td>
+                                        <td>{item.socio?.[0]?.nome_socio || "-"}</td>
+                                        <td>{item.socio?.[1]?.nome_socio || "-"}</td>
                                         <td className="lowercase">{item.email}</td>
                                         <td>
                                             <span className={`px-2 py-1 rounded-full text-xs font-bold ${item.crot === 'SIM' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>

@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Loader, Plus } from "lucide-react";
 import { ActionButton } from "../actionButton";
-import { useEffect, useMemo, useState } from "react";
-import { Investimento } from "@/utils/types/investimento";
-import { getInvestimento } from "@/api/investimento/routes";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useInvestimentos } from "@/hooks/queries/useInvestimentos";
 import { BaseModal } from "../modal";

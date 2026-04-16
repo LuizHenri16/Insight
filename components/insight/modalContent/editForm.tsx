@@ -1,28 +1,27 @@
 "use client"
 
-import { Input } from "@/components/ui/input"
-import MultiSelect from "../multiSelect"
-import Select from "../select"
+import { getInvestimento } from "@/api/investimento/routes"
+import { getRatingCredito } from "@/api/ratingcredito/routes"
 import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
 import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
-import { EmpresaForm } from "@/utils/types/Empresa"
-import { update } from "@/lib/utils/update"
-import { select } from "@/lib/utils/select"
-import { getRatingCredito } from "@/api/ratingcredito/routes"
-import { RatingCredito } from "@/utils/types/ratingcredito"
-import { Investimento } from "@/utils/types/investimento"
-import { ProdutoServico } from "@/utils/types/produtoservico"
-import { getInvestimento } from "@/api/investimento/routes"
-import { useRouter } from "next/navigation"
+import { Input } from "@/components/ui/input"
 import { useProdutos } from "@/hooks/queries/useProdutos"
+import { select } from "@/lib/utils/select"
+import { update } from "@/lib/utils/update"
+import { EmpresaForm, EmpresaInvestimentoItem, EmpresaJoin, ProdutosServicosEmpresaItem } from "@/utils/types/Empresa"
+import { Investimento } from "@/utils/types/investimento"
+import { RatingCredito } from "@/utils/types/ratingcredito"
+import { useRouter } from "next/navigation"
+import { useCallback, useEffect, useState } from "react"
+import MultiSelect from "../multiSelect"
+import Select from "../select"
 
 export const EditForm = ({ id }: { id: number | string }) => {
 
     const router = useRouter();
     const [ratingCredito, setRatingCredito] = useState<RatingCredito[]>([]);
     const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
-    const { data: produtosServicos, isLoading: isLoadingProdutosServicos } = useProdutos();
+    const { data: produtosServicos } = useProdutos();
 
     useEffect(() => {
         getRatingCredito().then((data) => setRatingCredito(data));
@@ -48,13 +47,17 @@ export const EditForm = ({ id }: { id: number | string }) => {
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
 
-    const getEmpresa = async () => {
+    const getEmpresa = useCallback(async () => {
         try {
             setFetching(true);
-            const empresa = await select(id);
+            const empresa: EmpresaJoin = await select(id);
 
-            const sociosMapeados = (empresa.EmpresaSocio || [])
-                .map((es: any) => es.Socio)
+            const sociosMapeados: EmpresaForm['Socio'] = (empresa.EmpresaSocio || [])
+                .map((es) => ({
+                    id_socio: es.Socio.id_socio,
+                    nome_socio: es.Socio.nome_socio,
+                    cpfcnpj_socio: es.Socio.cpfcnpj_socio
+                }))
                 .slice(0, 2);
 
             while (sociosMapeados.length < 2) {
@@ -70,13 +73,13 @@ export const EditForm = ({ id }: { id: number | string }) => {
                 email: empresa.email || "",
                 crot: empresa.crot || "",
                 Socio: sociosMapeados,
-                Investimentos: (empresa.EmpresaInvestimento || []).map((ei: any) => ({
+                Investimentos: (empresa.EmpresaInvestimento || []).map((ei: EmpresaInvestimentoItem) => ({
                     id_investimento: ei.Investimento.id_investimento,
-                    nome_investimento: ei.Investimento.investimento
+                    investimento: ei.Investimento.investimento
                 })),
-                ProdutosServicos: (empresa.ProdutosServicosEmpresa || []).map((pse: any) => ({
+                ProdutosServicos: (empresa.ProdutosServicosEmpresa || []).map((pse: ProdutosServicosEmpresaItem) => ({
                     id_produto_servico: pse.ProdutosServicos.id_produtos_servicos,
-                    nome_produto_servico: pse.ProdutosServicos.produto_servico
+                    produto_servico: pse.ProdutosServicos.produto_servico
                 })),
                 RatingCredito: empresa.id_rating_credito?.toString() || ""
             };
@@ -88,13 +91,13 @@ export const EditForm = ({ id }: { id: number | string }) => {
         } finally {
             setFetching(false);
         }
-    }
+    }, [id]);
 
     useEffect(() => {
         if (id) {
             getEmpresa();
         }
-    }, [id]);
+    }, [getEmpresa, id]);
 
     const updateSocio = (index: number, field: 'nome_socio' | 'cpfcnpj_socio', value: string) => {
         const newSocios = [...formData.Socio];
@@ -117,9 +120,10 @@ export const EditForm = ({ id }: { id: number | string }) => {
                 windowDispatchFeedback("success", "Empresa atualizada com sucesso!");
                 router.refresh();
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
-            windowDispatchFeedback("error", error.message || "Erro ao salvar os dados.");
+            const message = error instanceof Error ? error.message : "Erro desconhecido ao salvar os dados.";
+            windowDispatchFeedback("error", message);
         } finally {
             setLoading(false);
         }
@@ -225,18 +229,18 @@ export const EditForm = ({ id }: { id: number | string }) => {
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Investimentos</label>
                             <MultiSelect
-                                options={investimentos.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))}
-                                value={formData.Investimentos.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.nome_investimento }))}
-                                onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), nome_investimento: i.nomeDoItem })) })}
+                                options={investimentos.map(i => ({ id: i.id_investimento!.toString(), nomeDoItem: i.investimento }))}
+                                value={formData.Investimentos.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))}
+                                onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), investimento: i.nomeDoItem })) })}
                             />
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Produtos/Serviços</label>
                             <MultiSelect
-                                options={(produtosServicos || []).map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))}
-                                value={formData.ProdutosServicos.map(p => ({ id: p.id_produto_servico.toString(), nomeDoItem: p.nome_produto_servico }))}
-                                onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), nome_produto_servico: i.nomeDoItem })) })}
+                                options={(produtosServicos || []).map(p => ({ id: p.id_produtos_servicos!.toString(), nomeDoItem: p.produto_servico }))}
+                                value={formData.ProdutosServicos.map(p => ({ id: p.id_produto_servico.toString(), nomeDoItem: p.produto_servico }))}
+                                onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), produto_servico: i.nomeDoItem })) })}
                             />
                         </div>
 

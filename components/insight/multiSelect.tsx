@@ -47,7 +47,7 @@ const MultiSelectDropdown = ({ options, onChange, value, disabled }: MultiSelect
     };
 
     return (
-        <div ref={dropdownRef} className="w-full relative">
+        <div ref={dropdownRef} className={`${disabled ? 'opacity-50 cursor-not-allowed' : 'w-full'} relative`}>
             <div className='flex justify-between items-center cursor-pointer px-3 py-2.5 border border-[#1B2F53] dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-200 rounded-xl'
                 onClick={() => setIsOpen(!isOpen)}
             >

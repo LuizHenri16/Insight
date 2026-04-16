@@ -1,7 +1,14 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-export const HelpCardDropdown = ({ item }: { item: any }) => {
+interface HelpItem {
+    title: string;
+    content: string;
+    icon: string;
+    category: string;
+}
+
+export const HelpCardDropdown = ({ item }: { item: HelpItem }) => {
     const [open, setOpen] = useState(false);
     const toggleOpen = () => {
         setOpen(!open);

@@ -1,34 +1,29 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
+import { useInvestimentos } from "@/hooks/queries/useInvestimentos"
+import { useProdutos } from "@/hooks/queries/useProdutos"
+import { useRatingCredito } from "@/hooks/queries/useRatingCredito"
+import { select } from "@/lib/utils/select"
+import { EmpresaTable, EmpresaJoin } from "@/utils/types/Empresa"
+import { useCallback, useEffect, useState } from "react"
 import MultiSelect from "../multiSelect"
 import Select from "../select"
-import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
-import { EmpresaForm, EmpresaTable } from "@/utils/types/Empresa"
-import { getRatingCredito } from "@/api/ratingcredito/routes"
-import { RatingCredito } from "@/utils/types/ratingcredito"
-import { Investimento } from "@/utils/types/investimento"
-import { getInvestimento } from "@/api/investimento/routes"
-import { select } from "@/lib/utils/select"
-import { useProdutos } from "@/hooks/queries/useProdutos"
-import { useInvestimentos } from "@/hooks/queries/useInvestimentos"
-import { useRatingCredito } from "@/hooks/queries/useRatingCredito"
 
 export const ViewForm = ({ id }: { id: number | string }) => {
 
-    const { data: produtosServicos, isLoading: isLoadingProdutosServicos } = useProdutos();
-    const { data: investimentos, isLoading: isLoadingInvestimentos } = useInvestimentos();
-    const { data: ratingCredito, isLoading: isLoadingRatingCredito } = useRatingCredito();
+    const { data: produtosServicos } = useProdutos();
+    const { data: investimentos } = useInvestimentos();
+    const { data: ratingCredito } = useRatingCredito();
 
     const [fetching, setFetching] = useState(true);
 
     const [dadosEmpresa, setEmpresa] = useState<EmpresaTable | null>(null);
 
 
-    const getEmpresa = async () => {
+    const getEmpresa = useCallback(async () => {
         setFetching(true);
-        const empresa = await select(id);
+        const empresa: EmpresaJoin = await select(id);
 
         const empresaFormatada: EmpresaTable = {
             id_empresa: empresa.id_empresa,
@@ -38,19 +33,19 @@ export const ViewForm = ({ id }: { id: number | string }) => {
             email: empresa.email,
             telefone: empresa.telefone,
             crot: empresa.crot,
-            id_rating_credito: empresa.id_rating_credito,
-            Socio: empresa.EmpresaSocio?.map((es: any) => es.Socio) || [],
-            Investimentos: empresa.EmpresaInvestimento?.map((ei: any) => ei.Investimento) || [],
-            ProdutosServicos: empresa.ProdutosServicosEmpresa?.map((pse: any) => pse.ProdutosServicos) || []
+            id_rating_credito: empresa.id_rating_credito || 0,
+            Socio: empresa.EmpresaSocio?.map((es) => es.Socio) || [],
+            Investimentos: empresa.EmpresaInvestimento?.map((ei) => ei.Investimento) || [],
+            ProdutosServicos: empresa.ProdutosServicosEmpresa?.map((pse) => pse.ProdutosServicos) || []
         };
 
         setEmpresa(empresaFormatada);
         setFetching(false);
-    }
+    }, [id]);
 
     useEffect(() => {
         getEmpresa();
-    }, [id]);
+    }, [getEmpresa]);
 
     if (fetching) {
         return <div className="p-4">Carregando dados...</div>;
@@ -147,12 +142,14 @@ export const ViewForm = ({ id }: { id: number | string }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="w-full flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Investimentos</label>
-                            <MultiSelect options={(investimentos || []).map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))} value={dadosEmpresa?.Investimentos?.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento })) || []} />
+                            <MultiSelect options={(investimentos || [])
+                                .map(i => ({ id: i.id_investimento!.toString(), nomeDoItem: i.investimento }))} value={dadosEmpresa?.Investimentos?.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento })) || []} />
                         </div>
 
                         <div className="w-full flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Produtos/Serviços</label>
-                            <MultiSelect options={(produtosServicos || []).map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))} value={dadosEmpresa?.ProdutosServicos?.map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico })) || []} />
+                            <MultiSelect options={(produtosServicos || [])
+                                .map(p => ({ id: p.id_produtos_servicos!.toString(), nomeDoItem: p.produto_servico }))} value={dadosEmpresa?.ProdutosServicos?.map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico })) || []} />
                         </div>
 
 

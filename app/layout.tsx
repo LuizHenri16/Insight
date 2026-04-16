@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Sora } from "next/font/google";
+import { Sora } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { FeedbackModal } from "@/components/insight/feedbackModal";
 import "./globals.css";
@@ -17,12 +17,6 @@ export const metadata: Metadata = {
     icon: "/assets/icons/INSIGHT.svg",
   },
 };
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  display: "swap",
-  subsets: ["latin"],
-});
 
 const sora = Sora({
   variable: "--font-sora",

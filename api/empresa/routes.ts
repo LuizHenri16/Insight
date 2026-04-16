@@ -1,13 +1,15 @@
 import { createClient } from "@/lib/supabase/client";
 import { EmpresaForm } from "@/utils/types/Empresa";
-import { NextResponse } from "next/server";
+import { Investimento } from "@/utils/types/investimento";
+import { ProdutoServico } from "@/utils/types/produtoservico";
+import { Socio } from "@/utils/types/Socio";
 
 export async function POST(data: EmpresaForm) {
     const supabase = await createClient();
 
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData?.user) {
-        return NextResponse.json({ error: "Usuário não autenticado" }, { status: 401 });
+        return { success: false, id_empresa: 0, error: "Usuário não autenticado" };
     }
 
     try {
@@ -33,10 +35,10 @@ export async function POST(data: EmpresaForm) {
         // 2. Inserir Sócios
         if (data.Socio?.length > 0) {
             const sociosParaInserir = data.Socio
-                .filter((s: any) => s.nome_socio.trim() !== "")
-                .map((s: any) => ({
-                    nome_socio: s.nome_socio,
-                    cpfcnpj_socio: s.cpfcnpj_socio.replace(".", "").replace(".", "").replace("/", "").replace("-", "")
+                .filter((socio: Socio) => socio.nome_socio.trim() !== "")
+                .map((socio: Socio) => ({
+                    nome_socio: socio.nome_socio,
+                    cpfcnpj_socio: socio.cpfcnpj_socio.replace(".", "").replace(".", "").replace("/", "").replace("-", "")
                 }));
 
             if (sociosParaInserir.length > 0) {
@@ -55,6 +57,7 @@ export async function POST(data: EmpresaForm) {
                 const { error: relErr } = await supabase
                     .from('empresasocio')
                     .insert(vinculoSocios);
+
                 if (relErr) throw relErr;
             }
         }
@@ -62,9 +65,9 @@ export async function POST(data: EmpresaForm) {
         // 3. Vincular Investimentos
         if (data.Investimentos?.length > 0) {
 
-            const invData = data.Investimentos.map((inv: any) => ({
+            const invData = data.Investimentos.map((investimento: Investimento) => ({
                 id_empresa: id_empresa,
-                id_investimento: inv.id_investimento
+                id_investimento: investimento.id_investimento
             }));
 
             const { error: invErr } = await supabase
@@ -76,10 +79,10 @@ export async function POST(data: EmpresaForm) {
 
         if (data.ProdutosServicos?.length > 0) {
             const validProds = data.ProdutosServicos
-                .filter((p: any) => p.id_produto_servico)
-                .map((prod: any) => ({
+                .filter((produto: ProdutoServico) => produto.id_produtos_servicos)
+                .map((produto: ProdutoServico) => ({
                     id_empresa: Number(id_empresa),
-                    id_produtos_servicos: Number(prod.id_produto_servico)
+                    id_produtos_servicos: Number(produto.id_produtos_servicos)
                 }));
 
             if (validProds.length > 0) {
@@ -91,10 +94,11 @@ export async function POST(data: EmpresaForm) {
             }
         }
 
-        return { success: true, id_empresa };
+        return { success: true, id_empresa, error: "" };
 
-    } catch (error: any) {
-        return { success: false, error: error.message, id_empresa: null };
+    // unknown é o tipo mais seguro para erros, pois pode ser qualquer coisa. Ao usar (error as Error).message, estamos assumindo que o erro é um objeto do tipo Error, o que é uma prática comum, mas não garantida. Se o erro não for um objeto Error, isso pode resultar em undefined ou em outro comportamento inesperado.
+    } catch (error: unknown) {
+        return { success: false, error: (error as Error).message, id_empresa: null };
     }
 }
 

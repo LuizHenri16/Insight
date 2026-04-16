@@ -1,14 +1,14 @@
-import { Input } from "@/components/ui/input"
+import { save } from "@/api/empresa/create"
 import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useInvestimentos } from "@/hooks/queries/useInvestimentos"
+import { useProdutos } from "@/hooks/queries/useProdutos"
+import { useRatingCredito } from "@/hooks/queries/useRatingCredito"
+import { EmpresaForm } from "@/utils/types/Empresa"
+import { useState } from "react"
 import MultiSelect from "../multiSelect"
 import Select from "../select"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
-import { EmpresaForm } from "@/utils/types/Empresa"
-import { save } from "@/api/empresa/create"
-import { useProdutos } from "@/hooks/queries/useProdutos"
-import { useInvestimentos } from "@/hooks/queries/useInvestimentos"
-import { useRatingCredito } from "@/hooks/queries/useRatingCredito"
 
 // Dados iniciais do formulário
 const initialFormData: EmpresaForm = {
@@ -28,9 +28,9 @@ const initialFormData: EmpresaForm = {
 };
 
 export const CreateForm = () => {
-    const { data: produtosServicos, isLoading: isLoadingProdutosServicos } = useProdutos();
-    const { data: investimentos, isLoading: isLoadingInvestimentos } = useInvestimentos();
-    const { data: ratingCredito, isLoading: isLoadingRatingCredito } = useRatingCredito();
+    const { data: produtosServicos } = useProdutos();
+    const { data: investimentos } = useInvestimentos();
+    const { data: ratingCredito } = useRatingCredito();
 
     const [formData, setFormData] = useState<EmpresaForm>(initialFormData);
 
@@ -158,12 +158,18 @@ export const CreateForm = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="flex flex-col gap-2">
                             <label className="text-sm   font-medium text-gray-700 dark:text-zinc-300">Investimentos</label>
-                            <MultiSelect options={(investimentos || []).map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))} onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), nome_investimento: i.nomeDoItem })) })} />
+                            <MultiSelect options={(investimentos || [])
+                                .filter(i => i.id_investimento !== undefined)
+                                .map(i => ({ id: i.id_investimento!.toString(), nomeDoItem: i.investimento }))} 
+                                onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), investimento: i.nomeDoItem })) })} />
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">Produtos/Serviços</label>
-                            <MultiSelect options={(produtosServicos || []).map(p => ({ id: p.id_produtos_servicos.toString(), nomeDoItem: p.produto_servico }))} onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), nome_produto_servico: i.nomeDoItem })) })} />
+                            <MultiSelect options={(produtosServicos || [])
+                                .filter(i => i.id_produtos_servicos !== undefined)
+                                .map(p => ({ id: p.id_produtos_servicos!.toString(), nomeDoItem: p.produto_servico }))} 
+                                onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), produto_servico: i.nomeDoItem })) })} />
                         </div>
 
                         <div className="flex flex-col gap-2">

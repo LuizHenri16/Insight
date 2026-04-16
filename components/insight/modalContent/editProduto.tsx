@@ -1,14 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { windowDispatchFeedback } from "../feedbackModal"
-import { getProdutoById, updateProduto } from "@/api/produtoservico/routes"
 import { useUpdateProdutoMutation } from "@/hooks/mutations/useProdutosMutation"
 import { useProdutos } from "@/hooks/queries/useProdutos"
-import { ProdutoServico } from "@/utils/types/produtoservico"
 
 export const ModalEditProduto = ({ id }: { id: number | string }) => {
     const { data: produtos, isLoading: isLoadingProdutos } = useProdutos();

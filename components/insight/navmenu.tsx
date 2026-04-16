@@ -9,9 +9,10 @@ import { GearIcon, PlusIcon, QuestionMarkIcon } from "@radix-ui/react-icons";
 import { ProductsModal } from "./modalContent/productsModal";
 import { RatingCreditoModal } from "./modalContent/ratingCreditoModal";
 import { AccessModal } from "./modalContent/accessModal";
-import { createClient } from "@/lib/supabase/client";
 import { InvestimentosModal } from "./modalContent/investimentos.Modal";
 import { useRouter } from "next/navigation";
+import { getUserRole } from "@/api/usuario/routes";
+import { windowDispatchFeedback } from "./feedbackModal";
 
 export const NavMenu = () => {
     const router = useRouter();
@@ -24,49 +25,30 @@ export const NavMenu = () => {
     const [role, setRole] = useState("");
 
     useEffect(() => {
-        const supabase = createClient();
-
-        async function getUserRole() {
-            const { data: { user } } = await supabase.auth.getUser();
-
-            if (user) {
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .select('role')
-                    .eq('id', user.id)
-                    .single();
-                if (data) {
-                    setRole(data.role);
-                }
+        const fetchUserRole = async () => {
+            try {
+                const userRole = await getUserRole();
+                setRole(userRole); 
+            } catch (error: unknown) {
+                windowDispatchFeedback("error", error instanceof Error ? error.message : "Erro desconhecido ao tentar obter o papel do usuário. Tente novamente mais tarde.");
             }
         }
-        getUserRole();
-    }, [])
+        fetchUserRole();
+    }, []);
 
-    const handleModalAddOpen = () => {
-        setIsModalAddOpen(!isModalAddOpen);
-    }
+    const handleModalAddOpen = () => {setIsModalAddOpen(!isModalAddOpen);}
 
-    const handleModalProdutosOpen = () => {
-        setIsModalProdutosOpen(!isModalProdutosOpen);
-    }
+    const handleModalProdutosOpen = () => {setIsModalProdutosOpen(!isModalProdutosOpen);}
 
-    const handleModalRatingCreditoOpen = () => {
-        setIsModalRatingCreditoOpen(!isModalRatingCreditoOpen);
-    }
+    const handleModalRatingCreditoOpen = () => {setIsModalRatingCreditoOpen(!isModalRatingCreditoOpen);}
 
-    const handleModalAcessosOpen = () => {
-        setIsModalAcessosOpen(!isModalAcessosOpen);
-    }
+    const handleModalAcessosOpen = () => {setIsModalAcessosOpen(!isModalAcessosOpen);}
 
-    const handleModalInvestimentosOpen = () => {
-        setIsModalInvestimentosOpen(!isModalInvestimentosOpen);
-    }
+    const handleModalInvestimentosOpen = () => {setIsModalInvestimentosOpen(!isModalInvestimentosOpen);}
 
     return (
         <div className="">
             <MenuDropdown title="Menu">
-
                 <div className="w-full flex flex-col text-left justify-center pb-2 gap-1 border-b border-gray-300 dark:border-zinc-700">
                     <p className="ml-1 text-sm font-normal text-gray-400 dark:text-zinc-500">Configurações</p>
 
@@ -85,8 +67,8 @@ export const NavMenu = () => {
                             </NavButton>
 
                             {/* <NavButton text="Gerenciar acessos" onClick={handleModalAcessosOpen}>
-                            <GearIcon width={18} height={18} />
-                        </NavButton> */}
+                                <GearIcon width={18} height={18} />
+                            </NavButton> */}
                         </div>
                     )}
                     <NavButton text="Central de Ajuda" onClick={() => router.push("/help")}>
