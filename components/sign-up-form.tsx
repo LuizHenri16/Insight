@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { windowDispatchFeedback } from "./insight/feedbackModal";
 
 export function SignUpForm({
   className,
@@ -23,7 +24,6 @@ export function SignUpForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -31,10 +31,9 @@ export function SignUpForm({
     e.preventDefault();
     const supabase = createClient();
     setIsLoading(true);
-    setError(null);
 
     if (password !== repeatPassword) {
-      setError("Passwords do not match");
+      windowDispatchFeedback("error", "As senhas não coincidem.");
       setIsLoading(false);
       return;
     }
@@ -50,7 +49,7 @@ export function SignUpForm({
       if (error) throw error;
       router.push("/auth/sign-up-success");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      windowDispatchFeedback("error", error instanceof Error ? "Email já cadastrado." : "Ocorre um erro ao tentar criar conta.");
     } finally {
       setIsLoading(false);
     }
@@ -60,8 +59,8 @@ export function SignUpForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Create a new account</CardDescription>
+          <CardTitle className="text-2xl">Criar conta</CardTitle>
+          <CardDescription>Crie uma nova conta</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignUp}>
@@ -79,7 +78,7 @@ export function SignUpForm({
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Senha</Label>
                 </div>
                 <Input
                   id="password"
@@ -91,7 +90,7 @@ export function SignUpForm({
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="repeat-password">Repeat Password</Label>
+                  <Label htmlFor="repeat-password">Repetir senha</Label>
                 </div>
                 <Input
                   id="repeat-password"
@@ -101,15 +100,14 @@ export function SignUpForm({
                   onChange={(e) => setRepeatPassword(e.target.value)}
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating an account..." : "Sign up"}
+                {isLoading ? "Criando conta..." : "Criar conta"}
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
+              Já tem uma conta?{" "}
               <Link href="/auth/login" className="underline underline-offset-4">
-                Login
+                Entrar
               </Link>
             </div>
           </form>

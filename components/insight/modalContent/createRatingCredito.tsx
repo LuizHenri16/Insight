@@ -24,7 +24,7 @@ export const ModalCreateRatingCredito = () => {
     return (
         <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2 p-2">
-                <label htmlFor="ratingCredito">Rating de Crédito</label>
+                <label htmlFor="ratingCredito" className="text-sm font-medium dark:text-zinc-300">Rating de Crédito</label>
                 <Input required name="ratingCredito" id="ratingCredito" value={ratingCredito} onChange={(e) => setRatingCredito(e.target.value)} placeholder="Digite o nome do rating de crédito" />
             </div>
             <div className="flex justify-end">

@@ -4,11 +4,11 @@ import { POST } from "./routes";
 export interface ResponseCreateEmpresa {
     success: boolean;
     id_empresa: number;
-    error: string | undefined;
+    error?: string;
 }
 
 export async function save(data: EmpresaForm) {
-    const response: Response | any = await POST(data);
+    const response: ResponseCreateEmpresa = await POST(data);
 
     if (!response.success) {
         throw new Error(response.error);

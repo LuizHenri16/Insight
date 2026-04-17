@@ -1,11 +1,8 @@
-import { Edit, Trash, Plus } from "lucide-react";
-import { useState } from "react";
+import { Plus } from "lucide-react";
 import { ActionButton } from "../actionButton";
 import { Button } from "@/components/ui/button";
 
 export const AccessModal = () => {
-
-    const [usuarios, setUsuarios] = useState<[]>([]);
 
     return (
         <div className="w-full max-h-[24rem] overflow-y-auto flex flex-col gap-4">

@@ -16,7 +16,7 @@ export const PaginationControls = ({ currentPage, totalPages }: { currentPage: n
             <button
                 disabled={currentPage <= 1}
                 onClick={() => changePage(currentPage - 1)}
-                className="p-2 border border-gray-200 rounded-lg disabled:opacity-50"
+                className="p-2 border border-gray-200 dark:border-zinc-600 rounded-lg disabled:opacity-50 dark:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
             >
                 Anterior
             </button>
@@ -24,7 +24,7 @@ export const PaginationControls = ({ currentPage, totalPages }: { currentPage: n
             <button
                 disabled={currentPage >= totalPages}
                 onClick={() => changePage(currentPage + 1)}
-                className="p-2 border border-gray-200 rounded-lg disabled:opacity-50"
+                className="p-2 border border-gray-200 dark:border-zinc-600 rounded-lg disabled:opacity-50 dark:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
             >
                 Próximo
             </button>

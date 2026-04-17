@@ -1,27 +1,22 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createClient } from "@/lib/supabase/client"
-import { Investimento } from "@/utils/types/investimento"
 import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
+import { postInvestimento, updateInvestimento, deleteInvestimento } from "@/api/investimento/routes"
+
 
 export const useInvestimentosMutation = () => {
     const queryClient = useQueryClient()
-    const supabase = createClient()
 
     return useMutation({
-        mutationFn: async (novoInvestimento: Partial<Investimento>) => {
-            const { data, error } = await supabase
-                .from('Investimento')
-                .insert([novoInvestimento])
+        // Função que será chamada quando a mutação for disparada
+        mutationFn: postInvestimento,
 
-            if (error) throw error
-            return data
-        },
         onSuccess: () => {
             // Invalida a query de investimentos para atualizar a lista
             queryClient.invalidateQueries({ queryKey: ['investimentos'] })
             // Dispara sucesso em caso de criação do investimento
             windowDispatchFeedback("success", "Investimento cadastrado com sucesso!");
         },
+
         onError: (error) => {
             // Dispara erro em caso de falha na criação do investimento
             windowDispatchFeedback("error", error.message);
@@ -29,3 +24,35 @@ export const useInvestimentosMutation = () => {
     })
 
 }
+
+export const useUpdateInvestimentoMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ id, investimento }: { id: number, investimento: string }) => updateInvestimento(id, { investimento }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['investimentos'] })
+            windowDispatchFeedback("success", "Investimento atualizado com sucesso!");
+        },
+        onError: (error) => {
+            windowDispatchFeedback("error", error.message);
+        }
+    })
+}
+
+export const useDeleteInvestimentoMutation = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteInvestimento(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['investimentos'] })
+            windowDispatchFeedback("success", "Investimento excluído com sucesso!");
+        },
+        onError: (error) => {
+            windowDispatchFeedback("error", error.message);
+        }
+    })
+}
+
+

@@ -17,7 +17,6 @@ export function LoginForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -25,7 +24,6 @@ export function LoginForm({
     e.preventDefault();
     const supabase = createClient();
     setIsLoading(true);
-    setError(null);
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -85,6 +83,12 @@ export function LoginForm({
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Entrando..." : "Entrar"}
               </Button>
+            </div>
+            <div className="mt-6 text-center text-sm">
+              Não tem uma conta?{" "}
+              <Link href="/auth/sign-up" className="underline">
+                Registre-se
+              </Link>
             </div>
           </form>
         </CardContent>

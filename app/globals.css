@@ -33,6 +33,7 @@
   }
 
   .dark {
+    --background-login-gradient: linear-gradient(160deg, #0f1117 0%, #1a2035 100%);
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
@@ -76,4 +77,12 @@
 
 .background-dashboard-gradient {
   background: linear-gradient(140deg, #ffffff 48%, #8f9bb8 100%);
+}
+
+.dark .background-dashboard-gradient {
+  background: linear-gradient(140deg, #0f1117 48%, #1a2035 100%);
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s infinite;
 }

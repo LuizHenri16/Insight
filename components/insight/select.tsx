@@ -45,13 +45,14 @@ const Select = ({ options, onSelect, value, disabled, className }: SingleSelectD
     };
 
     return (
-        <div ref={dropdownRef} className={`w-full relative font-sans ${className}`}>
+        <div ref={dropdownRef} className={`${disabled ? 'opacity-50 cursor-not-allowed' : 'w-full'} relative font-sans ${className}`}>
             <div
                 className={`flex justify-between items-center cursor-pointer px-3 py-2.5 border rounded-xl transition-all
-                    ${isOpen ? 'border-blue-500 shadow-sm' : 'border-[#1B2F53]'}`}
+                    bg-white dark:bg-zinc-900 dark:text-zinc-200
+                    ${isOpen ? 'border-blue-500 dark:border-blue-400 shadow-sm' : 'border-[#1B2F53] dark:border-zinc-600'}`}
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className={selectedItem ? 'text-black' : 'text-gray-500'}>
+                <span className={selectedItem ? 'text-black dark:text-zinc-100' : 'text-gray-500 dark:text-zinc-500'}>
                     {selectedItem ? selectedItem.nomeDoItem : "Selecione..."}
                 </span>
                 <span className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
@@ -60,19 +61,19 @@ const Select = ({ options, onSelect, value, disabled, className }: SingleSelectD
             </div>
 
             {isOpen && (
-                <div className='absolute top-full left-0 right-0 bg-white border border-gray-200 shadow-xl z-10 max-h-60 overflow-y-auto rounded-lg mt-1 py-1'>
+                <div className='absolute top-full left-0 right-0 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 shadow-xl z-10 max-h-60 overflow-y-auto rounded-lg mt-1 py-1'>
                     {options.map((option) => (
                         <div
                             key={option.id}
-                            className={`p-3 cursor-pointer transition-colors hover:bg-blue-50
-                                ${selectedItem?.id === option.id ? 'bg-blue-100 text-blue-700 font-medium' : 'text-gray-700'}`}
+                            className={`p-3 cursor-pointer transition-colors hover:bg-blue-50 dark:hover:bg-zinc-700
+                                ${selectedItem?.id === option.id ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-medium' : 'text-gray-700 dark:text-zinc-300'}`}
                             onClick={() => handleOptionClick(option)}
                         >
                             {option.nomeDoItem}
                         </div>
                     ))}
                     {options.length === 0 && (
-                        <div className="p-3 text-gray-400 text-sm">Nenhuma opção encontrada</div>
+                        <div className="p-3 text-gray-400 dark:text-zinc-500 text-sm">Nenhuma opção encontrada</div>
                     )}
                 </div>
             )}

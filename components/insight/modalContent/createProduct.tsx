@@ -25,7 +25,7 @@ export const ModalCreateProduct = () => {
     return (
         <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-2 p-2">
-                <label htmlFor="produto">Produto</label>
+                <label htmlFor="produto" className="text-sm font-medium dark:text-zinc-300">Produto</label>
                 <Input required name="produto_servico" id="produto_servico" value={produto} onChange={(e) => setProduto(e.target.value)} placeholder="Digite o nome do produto" />
             </div>
             <div className="flex justify-end">

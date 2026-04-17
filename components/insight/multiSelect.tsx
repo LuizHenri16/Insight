@@ -1,4 +1,3 @@
-import { TriangleDownIcon, TriangleUpIcon } from '@radix-ui/react-icons';
 import { ChevronDownIcon } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 
@@ -48,8 +47,8 @@ const MultiSelectDropdown = ({ options, onChange, value, disabled }: MultiSelect
     };
 
     return (
-        <div ref={dropdownRef} className="w-full relative">
-            <div className='flex justify-between items-center cursor-pointer px-3 py-2.5 border border-[#1B2F53] rounded-xl'
+        <div ref={dropdownRef} className={`${disabled ? 'opacity-50 cursor-not-allowed' : 'w-full'} relative`}>
+            <div className='flex justify-between items-center cursor-pointer px-3 py-2.5 border border-[#1B2F53] dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-200 rounded-xl'
                 onClick={() => setIsOpen(!isOpen)}
             >
                 {selectedItems.length > 0
@@ -62,10 +61,10 @@ const MultiSelectDropdown = ({ options, onChange, value, disabled }: MultiSelect
 
             {isOpen && (
                 <div
-                    className='absolute top-full left-0 right-0 bg-white border border-gray-200 shadow-lg z-10 max-h-[12rem] overflow-y-auto rounded-lg mt-1'>
+                    className='absolute top-full left-0 right-0 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 shadow-lg z-10 max-h-[12rem] overflow-y-auto rounded-lg mt-1'>
                     {options.map((option) => (
                         <div
-                            className={`p-3 cursor-pointer border-b transition-colors hover:bg-blue-50 border-b-gray-200 ${selectedItems.some(s => s.id === option.id) ? 'bg-blue-200' : ''}`}
+                            className={`p-3 cursor-pointer border-b dark:border-zinc-700 transition-colors hover:bg-blue-50 dark:hover:bg-zinc-700 border-b-gray-200 dark:text-zinc-200 ${selectedItems.some(s => s.id === option.id) ? 'bg-blue-200 dark:bg-blue-900/40 dark:text-blue-300' : ''}`}
                             key={option.id}
                             onClick={() => toggleOption(option)}
                         >

@@ -6,6 +6,7 @@ import { Suspense } from "react"
 import { AuthButton } from "../auth-button"
 import Image from "next/image"
 import { MobileMenu } from "./mobileMenu"
+import { ThemeToggle } from "./themeToggle"
 
 export const Header = () => {
     const authSection = !hasEnvVars ? (
@@ -25,10 +26,12 @@ export const Header = () => {
 
                 <div className="hidden md:flex gap-6 items-center">
                     <NavMenu />
+                    <ThemeToggle />
                     {authSection}
                 </div>
 
                 <div className="md:hidden flex items-center gap-4">
+                    <ThemeToggle />
                     <NavMenu />
                     <MobileMenu>
                         {authSection}

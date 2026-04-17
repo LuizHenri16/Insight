@@ -1,4 +1,4 @@
 export interface Investimento {
-    id_investimento: number;
+    id_investimento?: number;
     investimento: string;
 }

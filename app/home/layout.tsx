@@ -1,10 +1,3 @@
-
-import { EnvVarWarning } from "@/components/env-var-warning";
-import { AuthButton } from "@/components/auth-button";
-import { hasEnvVars } from "@/lib/utils";
-import Link from "next/link";
-import { Suspense } from "react";
-import { NavMenu } from "@/components/insight/navmenu";
 import { Header } from "@/components/insight/header";
 
 export default function ProtectedLayout({

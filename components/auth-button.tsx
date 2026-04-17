@@ -13,8 +13,8 @@ export async function AuthButton() {
 
   return user ? (
     <div className="flex justify-end items-center gap-2">
-      <p className="text-[.8rem] font-semibold text-gray-800">Olá, {emailShort}!</p>
-      <div className="mr-2 ml-2 border-l border-[1px] border-gray-500 h-4"></div>
+      <p className="text-[.8rem] font-semibold text-gray-800 dark:text-zinc-200">Olá, {emailShort}!</p>
+      <div className="mr-2 ml-2 border-l border-[1px] border-gray-500 dark:border-zinc-500 h-4"></div>
       <LogoutButton />
     </div>
   ) : (
