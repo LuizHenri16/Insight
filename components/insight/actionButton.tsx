@@ -11,7 +11,13 @@ import { ModalEditRatingCredito } from "./modalContent/editRatingCredito";
 import { ModalEditInvestimento } from "./modalContent/editInvestimento";
 import { DeleteConfirmForm } from "./modalContent/confirmForm";
 
-export const ActionButton = ({ type, idEmpresa, entity = 'empresa' }: { type: 'view' | 'edit' | 'delete', idEmpresa: number, entity?: 'empresa' | 'produto' | 'ratingCredito' | 'investimento' }) => {
+interface ActionButtonProps {
+    type: 'view' | 'edit' | 'delete';
+    idEmpresa: number;
+    entity?: 'empresa' | 'produto' | 'ratingCredito' | 'investimento';
+}
+
+export const ActionButton = ({ type, idEmpresa, entity = 'empresa' }: ActionButtonProps) => {
     const [modalOpen, setModalOpen] = useState(false);
 
     const toggleModal = () => setModalOpen(!modalOpen);

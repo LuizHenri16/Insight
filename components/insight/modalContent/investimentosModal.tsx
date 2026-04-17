@@ -22,8 +22,8 @@ export const InvestimentosModal = () => {
                 <td className="py-3 px-4 text-slate-600 dark:text-zinc-300">{investimento.id_investimento}</td>
                 <td className="py-3 px-4 text-slate-600 dark:text-zinc-300">{investimento.investimento}</td>
                 <td className="py-3 px-4 flex justify-end gap-2">
-                    <ActionButton type="edit" idEmpresa={investimento.id_investimento} entity="investimento" />
-                    <ActionButton type="delete" idEmpresa={investimento.id_investimento} />
+                    <ActionButton type="edit" idEmpresa={investimento.id_investimento!} entity="investimento" />
+                    <ActionButton type="delete" idEmpresa={investimento.id_investimento!} entity="investimento" />
                 </td>
             </tr>
         ));

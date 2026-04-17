@@ -9,7 +9,7 @@ import { GearIcon, PlusIcon, QuestionMarkIcon } from "@radix-ui/react-icons";
 import { ProductsModal } from "./modalContent/productsModal";
 import { RatingCreditoModal } from "./modalContent/ratingCreditoModal";
 import { AccessModal } from "./modalContent/accessModal";
-import { InvestimentosModal } from "./modalContent/investimentos.Modal";
+import { InvestimentosModal } from "./modalContent/investimentosModal";
 import { useRouter } from "next/navigation";
 import { getUserRole } from "@/api/usuario/routes";
 import { windowDispatchFeedback } from "./feedbackModal";
