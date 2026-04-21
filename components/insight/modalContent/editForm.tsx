@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 import MultiSelect from "../multiSelect"
 import Select from "../select"
+import { validateForm } from "@/utils/validate/formValidate"
 
 export const EditForm = ({ id }: { id: number | string }) => {
 
@@ -48,6 +49,9 @@ export const EditForm = ({ id }: { id: number | string }) => {
     const [fetching, setFetching] = useState(true);
 
     const getEmpresa = useCallback(async () => {
+
+        if (!validateForm(formData)) return;
+
         try {
             setFetching(true);
             const empresa: EmpresaJoin = await select(id);
@@ -86,7 +90,6 @@ export const EditForm = ({ id }: { id: number | string }) => {
 
             setFormData(empresaFormatada);
         } catch (error) {
-            console.error("Erro ao buscar dados da empresa:", error);
             windowDispatchFeedback("error", "Erro ao carregar dados para edição.");
         } finally {
             setFetching(false);
@@ -121,7 +124,6 @@ export const EditForm = ({ id }: { id: number | string }) => {
                 router.refresh();
             }
         } catch (error: unknown) {
-            console.error(error);
             const message = error instanceof Error ? error.message : "Erro desconhecido ao salvar os dados.";
             windowDispatchFeedback("error", message);
         } finally {
