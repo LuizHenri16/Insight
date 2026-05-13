@@ -39,43 +39,6 @@ O **Insight** é uma plataforma robusta de gestão voltada para o acompanhamento
 └── public/              # Ativos estáticos (Imagens, Logos)
 ```
 
-## ⚙️ Começando
-
-### Pré-requisitos
-
-- **Node.js** (v18+)
-- **NPM**, **YARN** ou **PNPM**
-- Conta no **Supabase**
-
-### Instalação
-
-1.  **Clone o repositório:**
-    ```bash
-    git clone https://github.com/seu-usuario/insight.git
-    cd insight
-    ```
-
-2.  **Instale as dependências:**
-    ```bash
-    npm install
-    # ou
-    yarn install
-    ```
-
-3.  **Configure as variáveis de ambiente:**
-    Renomeie `.env.example` para `.env.local` e preencha com suas credenciais do Supabase:
-    ```env
-    NEXT_PUBLIC_SUPABASE_URL=seu_projeto_url
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sua_anon_key
-    ```
-
-4.  **Inicie o servidor de desenvolvimento:**
-    ```bash
-    npm run dev
-    ```
-
-O sistema estará disponível em `http://localhost:3000`.
-
 ## 📄 Documentação Técnica
 
 ### Integração com Supabase
