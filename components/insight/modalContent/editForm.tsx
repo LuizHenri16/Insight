@@ -15,7 +15,6 @@ import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 import MultiSelect from "../multiSelect"
 import Select from "../select"
-import { validateForm } from "@/utils/validate/formValidate"
 
 export const EditForm = ({ id }: { id: number | string }) => {
 
@@ -49,8 +48,6 @@ export const EditForm = ({ id }: { id: number | string }) => {
     const [fetching, setFetching] = useState(true);
 
     const getEmpresa = useCallback(async () => {
-
-        if (!validateForm(formData)) return;
 
         try {
             setFetching(true);
@@ -89,8 +86,9 @@ export const EditForm = ({ id }: { id: number | string }) => {
             };
 
             setFormData(empresaFormatada);
-        } catch (error) {
-            windowDispatchFeedback("error", "Erro ao carregar dados para edição.");
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "Erro ao carregar dados para edição.";
+            windowDispatchFeedback("error", message);
         } finally {
             setFetching(false);
         }
@@ -138,7 +136,6 @@ export const EditForm = ({ id }: { id: number | string }) => {
     return (
         <div className="w-full max-w-5xl mx-auto p-2 sm:p-6">
             <form className="flex flex-col gap-10">
-                {/* Seção: Dados da Empresa */}
                 <section className="space-y-6">
                     <div className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados da Empresa</h2>
@@ -160,7 +157,6 @@ export const EditForm = ({ id }: { id: number | string }) => {
                     </div>
                 </section>
 
-                {/* Seção: Dados dos Sócios */}
                 <section className="space-y-6">
                     <div className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados dos Sócios</h2>
@@ -203,7 +199,6 @@ export const EditForm = ({ id }: { id: number | string }) => {
                     </div>
                 </section>
 
-                {/* Seção: Dados de Contato */}
                 <section className="space-y-6">
                     <div className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados de Contato</h2>
@@ -221,7 +216,6 @@ export const EditForm = ({ id }: { id: number | string }) => {
                     </div>
                 </section>
 
-                {/* Seção: Financeiro */}
                 <section className="space-y-6">
                     <div className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Financeiro</h2>

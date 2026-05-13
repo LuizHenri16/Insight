@@ -125,7 +125,7 @@ export const InsightTable = () => {
                     </table>
                 </div>
             </div>
-
+            
             <div className="flex flex-col sm:flex-row justify-between items-center p-4 gap-4">
                 <p className="text-sm text-gray-600 dark:text-zinc-400">
                     Mostrando <strong>{range.from + 1}</strong> a <strong>{Math.min(range.to + 1, totalCount)}</strong> de <strong>{totalCount}</strong> cadastros

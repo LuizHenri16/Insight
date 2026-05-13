@@ -8,6 +8,7 @@ import Image from "next/image"
 import { MobileMenu } from "./mobileMenu"
 import { ThemeToggle } from "./themeToggle"
 
+
 export const Header = () => {
     const authSection = !hasEnvVars ? (
         <EnvVarWarning />
@@ -37,7 +38,6 @@ export const Header = () => {
                         {authSection}
                     </MobileMenu>
                 </div>
-
             </div>
         </nav>
     )
