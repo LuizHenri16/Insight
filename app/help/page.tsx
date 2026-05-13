@@ -24,7 +24,7 @@ export default function HelpPage() {
                 ))}
             </section>
 
-            <button onClick={() => router.push("/home")} className="fixed bottom-4 right-4 flex bg-[#1e293b] items-center gap-1 p-1 rounded-full border border-slate-400 cursor-pointer hover:opacity-80 transition-opacity duration-200 z-10 animate-pulse-slow">
+            <button onClick={() => router.back()} className="fixed bottom-4 right-4 flex bg-[#1e293b] items-center gap-1 p-1 rounded-full border border-slate-400 cursor-pointer hover:opacity-80 transition-opacity duration-200 z-10 animate-pulse-slow">
                 <ChevronLeft color="white" />
             </button>
         </div>

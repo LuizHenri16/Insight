@@ -9,6 +9,7 @@ import { EmpresaForm } from "@/utils/types/Empresa"
 import { useState } from "react"
 import MultiSelect from "../multiSelect"
 import Select from "../select"
+import { validateForm } from "@/utils/validate/formValidate"
 
 // Dados iniciais do formulário
 const initialFormData: EmpresaForm = {
@@ -48,13 +49,11 @@ export const CreateForm = () => {
     // Em caso de erro mostra um feedback
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (!formData.nome_empresa || !formData.cnpj_empresa || !formData.conta) {
-            windowDispatchFeedback("warning", "Preencha os campos obrigatórios: Nome, CNPJ e Conta.");
-            return;
-        }
+
+        // Valida o formulário
+        if (!validateForm(formData)) return;
 
         setLoading(true);
-
         try {
             await save(formData);
             windowDispatchFeedback("success", "Empresa cadastrada com sucesso!");
@@ -160,7 +159,7 @@ export const CreateForm = () => {
                             <label className="text-sm   font-medium text-gray-700 dark:text-zinc-300">Investimentos</label>
                             <MultiSelect options={(investimentos || [])
                                 .filter(i => i.id_investimento !== undefined)
-                                .map(i => ({ id: i.id_investimento!.toString(), nomeDoItem: i.investimento }))} 
+                                .map(i => ({ id: i.id_investimento!.toString(), nomeDoItem: i.investimento }))}
                                 onChange={(items) => setFormData({ ...formData, Investimentos: items.map(i => ({ id_investimento: parseInt(i.id), investimento: i.nomeDoItem })) })} />
                         </div>
 
@@ -168,7 +167,7 @@ export const CreateForm = () => {
                             <label className="text-sm font-medium text-gray-700 dark:text-zinc-300">Produtos/Serviços</label>
                             <MultiSelect options={(produtosServicos || [])
                                 .filter(i => i.id_produtos_servicos !== undefined)
-                                .map(p => ({ id: p.id_produtos_servicos!.toString(), nomeDoItem: p.produto_servico }))} 
+                                .map(p => ({ id: p.id_produtos_servicos!.toString(), nomeDoItem: p.produto_servico }))}
                                 onChange={(items) => setFormData({ ...formData, ProdutosServicos: items.map(i => ({ id_produto_servico: parseInt(i.id), produto_servico: i.nomeDoItem })) })} />
                         </div>
 

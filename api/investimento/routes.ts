@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/client";
 import { Investimento } from "@/utils/types/investimento";
 
-
 export const postInvestimento = async (investimento: Partial<Investimento>) => {
     const supabase = createClient();
 

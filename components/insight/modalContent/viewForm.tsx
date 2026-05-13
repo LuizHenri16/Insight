@@ -11,15 +11,11 @@ import MultiSelect from "../multiSelect"
 import Select from "../select"
 
 export const ViewForm = ({ id }: { id: number | string }) => {
-
     const { data: produtosServicos } = useProdutos();
     const { data: investimentos } = useInvestimentos();
     const { data: ratingCredito } = useRatingCredito();
-
     const [fetching, setFetching] = useState(true);
-
     const [dadosEmpresa, setEmpresa] = useState<EmpresaTable | null>(null);
-
 
     const getEmpresa = useCallback(async () => {
         setFetching(true);
