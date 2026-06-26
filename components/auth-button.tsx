@@ -8,13 +8,12 @@ export async function AuthButton() {
   const { data } = await supabase.auth.getUser();
 
   const user = data?.user;
-  // Exibir somente primeira parte do email
   const emailShort = user?.email?.split("@")[0];
 
   return user ? (
     <div className="flex justify-end items-center gap-2">
-      <p className="text-[.8rem] font-semibold text-gray-800 dark:text-zinc-200">Olá, {emailShort}!</p>
-      <div className="mr-2 ml-2 border-l border-[1px] border-gray-500 dark:border-zinc-500 h-4"></div>
+      <p className="text-sm font-medium text-foreground">Olá, {emailShort}!</p>
+      <div className="mx-2 border-l border-border h-4"></div>
       <LogoutButton />
     </div>
   ) : (

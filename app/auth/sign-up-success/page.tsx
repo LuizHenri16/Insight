@@ -9,12 +9,12 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <div className="flex min-h-svh w-full items-center justify-center p-4 md:p-10 background-login-gradient">
       <div className="w-full max-w-sm">
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl">
+              <CardTitle className="text-2xl text-primary">
                 Obrigado por se cadastrar!
               </CardTitle>
               <CardDescription>Confira seu email para confirmar</CardDescription>

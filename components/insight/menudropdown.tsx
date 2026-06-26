@@ -34,16 +34,15 @@ export const MenuDropdown = ({ title = "Menu", children }: MenuDropdownProps) =>
         <div className="relative inline-block text-left" ref={dropdownRef}>
             <Button className="rounded-xl" size="sm" variant="default" onClick={toggleDropdown}>
                 {title}
-                <div className="border-l border-[1px] border-white h-3"></div>
+                <div className="border-l border-[1px] border-primary-foreground/50 h-3"></div>
                 <ChevronDownIcon width={14} height={14} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
             </Button>
 
             {isOpen && (
-                <div className="absolute left-[-6rem] md:left-0 mt-2 min-w-60 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-lg z-20 p-1 py-3 flex flex-col gap-1">
+                <div className="absolute left-[-6rem] md:left-0 mt-2 min-w-60 bg-card border border-input rounded-xl shadow-paper-lg z-20 p-1.5 py-3 flex flex-col gap-1">
                     {children}
                 </div>
             )}
         </div>
     );
 };
-

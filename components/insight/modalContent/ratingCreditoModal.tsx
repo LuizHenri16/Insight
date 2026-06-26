@@ -11,71 +11,72 @@ export const RatingCreditoModal = () => {
 
     const { data: ratingCredito, isLoading } = useRatingCredito();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [innerDirty, setInnerDirty] = useState(false);
 
     const handleModalOpen = () => {
+        if (isModalOpen) setInnerDirty(false);
         setIsModalOpen(!isModalOpen);
     }
 
     const rows = useMemo(() => {
-        return ratingCredito?.map((item) => (
-            <tr key={item.id_rating_credito} className="border-b border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors">
-                <td className="py-3 px-4 text-slate-600 dark:text-zinc-300">{item.id_rating_credito}</td>
-                <td className="py-3 px-4 text-slate-600 dark:text-zinc-300">{item.rating_credito}</td>
-                <td className="py-3 px-4 flex justify-end gap-2">
-                    <ActionButton type="edit" idEmpresa={item.id_rating_credito} entity="ratingCredito" />
-                    <ActionButton type="delete" idEmpresa={item.id_rating_credito} />
+        return ratingCredito?.map((item, index) => (
+            <tr key={item.id_rating_credito} className={`transition-colors hover:bg-accent/30 ${index % 2 === 0 ? 'bg-card' : 'bg-secondary/10'}`}>
+                <td className="py-3 px-4 text-muted-foreground font-mono text-xs">{item.id_rating_credito}</td>
+                <td className="py-3 px-4 text-foreground font-medium">{item.rating_credito}</td>
+                <td className="py-3 px-4 text-right">
+                    <div className="inline-flex gap-1">
+                        <ActionButton type="edit" idEmpresa={item.id_rating_credito} entity="ratingCredito" />
+                        <ActionButton type="delete" idEmpresa={item.id_rating_credito} />
+                    </div>
                 </td>
             </tr>
         ));
     }, [ratingCredito]);
 
     return (
-        <div className="w-full max-h-[24rem] overflow-y-auto flex flex-col gap-4">
-            <div className="flex gap-2 justify-between items-center">
-                <h1 className="text-lg font-bold dark:text-zinc-100">Rating Crédito</h1>
-                <Button variant={"default"} className="flex items-center gap-2" onClick={handleModalOpen}>
+        <div className="w-full flex flex-col gap-4">
+            <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-2 justify-between items-start sm:items-center">
+                <h1 className="text-lg font-bold text-foreground">Rating Crédito</h1>
+                <Button variant={"default"} className="w-full sm:w-auto" onClick={handleModalOpen}>
                     <Plus size={16} />
                     Cadastrar novo
                 </Button>
             </div>
 
-            <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                    <thead>
-                        <tr className="border-b border-slate-200 dark:border-zinc-700">
-                            <th className="py-3 px-4 font-medium dark:text-zinc-200">ID</th>
-                            <th className="py-3 px-4 font-medium dark:text-zinc-200">Rating Crédito</th>
-                            <th className="py-3 px-4 font-medium text-right">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {isLoading ? (
-                            <tr>
-                                <td colSpan={3} className="py-10">
-                                    <div className="flex flex-col items-center justify-center animate-pulse gap-2 text-slate-600 dark:text-slate-300">
-                                        <Loader className="animate-spin" />
-                                        <p>Carregando rating de crédito...</p>
-                                    </div>
-                                </td>
+            {isLoading ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-3 text-muted-foreground">
+                    <Loader className="animate-spin w-6 h-6" />
+                    <p className="text-sm">Carregando ratings de crédito...</p>
+                </div>
+            ) : ratingCredito?.length === 0 ? (
+                <div className="flex flex-col items-center gap-3 py-12 text-center">
+                    <div className="bg-secondary/50 p-4 rounded-full">
+                        <Image src="/assets/images/no-data-image.svg" alt="Vazio" width={72} height={72} className="opacity-60" />
+                    </div>
+                    <div>
+                        <h3 className="font-medium text-foreground">Nenhum rating encontrado</h3>
+                        <p className="text-muted-foreground text-sm mt-1">Cadastre um novo rating para começar</p>
+                    </div>
+                </div>
+            ) : (
+                <div className="overflow-x-auto rounded-xl border border-border">
+                    <table className="w-full text-left">
+                        <thead>
+                            <tr className="bg-secondary/60">
+                                <th className="py-3 px-4 font-semibold text-muted-foreground text-xs uppercase tracking-wider">ID</th>
+                                <th className="py-3 px-4 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Rating Crédito</th>
+                                <th className="py-3 px-4 font-semibold text-muted-foreground text-xs uppercase tracking-wider text-right">Ações</th>
                             </tr>
-                        ) : (
-                            ratingCredito?.length === 0 ? (
-                                <tr>
-                                    <td colSpan={3} className="py-3 px-4 text-center text-slate-600 dark:text-slate-300">
-                                        <Image src="/assets/images/no-data-image.svg" alt="Vazio" width={138} height={138} className="mx-auto" />
-                                        <h3 className="mt-2 font-semibold text-slate-600 dark:text-slate-300">Nenhum rating de crédito encontrado</h3>
-                                    </td>
-                                </tr>
-                            ) : (
-                                rows
-                            )
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody className="divide-y divide-border/40">
+                            {rows}
+                        </tbody>
+                    </table>
+                </div>
+            )}
             {isModalOpen && (
-                <BaseModal isOpen={isModalOpen} onClose={handleModalOpen} title="Cadastrar Rating de crédito">
-                    <ModalCreateRatingCredito />
+                <BaseModal isOpen={isModalOpen} onClose={handleModalOpen} title="Cadastrar Rating de crédito" size="sm" dirty={innerDirty}>
+                    <ModalCreateRatingCredito onDirtyChange={setInnerDirty} />
                 </BaseModal>
             )}
         </div>

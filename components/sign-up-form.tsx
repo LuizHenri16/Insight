@@ -57,9 +57,9 @@ export function SignUpForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl">Criar conta</CardTitle>
+          <CardTitle className="text-2xl text-primary">Criar conta</CardTitle>
           <CardDescription>Crie uma nova conta</CardDescription>
         </CardHeader>
         <CardContent>
@@ -104,9 +104,9 @@ export function SignUpForm({
                 {isLoading ? "Criando conta..." : "Criar conta"}
               </Button>
             </div>
-            <div className="mt-4 text-center text-sm">
+            <div className="mt-4 text-center text-sm text-muted-foreground">
               Já tem uma conta?{" "}
-              <Link href="/auth/login" className="underline underline-offset-4">
+              <Link href="/auth/login" className="underline underline-offset-4 text-foreground hover:text-primary">
                 Entrar
               </Link>
             </div>

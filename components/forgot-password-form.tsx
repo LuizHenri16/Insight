@@ -31,7 +31,6 @@ export function ForgotPasswordForm({
     setError(null);
 
     try {
-      // The url which will be included in the email. This URL needs to be configured in your redirect URLs in the Supabase dashboard at https://supabase.com/dashboard/project/_/auth/url-configuration
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/auth/update-password`,
       });
@@ -47,9 +46,9 @@ export function ForgotPasswordForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       {success ? (
-        <Card>
+        <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-2xl">Confira seu email</CardTitle>
+            <CardTitle className="text-2xl text-primary">Confira seu email</CardTitle>
             <CardDescription>Instruções de redefinição de senha enviadas</CardDescription>
           </CardHeader>
           <CardContent>
@@ -60,9 +59,9 @@ export function ForgotPasswordForm({
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-2xl">Redefinir senha</CardTitle>
+            <CardTitle className="text-2xl text-primary">Redefinir senha</CardTitle>
             <CardDescription>
               Digite seu email e enviaremos um link para redefinir sua senha
             </CardDescription>
@@ -81,16 +80,16 @@ export function ForgotPasswordForm({
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
+                {error && <p className="text-sm text-destructive">{error}</p>}
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Enviando..." : "Enviar email de redefinição"}
                 </Button>
               </div>
-              <div className="mt-4 text-center text-sm">
+              <div className="mt-4 text-center text-sm text-muted-foreground">
                 Já tem uma conta?{" "}
                 <Link
                   href="/auth/login"
-                  className="underline underline-offset-4"
+                  className="underline underline-offset-4 text-foreground hover:text-primary"
                 >
                   Login
                 </Link>

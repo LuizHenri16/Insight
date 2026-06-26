@@ -41,9 +41,9 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-row", className)} {...props}>
-      <Card>
+      <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl text-[#1B2F53]">Login</CardTitle>
+          <CardTitle className="text-2xl text-primary">Login</CardTitle>
           <CardDescription>
             Digite seu email e senha para fazer login
           </CardDescription>
@@ -67,7 +67,7 @@ export function LoginForm({
                   <Label htmlFor="password">Senha</Label>
                   <Link
                     href="/auth/forgot-password"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-muted-foreground hover:text-foreground"
                   >
                     Esqueceu sua senha?
                   </Link>
@@ -84,9 +84,9 @@ export function LoginForm({
                 {isLoading ? "Entrando..." : "Entrar"}
               </Button>
             </div>
-            <div className="mt-6 text-center text-sm">
+            <div className="mt-6 text-center text-sm text-muted-foreground">
               Não tem uma conta?{" "}
-              <Link href="/auth/sign-up" className="underline">
+              <Link href="/auth/sign-up" className="underline text-foreground hover:text-primary">
                 Registre-se
               </Link>
             </div>

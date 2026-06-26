@@ -26,12 +26,12 @@ export const MobileMenu = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <div className="md:hidden" ref={dropdownRef}>
-            <button onClick={() => setIsOpen(!isOpen)} className="p-2">
+            <button onClick={() => setIsOpen(!isOpen)} className="p-2 text-foreground hover:bg-accent rounded-lg transition-colors">
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
             {isOpen && (
-                <div className="absolute top-14 left-0 w-full bg-background p-4 flex flex-col gap-4 z-10 border-b rounded-b-2xl shadow-lg border-foreground/10">
+                <div className="absolute top-14 left-0 w-full bg-card border-b border-border p-4 flex flex-col gap-4 z-10 shadow-paper-lg">
                     {children}
                 </div>
             )}

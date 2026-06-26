@@ -16,15 +16,15 @@ export const PaginationControls = ({ currentPage, totalPages }: { currentPage: n
             <button
                 disabled={currentPage <= 1}
                 onClick={() => changePage(currentPage - 1)}
-                className="p-2 border border-gray-200 dark:border-zinc-600 rounded-lg disabled:opacity-50 dark:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
+                className="px-4 py-2 border border-input rounded-xl shadow-paper-sm disabled:opacity-50 text-foreground hover:bg-accent transition-all bg-card"
             >
                 Anterior
             </button>
-            <span className="flex items-center px-2">Página {currentPage} de {totalPages}</span>
+            <span className="flex items-center px-2 text-sm text-muted-foreground">Página {currentPage} de {totalPages}</span>
             <button
                 disabled={currentPage >= totalPages}
                 onClick={() => changePage(currentPage + 1)}
-                className="p-2 border border-gray-200 dark:border-zinc-600 rounded-lg disabled:opacity-50 dark:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
+                className="px-4 py-2 border border-input rounded-xl shadow-paper-sm disabled:opacity-50 text-foreground hover:bg-accent transition-all bg-card"
             >
                 Próximo
             </button>

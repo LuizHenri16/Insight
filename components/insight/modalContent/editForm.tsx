@@ -5,6 +5,7 @@ import { getRatingCredito } from "@/api/ratingcredito/routes"
 import { windowDispatchFeedback } from "@/components/insight/feedbackModal"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { MaskedInput } from "@/components/ui/masked-input"
 import { useProdutos } from "@/hooks/queries/useProdutos"
 import { select } from "@/lib/utils/select"
 import { update } from "@/lib/utils/update"
@@ -12,11 +13,12 @@ import { EmpresaForm, EmpresaInvestimentoItem, EmpresaJoin, ProdutosServicosEmpr
 import { Investimento } from "@/utils/types/investimento"
 import { RatingCredito } from "@/utils/types/ratingcredito"
 import { useRouter } from "next/navigation"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import MultiSelect from "../multiSelect"
 import Select from "../select"
+import { FormSkeleton } from "../skeletons"
 
-export const EditForm = ({ id }: { id: number | string }) => {
+export const EditForm = ({ id, onDirtyChange }: { id: number | string, onDirtyChange?: (dirty: boolean) => void }) => {
 
     const router = useRouter();
     const [ratingCredito, setRatingCredito] = useState<RatingCredito[]>([]);
@@ -46,6 +48,16 @@ export const EditForm = ({ id }: { id: number | string }) => {
 
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(true);
+    const initialFormRef = useRef<string | null>(null);
+
+    const isDirty = useMemo(() => {
+        if (!initialFormRef.current) return false;
+        return JSON.stringify(formData) !== initialFormRef.current;
+    }, [formData]);
+
+    useEffect(() => {
+        onDirtyChange?.(isDirty);
+    }, [isDirty, onDirtyChange]);
 
     const getEmpresa = useCallback(async () => {
 
@@ -86,6 +98,7 @@ export const EditForm = ({ id }: { id: number | string }) => {
             };
 
             setFormData(empresaFormatada);
+            initialFormRef.current = JSON.stringify(empresaFormatada);
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : "Erro ao carregar dados para edição.";
             windowDispatchFeedback("error", message);
@@ -130,100 +143,100 @@ export const EditForm = ({ id }: { id: number | string }) => {
     }
 
     if (fetching) {
-        return <div className="p-4">Carregando dados...</div>;
+        return <FormSkeleton />;
     }
 
     return (
-        <div className="w-full max-w-5xl mx-auto p-2 sm:p-6">
-            <form className="flex flex-col gap-10">
-                <section className="space-y-6">
-                    <div className="border-b pb-3">
-                        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados da Empresa</h2>
-                        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Informações principais para identificação.</p>
+        <div className="w-full max-w-5xl mx-auto">
+            <form className="flex flex-col gap-8">
+                <section className="space-y-5">
+                    <div className="border-b border-border pb-3">
+                        <h2 className="text-xl font-semibold text-foreground">Dados da Empresa</h2>
+                        <p className="text-sm text-muted-foreground mt-1">Informações principais para identificação.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="nome_empresa" className="text-sm font-medium text-gray-700 dark:text-gray-300">Nome da empresa</label>
+                            <label htmlFor="nome_empresa" className="text-sm font-medium text-foreground">Nome da empresa</label>
                             <Input id="nome_empresa" type="text" placeholder="Digite o nome da empresa" value={formData.nome_empresa} onChange={(e) => setFormData({ ...formData, nome_empresa: e.target.value })} />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="cnpj_empresa" className="text-sm font-medium text-gray-700 dark:text-gray-300">CNPJ</label>
-                            <Input id="cnpj_empresa" type="text" placeholder="Digite o CNPJ" value={formData.cnpj_empresa} onChange={(e) => setFormData({ ...formData, cnpj_empresa: e.target.value })} />
+                            <label htmlFor="cnpj_empresa" className="text-sm font-medium text-foreground">CNPJ</label>
+                            <MaskedInput mask="cnpj" id="cnpj_empresa" type="text" placeholder="00.000.000/0000-00" value={formData.cnpj_empresa} onChange={(v) => setFormData({ ...formData, cnpj_empresa: v })} />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="conta" className="text-sm font-medium text-gray-700 dark:text-gray-300">Conta</label>
+                            <label htmlFor="conta" className="text-sm font-medium text-foreground">Conta</label>
                             <Input id="conta" type="text" placeholder="Digite o número da conta" value={formData.conta} onChange={(e) => setFormData({ ...formData, conta: e.target.value })} />
                         </div>
                     </div>
                 </section>
 
-                <section className="space-y-6">
-                    <div className="border-b pb-3">
-                        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados dos Sócios</h2>
-                        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Informações sobre os sócios da empresa.</p>
+                <section className="space-y-5">
+                    <div className="border-b border-border pb-3">
+                        <h2 className="text-xl font-semibold text-foreground">Dados dos Sócios</h2>
+                        <p className="text-sm text-muted-foreground mt-1">Informações sobre os sócios da empresa.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="p-5 rounded-xl bg-gray-50/50 dark:bg-zinc-800/50 border border-gray-100 dark:border-zinc-700 space-y-4">
-                            <h3 className="font-semibold text-sm text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="p-5 rounded-xl bg-secondary/50 border border-border space-y-4">
+                            <h3 className="font-semibold text-sm text-foreground flex items-center gap-2">
                                 <span className="bg-primary/10 text-primary w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
                                 Sócio Primário
                             </h3>
                             <div className="space-y-4">
                                 <div className="flex flex-col gap-2">
-                                    <label htmlFor="socio1_nome" className="text-sm font-medium text-gray-700 dark:text-gray-300">Nome completo</label>
+                                    <label htmlFor="socio1_nome" className="text-sm font-medium text-foreground">Nome completo</label>
                                     <Input id="socio1_nome" type="text" placeholder="Digite o nome do sócio 1" value={formData.Socio[0]?.nome_socio || ""} onChange={(e) => updateSocio(0, "nome_socio", e.target.value)} />
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <label htmlFor="socio1_cpf" className="text-sm font-medium text-gray-700 dark:text-gray-300">CPF ou CNPJ</label>
-                                    <Input id="socio1_cpf" type="text" placeholder="Digite o CPF/CNPJ do sócio 1" value={formData.Socio[0]?.cpfcnpj_socio || ""} onChange={(e) => updateSocio(0, "cpfcnpj_socio", e.target.value)} />
+                                    <label htmlFor="socio1_cpf" className="text-sm font-medium text-foreground">CPF ou CNPJ</label>
+                                    <MaskedInput mask="cpfCnpj" id="socio1_cpf" type="text" placeholder="CPF ou CNPJ do sócio 1" value={formData.Socio[0]?.cpfcnpj_socio || ""} onChange={(v) => updateSocio(0, "cpfcnpj_socio", v)} />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="p-5 rounded-xl bg-gray-50/50 dark:bg-zinc-800/50 border border-gray-100 dark:border-zinc-700 space-y-4">
-                            <h3 className="font-semibold text-sm text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                        <div className="p-5 rounded-xl bg-secondary/50 border border-border space-y-4">
+                            <h3 className="font-semibold text-sm text-foreground flex items-center gap-2">
                                 <span className="bg-primary/10 text-primary w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
                                 Sócio Secundário
                             </h3>
                             <div className="space-y-4">
                                 <div className="flex flex-col gap-2">
-                                    <label htmlFor="socio2_nome" className="text-sm font-medium text-gray-700 dark:text-gray-300">Nome completo</label>
+                                    <label htmlFor="socio2_nome" className="text-sm font-medium text-foreground">Nome completo</label>
                                     <Input id="socio2_nome" type="text" placeholder="Digite o nome do sócio 2" value={formData.Socio[1]?.nome_socio || ""} onChange={(e) => updateSocio(1, "nome_socio", e.target.value)} />
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <label htmlFor="socio2_cpf" className="text-sm font-medium text-gray-700 dark:text-gray-300">CPF ou CNPJ</label>
-                                    <Input id="socio2_cpf" type="text" placeholder="Digite o CPF/CNPJ do sócio 2" value={formData.Socio[1]?.cpfcnpj_socio || ""} onChange={(e) => updateSocio(1, "cpfcnpj_socio", e.target.value)} />
+                                    <label htmlFor="socio2_cpf" className="text-sm font-medium text-foreground">CPF ou CNPJ</label>
+                                    <MaskedInput mask="cpfCnpj" id="socio2_cpf" type="text" placeholder="CPF ou CNPJ do sócio 2" value={formData.Socio[1]?.cpfcnpj_socio || ""} onChange={(v) => updateSocio(1, "cpfcnpj_socio", v)} />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <section className="space-y-6">
-                    <div className="border-b pb-3">
-                        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Dados de Contato</h2>
-                        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Meios de comunicação com a empresa.</p>
+                <section className="space-y-5">
+                    <div className="border-b border-border pb-3">
+                        <h2 className="text-xl font-semibold text-foreground">Dados de Contato</h2>
+                        <p className="text-sm text-muted-foreground mt-1">Meios de comunicação com a empresa.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="telefone" className="text-sm font-medium text-gray-700 dark:text-gray-300">Telefone</label>
-                            <Input id="telefone" type="text" placeholder="Digite o telefone" value={formData.telefone} onChange={(e) => setFormData({ ...formData, telefone: e.target.value })} />
+                            <label htmlFor="telefone" className="text-sm font-medium text-foreground">Telefone</label>
+                            <MaskedInput mask="phone" id="telefone" type="text" placeholder="(00) 00000-0000" value={formData.telefone} onChange={(v) => setFormData({ ...formData, telefone: v })} />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="email" className="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                            <label htmlFor="email" className="text-sm font-medium text-foreground">Email</label>
                             <Input id="email" type="email" placeholder="Digite o email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                         </div>
                     </div>
                 </section>
 
-                <section className="space-y-6">
-                    <div className="border-b pb-3">
-                        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Financeiro</h2>
-                        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Informações financeiras, investimentos e crédito.</p>
+                <section className="space-y-5">
+                    <div className="border-b border-border pb-3">
+                        <h2 className="text-xl font-semibold text-foreground">Financeiro</h2>
+                        <p className="text-sm text-muted-foreground mt-1">Informações financeiras, investimentos e crédito.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Investimentos</label>
+                            <label className="text-sm font-medium text-foreground">Investimentos</label>
                             <MultiSelect
                                 options={investimentos.map(i => ({ id: i.id_investimento!.toString(), nomeDoItem: i.investimento }))}
                                 value={formData.Investimentos.map(i => ({ id: i.id_investimento.toString(), nomeDoItem: i.investimento }))}
@@ -232,7 +245,7 @@ export const EditForm = ({ id }: { id: number | string }) => {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Produtos/Serviços</label>
+                            <label className="text-sm font-medium text-foreground">Produtos/Serviços</label>
                             <MultiSelect
                                 options={(produtosServicos || []).map(p => ({ id: p.id_produtos_servicos!.toString(), nomeDoItem: p.produto_servico }))}
                                 value={formData.ProdutosServicos.map(p => ({ id: p.id_produto_servico.toString(), nomeDoItem: p.produto_servico }))}
@@ -241,7 +254,7 @@ export const EditForm = ({ id }: { id: number | string }) => {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Rating de Crédito</label>
+                            <label className="text-sm font-medium text-foreground">Rating de Crédito</label>
                             <Select
                                 options={ratingCredito.map(r => ({ id: r.id_rating_credito.toString(), nomeDoItem: r.rating_credito }))}
                                 value={formData.RatingCredito}
@@ -250,7 +263,7 @@ export const EditForm = ({ id }: { id: number | string }) => {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Cheque especial</label>
+                            <label className="text-sm font-medium text-foreground">Cheque especial</label>
                             <Select
                                 options={[{ id: "1", nomeDoItem: "SIM" }, { id: "2", nomeDoItem: "NAO" }]}
                                 value={formData.crot === "SIM" ? "1" : (formData.crot === "NAO" ? "2" : formData.crot)}
@@ -260,7 +273,7 @@ export const EditForm = ({ id }: { id: number | string }) => {
                     </div>
                 </section>
 
-                <div className="pt-6 mt-4 border-t dark:border-zinc-700 flex justify-end">
+                <div className="pt-5 mt-2 border-t border-border flex justify-end">
                     <Button type="button" onClick={handleSubmit} disabled={loading} className="w-full md:w-auto md:min-w-[200px]" size="lg">
                         {loading ? "Salvando..." : "Salvar Edição"}
                     </Button>

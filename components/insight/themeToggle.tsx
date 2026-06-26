@@ -22,9 +22,9 @@ export const ThemeToggle = () => {
             aria-label="Alternar tema"
         >
             {resolvedTheme === "dark" ? (
-                <SunIcon color="white" width={16} height={16} />
+                <SunIcon width={16} height={16} />
             ) : (
-                <MoonIcon color="black" width={16} height={16} />
+                <MoonIcon width={16} height={16} />
             )}
         </Button>
     );
