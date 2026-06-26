@@ -1,22 +1,30 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { windowDispatchFeedback } from "../feedbackModal"
 import { useRatingCredito } from "@/hooks/queries/useRatingCredito"
 import { useUpdateRatingCreditoMutation } from "@/hooks/mutations/useRatingCreditoMutation"
 
-export const ModalEditRatingCredito = ({ id }: { id: number | string }) => {
+export const ModalEditRatingCredito = ({ id, onDirtyChange }: { id: number | string, onDirtyChange?: (dirty: boolean) => void }) => {
     const { data: ratings, isLoading: isLoadingRatings } = useRatingCredito()
     const [ratingEdit, setRatingEdit] = useState("")
     const { mutate, isPending } = useUpdateRatingCreditoMutation()
+    const initialRef = useRef("")
+
+    const isDirty = ratingEdit !== initialRef.current
+
+    useEffect(() => {
+        onDirtyChange?.(isDirty)
+    }, [isDirty, onDirtyChange])
 
     const item = ratings?.find((r) => r.id_rating_credito === Number(id))
 
     useEffect(() => {
         if (item) {
             setRatingEdit(item.rating_credito || "")
+            initialRef.current = item.rating_credito || ""
         }
     }, [item])
 
@@ -34,8 +42,8 @@ export const ModalEditRatingCredito = ({ id }: { id: number | string }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-2 p-2">
-                <label htmlFor="ratingCredito" className="text-sm font-medium dark:text-zinc-300">Rating de Crédito</label>
+            <div className="flex flex-col gap-2">
+                <label htmlFor="ratingCredito" className="text-sm font-medium text-foreground">Rating de Crédito</label>
                 <Input 
                     required 
                     name="ratingCredito" 
@@ -45,8 +53,8 @@ export const ModalEditRatingCredito = ({ id }: { id: number | string }) => {
                     placeholder="Digite o nome do rating de crédito" 
                 />
             </div>
-            <div className="flex justify-end">
-                <Button className="w-[10rem]" type="submit" disabled={isPending || isLoadingRatings}>
+            <div className="flex justify-end mt-4">
+                <Button className="w-full sm:w-auto sm:min-w-[10rem]" type="submit" disabled={isPending || isLoadingRatings}>
                     {isPending ? "Salvando..." : "Salvar"}
                 </Button>
             </div>

@@ -19,13 +19,13 @@ export const Header = () => {
     )
 
     return (
-        <nav className="w-full border-b border-b-foreground/10 bg-background h-14 relative">
+        <nav className="w-full border-b border-border bg-card/80 backdrop-blur-sm h-14 relative">
             <div className="flex justify-between px-4 md:px-10 lg:px-20 items-center h-full">
                 <Link href={"/home"}>
                     <Image src="/assets/icons/INSIGHT.svg" alt="Insight" width={100} height={100} />
                 </Link>
 
-                <div className="hidden md:flex gap-6 items-center">
+                <div className="hidden md:flex gap-4 items-center">
                     <NavMenu />
                     <ThemeToggle />
                     {authSection}

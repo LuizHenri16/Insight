@@ -26,7 +26,6 @@ export const DeleteConfirmForm = ({ idEmpresa, entity = 'empresa' }: Props) => {
         } else if (entity === 'ratingCredito') {
             deleteRatingCredito(idEmpresa);
         } else {
-            // Fallback for 'empresa' (legacy manual call or could be refactored later)
             deleteEmpresa(idEmpresa);
         }
     }
@@ -34,8 +33,8 @@ export const DeleteConfirmForm = ({ idEmpresa, entity = 'empresa' }: Props) => {
     return (
         <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-                <p className="text-sm font-semibold text-[#1B2F53] dark:text-zinc-200">Confirmação</p>
-                <p className="text-sm text-gray-600 dark:text-zinc-400">Tem certeza que deseja excluir este item?</p>
+                <p className="text-sm font-semibold text-foreground">Confirmação</p>
+                <p className="text-sm text-muted-foreground">Tem certeza que deseja excluir este item?</p>
             </div>
             <div className="flex justify-end gap-2">
                 <Button variant="destructive" onClick={handleConfirm} disabled={isPending}>

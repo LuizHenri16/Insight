@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Sora } from "next/font/google";
 import { ThemeProvider } from "next-themes";
-import { FeedbackModal } from "@/components/insight/feedbackModal";
+import { Toaster } from "@/components/insight/toaster";
 import "./globals.css";
 import Providers from "@/components/providers";
 import PageTransition from "@/hooks/PageTransition";
@@ -43,7 +43,7 @@ export default function RootLayout({
             <PageTransition>
               {children}
             </PageTransition>
-            <FeedbackModal />
+            <Toaster />
           </Providers>
         </ThemeProvider>
       </body>

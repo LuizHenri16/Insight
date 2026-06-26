@@ -4,8 +4,8 @@ import { Suspense } from "react";
 export default function ProtectedPage() {
   return (
     <div>
-      <Suspense fallback={<div className="w-full flex justify-center items-center">Carregando...</div>}>
-        <p className="px-3 py-2 text-xl font-semibold text-[#1B2F53] dark:text-zinc-100">Cadastros</p>
+      <Suspense fallback={<div className="w-full flex justify-center items-center text-muted-foreground">Carregando...</div>}>
+        <p className="px-4 sm:px-1 py-3 text-2xl font-semibold text-foreground">Cadastros</p>
         <InsightTable />
       </Suspense>
     </div>

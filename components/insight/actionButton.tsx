@@ -19,8 +19,12 @@ interface ActionButtonProps {
 
 export const ActionButton = ({ type, idEmpresa, entity = 'empresa' }: ActionButtonProps) => {
     const [modalOpen, setModalOpen] = useState(false);
+    const [formDirty, setFormDirty] = useState(false);
 
-    const toggleModal = () => setModalOpen(!modalOpen);
+    const toggleModal = () => {
+        if (!modalOpen) setFormDirty(false);
+        setModalOpen(!modalOpen);
+    };
 
     const icons = {
         view: <EyeOpenIcon className="w-4 h-4" />,
@@ -33,34 +37,34 @@ export const ActionButton = ({ type, idEmpresa, entity = 'empresa' }: ActionButt
             <button
                 type="button"
                 onClick={toggleModal}
-                className="p-1 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
             >
                 {icons[type]}
             </button>
 
             {modalOpen && type === 'delete' && (
-                <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Excluir">
+                <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Excluir" size="sm">
                     <DeleteConfirmForm idEmpresa={idEmpresa} entity={entity} />
                 </BaseModal>
             )}
 
 
             {modalOpen && type === 'view' && (
-                <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Visualizar">
+                <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Visualizar" size="lg">
                     <ViewForm id={idEmpresa} />
                 </BaseModal>
             )}
 
             {modalOpen && type === 'edit' && (
-                <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Editar">
+                <BaseModal isOpen={modalOpen} onClose={toggleModal} title="Editar" size={entity === 'empresa' ? 'lg' : 'sm'} dirty={formDirty}>
                     {entity === 'produto' ? (
-                        <ModalEditProduto id={idEmpresa} />
+                        <ModalEditProduto id={idEmpresa} onDirtyChange={setFormDirty} />
                     ) : entity === 'ratingCredito' ? (
-                        <ModalEditRatingCredito id={idEmpresa} />
+                        <ModalEditRatingCredito id={idEmpresa} onDirtyChange={setFormDirty} />
                     ) : entity === 'investimento' ? (
-                        <ModalEditInvestimento id={idEmpresa} />
+                        <ModalEditInvestimento id={idEmpresa} onDirtyChange={setFormDirty} />
                     ) : (
-                        <EditForm id={idEmpresa} />
+                        <EditForm id={idEmpresa} onDirtyChange={setFormDirty} />
                     )}
                 </BaseModal>
             )}
